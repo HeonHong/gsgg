@@ -20,6 +20,11 @@ const menus = [
     name: "RecordsPage",//컴포넌트 이름
     componentPath: "records/RecordsPage",//실제 주소
   },
+  {
+    path: "userVs",
+    name: "UserVsPage",
+    componentPath: "uservs/UserVsPage",
+  }
 ];
 
 export default menus;
