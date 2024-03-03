@@ -1,0 +1,42 @@
+# .gitignore
+
+### Vue.js ###
+# Node.js dependencies
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Compiled output
+/dist
+
+# Local environment file
+.env.local
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+### Spring Boot ###
+# Compiled class file
+/target/
+
+# Logs
+/logs/
+
+# IDE-specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Spring Boot
+mvnw
+mvnw.cmd

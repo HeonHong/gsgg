@@ -1,0 +1,89 @@
+/* Epinput */
+.input-form-container {
+    display: flex;
+    overflow: none;
+    justify-content: flex-start;
+    align-items: center;
+    height: 25px;
+
+}
+
+.input-form-container.size-1 {
+    width: 150px;
+}
+
+.input-form-container.size-2 {
+    width: 300px;
+}
+
+.input-form-label {
+    display: flex;
+}
+
+.input-form-label {
+    width: 100px;
+}
+
+.input-form {
+    display: flex;
+    border: none;
+    background-color: lightgrey;
+}
+
+.og-input-form {
+    border: none;
+    background-color: lightgrey;
+}
+
+.og-input-form:focus {
+    outline: none;
+}
+
+
+/* 로딩바 */
+.loading-bar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw; /* 현재 뷰포트의 너비 */
+    height: 100vh; /* 현재 뷰포트의 높이 */
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+.loading-bar-shape,
+.loading-bar-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width:100px;
+    height:100px;
+    /* transform: translate(-50%, -50%); */
+    text-align: center;
+    line-height:100px;
+}
+.loading-bar-shape{
+    border: 3px solid;
+    border-color:  rgba(1,1,1,0.8) rgba(0,0,0,0);
+    border-radius: 100%;
+    animation: rotate-shape 3s infinite;
+    /* transition: all 0.5s ease-in-out; */
+}
+
+.loading-bar-text{
+    animation:text-opacity 3s infinite;
+}
+
+
+@keyframes rotate-shape{
+    0%{transform:rotate(0deg)}
+    100%{transform:rotate(360deg)}
+}
+
+@keyframes text-opacity {
+    0%  {opacity: 1}
+    25%  {opacity: 0.75}
+    50%  {opacity: 0.5}
+    75%  {opacity: 0.25}
+    100%{opacity: 0}
+}
