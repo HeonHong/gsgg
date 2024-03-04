@@ -18,7 +18,7 @@
     <button @click="test2">test button2</button>  -->
     <!--  -->
 
-    <EpButton :width="500" :height="100" :color="'#0FC2C0'" :label="'common button'" @btnClick="btnFunc"/>
+    <EpButton :width="500" :height="100" :color="'#0FC2C0'" :label="'common button'" @btnClick="test"/>
 
     <!-- 컴포넌트 캐싱 -->
     <!-- 캐싱하지 않는 경우 routerView만 사용해도 무방  -->
@@ -57,7 +57,7 @@ export default {
         //테스트 메서드
         test() {
             console.log('axios start');
-            axios.get("/api")
+            this.$axios.get("/api")
                 .then(res => console.log(res))
         },
 
@@ -73,8 +73,8 @@ export default {
 
     //components
     components: {
-        TabButtons: TabButtons,  //메인 탭
-        EpButton: EpButton,
+        TabButtons,  //메인 탭
+        EpButton,
         LoadingBar,
     },
 

@@ -5,9 +5,7 @@
 </template>
 <script>
 import commonUtils from "@/js/common-utils.js"
-// import apiMix from "@/js/mixins/api/api-mix.js"
 export default {
-    // mixins:[apiMix],
     mounted(){
         
         //공통함수js 예시
@@ -21,16 +19,19 @@ export default {
         this.deleteApi('/delTest',param,this.success,this.fail);
         
     },
+    data(){
+        return{
+        }
+    },
     methods:{
         success(data){
             console.log(data);
-            setTimeout(() => {
-                this.$store.commit('setSwitch','');
-            }, 5000);
         },
         fail(err){
             console.log(err.message);
         }
+    },
+    watch:{
     }
 
 }
