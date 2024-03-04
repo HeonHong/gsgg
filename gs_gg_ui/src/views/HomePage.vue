@@ -18,16 +18,19 @@
     <button @click="test2">test button2</button>  -->
     <!--  -->
 
-    <EpButton :width="500" :height="100" :color="'#0FC2C0'" :label="'common button'" @btnClick="btnFunc"/>
+    <!-- 공통 버튼 컴포넌트 예시 -->
+    <EpButton :width="'500px'" :height="'50%'" :color="'#0FC2C0'" :label="'common button'"/>
 
     <!-- 컴포넌트 캐싱 -->
     <!-- 캐싱하지 않는 경우 routerView만 사용해도 무방  -->
+
     <router-view v-slot="{Component}">
         <keep-alive>
             <component :is="Component" ></component>
         </keep-alive>
     </router-view>
-    <LoadingBar/>
+
+
 </template>
 <script>
 //import
@@ -37,7 +40,6 @@ import apiCall from "@/js/mixins/api/api-call.js"
 
 //공통 버튼 테스트
 import EpButton from '@/components/EpButton.vue';
-import LoadingBar from '@/components/LoadingBar.vue';
 
 export default {
     mixins:[apiCall],
@@ -65,9 +67,6 @@ export default {
             console.log('axios2 start');
             axios.get('/api/test')
                 .then(res => console.log(res))
-        },
-        btnFunc(){
-            console.log("눌렸냐?");
         }
     },
 
@@ -75,7 +74,6 @@ export default {
     components: {
         TabButtons: TabButtons,  //메인 탭
         EpButton: EpButton,
-        LoadingBar,
     },
 
     //data
