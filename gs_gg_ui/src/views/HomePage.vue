@@ -87,6 +87,9 @@ export default {
                 {id: 1, tabName: "tab2"},
                 {id: 2, tabName: "tab3"},
                 {id: 3, tabName: "챔피언 소개", pagePath: '/characters'},
+                {id: 4, tabName: "TestPage", pagePath: '/test'},
+                {id: 5, tabName: "SocketTest", pagePath: '/sockettest'},
+                
             ],
         }
     }
@@ -106,13 +109,17 @@ export default {
     background:var(--color1);
     color:white;
     cursor: pointer;
+    max-width: 100vw;
+    
 }
 .search{
     display:flex;
     justify-content: flex-end;
 }    
 .tab-btn-grp{
+    /* width: fit-content; */
+    max-width: 100vw;
+    justify-content: space-around;
     display: flex;
-    width: fit-content;
 }
 </style>
