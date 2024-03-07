@@ -1,7 +1,10 @@
 <template lang="">
     <!-- header 및 logo -->
     <div class="header">
-        <h1 @click="goToMainPage">GS.GG</h1>
+        <!-- <h1 @click="goToMainPage">GS.GG</h1> -->
+        <div class="logo-img">
+            <img src="@/assets/GS_GG Logo_NoBG.png" @click="goToMainPage"/>
+        </div>
     </div>
 
     <!-- 메인 탭 버튼 -->
@@ -100,6 +103,7 @@ export default {
     --color5:#0FC2C0;
 }
 .header{
+    display: flex;
     height:100px;
     background:var(--color1);
     color:white;
@@ -112,5 +116,8 @@ export default {
 .tab-btn-grp{
     display: flex;
     width: fit-content;
+}
+.logo-img{
+    display: flex;
 }
 </style>
