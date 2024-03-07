@@ -1,11 +1,12 @@
 <template lang="">
+    <div class="main-container">
     <!-- header 및 logo -->
     <div class="header">
         <h1 @click="goToMainPage">GS.GG</h1>
     </div>
 
     <!-- 메인 탭 버튼 -->
-    <div class="tab-btn-grp">
+    <div class="tab-btn-grp" :style="{'grid-template-columns': gridTemplateColumns }">
         <TabButtons v-for="objBtn in arrTabBtns" :key="objBtn"
         :objBtn="objBtn" 
         @componentChg="componentChg($event)"/>
@@ -28,7 +29,9 @@
         </keep-alive>
     </router-view>
     <LoadingBar/>
+</div>
 </template>
+
 <script>
 //import
 import axios from 'axios';
@@ -40,17 +43,17 @@ import EpButton from '@/components/EpButton.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
 
 export default {
-    mixins:[apiCall],
+    mixins: [apiCall],
 
     //methods
     methods: {
         //헤더 GS.GG 클릭 시 Main 화면으로 이동
         goToMainPage() {
-            this.$router.push({ path: '/'});
+            this.$router.push({ path: '/' });
         },
 
         //메인 탭 클릭시 component change 이벤트
-        componentChg(idNum){
+        componentChg(idNum) {
             this.$router.push(this.arrTabBtns[idNum].pagePath);
         },
 
@@ -66,7 +69,7 @@ export default {
             axios.get('/api/test')
                 .then(res => console.log(res))
         },
-        btnFunc(){
+        btnFunc() {
             console.log("눌렸냐?");
         }
     },
@@ -77,19 +80,23 @@ export default {
         EpButton,
         LoadingBar,
     },
-
+    computed:{
+        gridTemplateColumns(){
+            return `repeat(${this.arrTabBtns.length},1fr)`
+        }
+    },
     //data
     data() {
         return {
             //메인 탭
             arrTabBtns: [
-                {id: 0, tabName: "tab1", pagePath: '/'},
-                {id: 1, tabName: "tab2"},
-                {id: 2, tabName: "tab3"},
-                {id: 3, tabName: "챔피언 소개", pagePath: '/characters'},
-                {id: 4, tabName: "TestPage", pagePath: '/test'},
-                {id: 5, tabName: "SocketTest", pagePath: '/sockettest'},
-                
+                { id: 0, tabName: "tab1", pagePath: '/' },
+                { id: 1, tabName: "tab2" },
+                { id: 2, tabName: "tab3" },
+                { id: 3, tabName: "챔피언 소개", pagePath: '/characters' },
+                { id: 4, tabName: "TestPage", pagePath: '/test' },
+                { id: 5, tabName: "SocketTest", pagePath: '/sockettest' },
+
             ],
         }
     }
@@ -97,29 +104,27 @@ export default {
 </script>
 
 <style>
-:root{
-    --color1:#283959;
-    --color2:#A6A9F5;
-    --color3:#936CF5;
-    --color4:#699AF5;
-    --color5:#0FC2C0;
+:root {
+    --color1: #283959;
+    --color2: #A6A9F5;
+    --color3: #936CF5;
+    --color4: #699AF5;
+    --color5: #0FC2C0;
+    font-size:10px;
 }
-.header{
-    height:100px;
-    background:var(--color1);
-    color:white;
+
+.header {
+    height: 10rem;
+    background: var(--color1);
+    color: white;
     cursor: pointer;
     max-width: 100vw;
-    
+    grid-column-start: 1;
+    grid-column-end:6;
 }
-.search{
-    display:flex;
-    justify-content: flex-end;
-}    
-.tab-btn-grp{
-    /* width: fit-content; */
-    max-width: 100vw;
-    justify-content: space-around;
-    display: flex;
+
+.tab-btn-grp {
+    display: grid;
+    /* grid-template-columns: repeat(auto-fill, 20%); */
 }
 </style>

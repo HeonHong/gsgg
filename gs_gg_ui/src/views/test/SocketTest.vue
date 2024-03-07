@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <div>{{liveNum}}</div>
         유저이름:
         <input v-model="userName" type="text">
         내용: <input v-model="message" type="text" @keyup="sendMessage">
@@ -20,7 +21,8 @@ export default {
         return {
             userName: "",
             message: "",
-            recvList: []
+            recvList: [],
+            liveNum:1,
         }
     },
     created() {
@@ -28,10 +30,10 @@ export default {
     },
     methods: {
         connect() {
-            const serverURL = "http://localhost:8080"
+            const serverURL = process.env.VUE_APP_API_BASE_URL;
             let socket = new SockJS(serverURL);
             this.stompClient = Stomp.over(socket);
-            console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+            // console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
             this.stompClient.connect(
                 {},
                 frame => {
@@ -40,6 +42,10 @@ export default {
                     this.stompClient.subscribe("/send", res => {
                         console.log('구독으로 받은 메시지 입니다.', res.body);
                         this.recvList.push(JSON.parse(res.body))
+                    });
+                    this.stompClient.subscribe("/liveCheck", res => {
+                        console.log('구독으로 받은 메시지 입니다.', res.body);
+                        this.liveNum=res.body;
                     });
                 },
                 error => {
@@ -64,6 +70,15 @@ export default {
                 this.stompClient.send("/receive", JSON.stringify(msg), {});
             }
         },
+        liveCheck(liveNum){
+          if (this.stompClient && this.stompClient.connected) {
+                
+                this.stompClient.send("/sendLiveCheck", liveNum, {});
+            }
+        }
+    },
+    mounted(){
+      this.liveCheck(++this.liveNum);
     }
 }
 </script>
