@@ -32,8 +32,7 @@
             <component :is="Component" ></component>
         </keep-alive>
     </router-view>
-
-
+    <LoadingBar/>
 </template>
 <script>
 //import
@@ -43,6 +42,7 @@ import apiCall from "@/js/mixins/api/api-call.js"
 
 //공통 버튼 테스트
 import EpButton from '@/components/EpButton.vue';
+import LoadingBar from '@/components/LoadingBar.vue';
 
 export default {
     mixins:[apiCall],
@@ -62,7 +62,7 @@ export default {
         //테스트 메서드
         test() {
             console.log('axios start');
-            axios.get("/api")
+            this.$axios.get("/api")
                 .then(res => console.log(res))
         },
 
@@ -70,6 +70,9 @@ export default {
             console.log('axios2 start');
             axios.get('/api/test')
                 .then(res => console.log(res))
+        },
+        btnFunc(){
+            console.log("눌렸냐?");
         }
     },
 
@@ -77,6 +80,7 @@ export default {
     components: {
         TabButtons: TabButtons,  //메인 탭
         EpButton: EpButton,
+        LoadingBar,
     },
 
     //data
@@ -88,6 +92,9 @@ export default {
                 {id: 1, tabName: "tab2"},
                 {id: 2, tabName: "tab3"},
                 {id: 3, tabName: "챔피언 소개", pagePath: '/characters'},
+                {id: 4, tabName: "TestPage", pagePath: '/test'},
+                {id: 5, tabName: "SocketTest", pagePath: '/sockettest'},
+
             ],
         }
     }
@@ -108,12 +115,17 @@ export default {
     background:var(--color1);
     color:white;
     cursor: pointer;
+    max-width: 100vw;
+
 }
 .search{
     display:flex;
     justify-content: flex-end;
 }    
 .tab-btn-grp{
+    /* width: fit-content; */
+    max-width: 100vw;
+    justify-content: space-around;
     display: flex;
     width: fit-content;
 }

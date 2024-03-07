@@ -5,21 +5,23 @@
 </div>
 </template>
 <script>
+import { commSwitch } from '@/js/comm-switch';
 export default {
     name:"LoadingBar",
     data(){
         return{
-            
+            on:false,
         }
     },
     computed:{
-        on(){
-            console.log('로딩바',this.$store.getters.getSwitch);
-            if(this.$store.getters.getSwitch==this.$options.name) return true
-            else return false;
-        }
+        // on(){
+        //     console.log('로딩바',this.$store.getters.getSwitch);
+        //     if(this.$store.getters.getSwitch==this.$options.name) return true
+        //     else return false;
+        // }
     },
     created(){
+        commSwitch.setSwitch('LoadingBar',this)
     }
 }
 
