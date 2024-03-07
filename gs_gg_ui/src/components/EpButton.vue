@@ -44,6 +44,8 @@ export default {
         height: var(--dynamic-height);
         background: var(--dynamic-color);
         font-family: var(--main-font);
+        /* border: none; */
+        border-radius: 5%;
     }
 
 </style>

@@ -17,9 +17,6 @@
     <!-- <EpInput label='검색'></EpInput>
     <button @click="test">test button12</button>
     <button @click="test2">test button2</button>  -->
-    <!--  -->
-
-    <EpButton :width="500" :height="100" :color="'#0FC2C0'" :label="'common button'" @btnClick="test"/>
 
     <!-- 컴포넌트 캐싱 -->
     <!-- 캐싱하지 않는 경우 routerView만 사용해도 무방  -->
@@ -29,6 +26,7 @@
         </keep-alive>
     </router-view>
     <LoadingBar/>
+    <AlertMdl/>
 </div>
 </template>
 
@@ -39,8 +37,8 @@ import TabButtons from '@/components/TabButtons.vue';
 import apiCall from "@/js/mixins/api/api-call.js"
 
 //공통 버튼 테스트
-import EpButton from '@/components/EpButton.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
+import AlertMdl from '@/components/AlertMdl.vue';
 
 export default {
     mixins: [apiCall],
@@ -77,8 +75,8 @@ export default {
     //components
     components: {
         TabButtons,  //메인 탭
-        EpButton,
         LoadingBar,
+        AlertMdl
     },
     computed:{
         gridTemplateColumns(){
@@ -104,27 +102,4 @@ export default {
 </script>
 
 <style>
-:root {
-    --color1: #283959;
-    --color2: #A6A9F5;
-    --color3: #936CF5;
-    --color4: #699AF5;
-    --color5: #0FC2C0;
-    font-size:10px;
-}
-
-.header {
-    height: 10rem;
-    background: var(--color1);
-    color: white;
-    cursor: pointer;
-    max-width: 100vw;
-    grid-column-start: 1;
-    grid-column-end:6;
-}
-
-.tab-btn-grp {
-    display: grid;
-    /* grid-template-columns: repeat(auto-fill, 20%); */
-}
 </style>
