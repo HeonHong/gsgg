@@ -4,11 +4,11 @@ export const commSwitch=reactive({
     setSwitch(name,callee){
         swithBtn.set(name,callee);
     },
-    onSwitch(name){
+    on(name){
         let compo=swithBtn.get(name);
         compo.on=true;
     },
-    offSwitch(name){
+    off(name){
         let compo=swithBtn.get(name);
         compo.on=false;
     }

@@ -17,4 +17,14 @@ public class WsTestController {
         WsTestDTO result = new WsTestDTO(userName,content);
         return result;
     }
+
+    @MessageMapping("/sendLiveCheck")
+    @SendTo("/liveCheck")
+    public int SocketHandler(int liveNum){
+        System.out.println(liveNum);
+        liveNum++;
+
+
+        return liveNum;
+    }
 }

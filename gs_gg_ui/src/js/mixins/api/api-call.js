@@ -4,12 +4,12 @@ import { commSwitch } from "@/js/comm-switch";
 
 function response(data,sucFunc){
   sucFunc(data);
-  commSwitch.offSwitch('LoadingBar');
+  commSwitch.off('LoadingBar');
 }
 
 function onFail(error,failFunc){
   failFunc(error);
-  commSwitch.offSwitch('LoadingBar');
+  commSwitch.off('LoadingBar');
 }
 
 // function queryString(url,params){
@@ -33,7 +33,7 @@ export default{
     let param=null;
     if(!params)param={params};
     
-    commSwitch.onSwitch('LoadingBar'); 
+    commSwitch.on('LoadingBar'); 
     axios.get(url,param)
     .then((data)=>response(data,success))
     .catch((error)=>onFail(error,fail));
@@ -45,13 +45,13 @@ export default{
     //   .catch((error)=>onFail(error,fail));
   },
   post:function postApi(url,param,success,fail){
-    commSwitch.onSwitch('LoadingBar');
+    commSwitch.on('LoadingBar');
     axios.post(url,param)
       .then((data)=>response(data,success))
       .catch((error)=>onFail(error,fail));
   },
   put:function putApi(url,param,success,fail){
-    commSwitch.onSwitch('LoadingBar');
+    commSwitch.on('LoadingBar');
     axios.put(url,param)
       .then((data)=>response(data,success))
       .catch((error)=>onFail(error,fail));
@@ -59,7 +59,7 @@ export default{
   delete:function deleteApi(url,params,success,fail){
     let param={params}; 
 
-    commSwitch.onSwitch('LoadingBar');
+    commSwitch.on('LoadingBar');
     axios.delete(url,param)
       .then((data)=>response(data,success))
       .catch((error)=>onFail(error,fail));

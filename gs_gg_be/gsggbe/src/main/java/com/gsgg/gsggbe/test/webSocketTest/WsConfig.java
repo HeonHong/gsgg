@@ -12,9 +12,11 @@ public class WsConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/send");
+        config.enableSimpleBroker("/liveCheck");
     }
 
     @Override
+    //핸드쉐이크 CORS 해제
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/")
                 .setAllowedOriginPatterns("*")

@@ -1,4 +1,5 @@
 <template lang="">
+    <div class="main-container">
     <!-- header 및 logo -->
     <div class="header">
         <!-- <h1 @click="goToMainPage">GS.GG</h1> -->
@@ -8,7 +9,7 @@
     </div>
 
     <!-- 메인 탭 버튼 -->
-    <div class="tab-btn-grp">
+    <div class="tab-btn-grp" :style="{'grid-template-columns': gridTemplateColumns }">
         <TabButtons v-for="objBtn in arrTabBtns" :key="objBtn"
         :objBtn="objBtn" 
         @componentChg="componentChg($event)"/>
@@ -19,10 +20,7 @@
     <!-- <EpInput label='검색'></EpInput>
     <button @click="test">test button12</button>
     <button @click="test2">test button2</button>  -->
-    <!--  -->
 
-    <!-- 공통 버튼 컴포넌트 예시 -->
-    <EpButton :width="'500px'" :height="'50%'" :color="'#0FC2C0'" :label="'common button'"/>
 
     <!-- 컴포넌트 캐싱 -->
     <!-- 캐싱하지 않는 경우 routerView만 사용해도 무방  -->
@@ -33,7 +31,10 @@
         </keep-alive>
     </router-view>
     <LoadingBar/>
+    <AlertMdl/>
+</div>
 </template>
+
 <script>
 //import
 import axios from 'axios';
@@ -41,21 +42,21 @@ import TabButtons from '@/components/TabButtons.vue';
 import apiCall from "@/js/mixins/api/api-call.js"
 
 //공통 버튼 테스트
-import EpButton from '@/components/EpButton.vue';
 import LoadingBar from '@/components/LoadingBar.vue';
+import AlertMdl from '@/components/AlertMdl.vue';
 
 export default {
-    mixins:[apiCall],
+    mixins: [apiCall],
 
     //methods
     methods: {
         //헤더 GS.GG 클릭 시 Main 화면으로 이동
         goToMainPage() {
-            this.$router.push({ path: '/'});
+            this.$router.push({ path: '/' });
         },
 
         //메인 탭 클릭시 component change 이벤트
-        componentChg(idNum){
+        componentChg(idNum) {
             this.$router.push(this.arrTabBtns[idNum].pagePath);
         },
 
@@ -71,29 +72,34 @@ export default {
             axios.get('/api/test')
                 .then(res => console.log(res))
         },
-        btnFunc(){
+        btnFunc() {
             console.log("눌렸냐?");
         }
     },
 
     //components
     components: {
-        TabButtons: TabButtons,  //메인 탭
-        EpButton: EpButton,
+        TabButtons,  //메인 탭
         LoadingBar,
+        AlertMdl
     },
-
+    computed:{
+        gridTemplateColumns(){
+            return `repeat(${this.arrTabBtns.length},1fr)`
+        }
+    },
     //data
     data() {
         return {
             //메인 탭
             arrTabBtns: [
-                {id: 0, tabName: "tab1", pagePath: '/'},
-                {id: 1, tabName: "tab2"},
-                {id: 2, tabName: "tab3"},
-                {id: 3, tabName: "챔피언 소개", pagePath: '/characters'},
-                {id: 4, tabName: "TestPage", pagePath: '/test'},
-                {id: 5, tabName: "SocketTest", pagePath: '/sockettest'},
+                { id: 0, tabName: "tab1", pagePath: '/' },
+                { id: 1, tabName: "tab2" },
+                { id: 2, tabName: "tab3" },
+                { id: 3, tabName: "챔피언 소개", pagePath: '/characters' },
+                {id: 4, tabName: "갈등을 빚자", pagePath: '/userVs'},
+                { id: 4, tabName: "TestPage", pagePath: '/test' },
+                { id: 5, tabName: "SocketTest", pagePath: '/sockettest' },
 
             ],
         }
@@ -102,7 +108,7 @@ export default {
 </script>
 
 <style>
-:root{
+/* :root{
     --color1:#283959;
     --color2:#A6A9F5;
     --color3:#936CF5;
@@ -115,21 +121,14 @@ export default {
     background:var(--color1);
     color:white;
     cursor: pointer;
-    max-width: 100vw;
-
 }
 .search{
     display:flex;
     justify-content: flex-end;
 }    
 .tab-btn-grp{
-    /* width: fit-content; */
-    max-width: 100vw;
-    justify-content: space-around;
     display: flex;
     width: fit-content;
-}
-.logo-img{
-    display: flex;
-}
+} */
+
 </style>

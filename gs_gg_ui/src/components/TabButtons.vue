@@ -27,10 +27,9 @@ export default {
 
 <style scoped>
     .tabBtn {
-        flex: 1;
-        height: 30px;
+        height: 3rem;
         background-color: #fff; /* 초기 배경 색상 */
-        border: 1px solid #ccc; /* 테두리 스타일 및 색상 */
+        border: 0.1rem solid #ccc; /* 테두리 스타일 및 색상 */
         cursor: pointer;
         transition: background-color 0.3s; /* 호버 시 배경 색상 전환을 */
     }
