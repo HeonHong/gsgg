@@ -23,17 +23,13 @@
     cursor: pointer;
     max-width: 100vw;
 }
-.search {
-    display: flex;
-    justify-content: flex-end;
-}
-
-
-
-
-
-
 .tab-btn-grp {
     display: grid;
     /* grid-template-columns: repeat(auto-fill, 20%); */
+}
+
+.logo-img{
+    display: flex;
+    height:10rem;
+    width: 10rem;
 }

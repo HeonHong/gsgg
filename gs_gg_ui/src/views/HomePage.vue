@@ -2,7 +2,10 @@
     <div class="main-container">
     <!-- header 및 logo -->
     <div class="header">
-        <h1 @click="goToMainPage">GS.GG</h1>
+        <!-- <h1 @click="goToMainPage">GS.GG</h1> -->
+        <div class="logo-img">
+            <img src="@/assets/GS_GG Logo_NoBG.png" @click="goToMainPage"/>
+        </div>
     </div>
 
     <!-- 메인 탭 버튼 -->
@@ -18,8 +21,10 @@
     <button @click="test">test button12</button>
     <button @click="test2">test button2</button>  -->
 
+
     <!-- 컴포넌트 캐싱 -->
     <!-- 캐싱하지 않는 경우 routerView만 사용해도 무방  -->
+
     <router-view v-slot="{Component}">
         <keep-alive>
             <component :is="Component" ></component>
@@ -102,4 +107,27 @@ export default {
 </script>
 
 <style>
+/* :root{
+    --color1:#283959;
+    --color2:#A6A9F5;
+    --color3:#936CF5;
+    --color4:#699AF5;
+    --color5:#0FC2C0;
+}
+.header{
+    display: flex;
+    height:100px;
+    background:var(--color1);
+    color:white;
+    cursor: pointer;
+}
+.search{
+    display:flex;
+    justify-content: flex-end;
+}    
+.tab-btn-grp{
+    display: flex;
+    width: fit-content;
+} */
+
 </style>
