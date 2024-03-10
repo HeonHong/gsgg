@@ -12,17 +12,28 @@
     --color5: #0FC2C0;
     --main-font:'Helvetica';
     --sub-font:'SBAggroB';
-
+    font-size: 10px;
+    font-family: var(--main-font);
 }
 
 .header {
-    height: 100px;
+    height: 10rem;
     background: var(--color1);
     color: white;
     cursor: pointer;
+    max-width: 100vw;
 }
-
 .search {
     display: flex;
     justify-content: flex-end;
+}
+
+
+
+
+
+
+.tab-btn-grp {
+    display: grid;
+    /* grid-template-columns: repeat(auto-fill, 20%); */
 }

@@ -1,9 +1,48 @@
 <template lang="">
+
+        <input type="button" class="tabBtn" 
+            @click="componentChg(objBtn.id)" :value="objBtn.tabName">
+
+            <!-- <button @click="console.log(this.objBtn)">{{this.objBtn.tabName}}</button> -->
+</template>
+
+<script>
+import apiCall from "@/js/mixins/api/api-call.js"
+
+export default {
+    mixins:[apiCall],
+
+    methods: {
+        componentChg(idNum) {
+            this.pageIDNum = idNum;
+            this.$emit("componentChg", idNum);
+        }
+    },
+
+    props: {
+        objBtn: Object
+    },
+}
+</script>
+
+<style scoped>
+    .tabBtn {
+        height: 3rem;
+        background-color: #fff; /* 초기 배경 색상 */
+        border: 0.1rem solid #ccc; /* 테두리 스타일 및 색상 */
+        cursor: pointer;
+        transition: background-color 0.3s; /* 호버 시 배경 색상 전환을 */
+    }
+    .tabBtn:hover {
+        background-color: #ccc;
+    }
+</style>
+<!-- <template lang="">
     <div>
         <button class="tabBtn" 
             @click="componentChg(objBtn.id)">{{objBtn.tabName}}</button>
 
-            <!-- <button @click="console.log(this.objBtn)">{{this.objBtn.tabName}}</button> -->
+            <button @click="console.log(this.objBtn)">{{this.objBtn.tabName}}</button>
     </div>
 </template>
 
@@ -38,4 +77,4 @@ export default {
     .tabBtn:hover {
         background-color: #ccc;
     }
-</style>
+</style> -->

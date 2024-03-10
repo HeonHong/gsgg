@@ -1,5 +1,5 @@
 <template lang="">
-    <div>
+    <div class="ep-button">
         <button @click="btnClick" class="common-btn">{{this.label}}</button>
     </div>
 </template>
@@ -44,5 +44,8 @@ export default {
         height: var(--dynamic-height);
         background: var(--dynamic-color);
         font-family: var(--main-font);
+        /* border: none; */
+        border-radius: 5%;
     }
+
 </style>
