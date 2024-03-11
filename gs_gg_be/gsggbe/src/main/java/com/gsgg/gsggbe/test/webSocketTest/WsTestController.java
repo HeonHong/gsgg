@@ -1,15 +1,24 @@
 package com.gsgg.gsggbe.test.webSocketTest;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class WsTestController {
+
+    @Autowired
+    private final WsLiveNumDTO wsLiveNumDTO;
+    private int number=0;
+
+
 
     @MessageMapping("/receive")
     @SendTo("/send")
-    public WsTestDTO SocketHandler(WsTestDTO wsTestDTO){
+    public WsTestDTO SocketMessageHandler(WsTestDTO wsTestDTO){
 
         String userName=wsTestDTO.getUserName();
         String content=wsTestDTO.getContent();
@@ -18,13 +27,18 @@ public class WsTestController {
         return result;
     }
 
-    @MessageMapping("/sendLiveCheck")
-    @SendTo("/liveCheck")
-    public int SocketHandler(int liveNum){
-        System.out.println(liveNum);
-        liveNum++;
+    @MessageMapping("/liveCheck")
+    @SendTo("/live")
+    public int SocketLiveCheckHandler(int isExit){
+        if(isExit==0){
+
+            ++number;
+        }else{
+            --number;
+        }
 
 
-        return liveNum;
+        return number;
     }
+
 }

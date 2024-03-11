@@ -20,6 +20,12 @@ public class TestController {
 //        String testResponse = testService.test();
         return "test view";
     }
+    @GetMapping("/getTest")
+    public String getTestMethod() {
+        System.out.println("getTest");
+//        String testResponse = testService.test();
+        return "test view";
+    }
 
 //    @GetMapping("/api/test")
     public Map<String, Object> testMethod2() {
