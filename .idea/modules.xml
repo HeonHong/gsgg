@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/gsgg.iml" filepath="$PROJECT_DIR$/.idea/gsgg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gsggbe.iml" filepath="$PROJECT_DIR$/.idea/modules/gsggbe.iml" group="gsggbe" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gsggbe_main.iml" filepath="$PROJECT_DIR$/.idea/modules/gsggbe_main.iml" group="gsggbe" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gsggbe_test.iml" filepath="$PROJECT_DIR$/.idea/modules/gsggbe_test.iml" group="gsggbe" />
     </modules>
   </component>
 </project>

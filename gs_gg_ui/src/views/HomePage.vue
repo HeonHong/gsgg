@@ -94,13 +94,10 @@ export default {
             //메인 탭
             arrTabBtns: [
                 { id: 0, tabName: "tab1", pagePath: '/' },
-                { id: 1, tabName: "tab2" },
-                { id: 2, tabName: "tab3" },
-                { id: 3, tabName: "챔피언 소개", pagePath: '/characters' },
-                {id: 4, tabName: "갈등을 빚자", pagePath: '/userVs'},
-                { id: 4, tabName: "TestPage", pagePath: '/test' },
-                { id: 5, tabName: "SocketTest", pagePath: '/sockettest' },
-
+                { id: 1, tabName: "챔피언 소개", pagePath: '/characters' },
+                {id: 2, tabName: "갈등을 빚자", pagePath: '/userVs'},
+                { id: 3, tabName: "TestPage", pagePath: '/test' },
+                { id: 4, tabName: "SocketTest", pagePath: '/sockettest' },
             ],
         }
     }
