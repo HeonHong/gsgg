@@ -1,7 +1,6 @@
 <template>
     <div id="app">
-        <div>{{liveNum}}</div>
-        <input type="button" value="실시간 사용자 늘리기" @click="liveCheck">
+        <div>실시간 사용자 수 : {{liveNum}}</div>
         유저이름:
         <input v-model="userName" type="text">
         내용: <input v-model="message" type="text" @keyup="sendMessage">
@@ -28,7 +27,7 @@ export default {
     },
     created() {
         this.connect();
-        window.addEventListener('beforeunload',this.liveCheck(1));
+        window.addEventListener('beforeunload',this.liveCheck.bind(this,1));
     },
     methods: {
         connect() {
@@ -81,9 +80,13 @@ export default {
         }
     },
     mounted(){
+        
+    },
+    deactivated(){
     },
     beforeUnmount() {
-        this.liveCheck(1);
+        window.removeEventListener('beforeunload',this.liveCheck.bind(this,1));
+
     },
 }
 </script>

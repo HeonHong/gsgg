@@ -30,6 +30,7 @@ public class WsTestController {
     @MessageMapping("/liveCheck")
     @SendTo("/live")
     public int SocketLiveCheckHandler(int isExit){
+        System.out.println(isExit);
         if(isExit==0){
 
             ++number;
