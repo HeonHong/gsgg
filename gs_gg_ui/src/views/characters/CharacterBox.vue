@@ -29,9 +29,6 @@ export default {
       }
 
       apiCall.get(url, '', success, fail)
-
-      let url2 = '/api/test';
-      apiCall.get(url2, '', success, fail)
     }
 };
 </script>

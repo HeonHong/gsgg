@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.gsgg.characters.mapper.CrtMainMapper">
-    <select id="mbtest" resultType="java.util.HashMap">
+<mapper namespace="com.gsgg.gsggbe.mapper.characters.CrtMainMapper">
+    <select id="selectCrtInfos" resultType="java.util.HashMap">
         select * from test
     </select>
 </mapper>

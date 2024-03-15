@@ -1,10 +1,9 @@
-package com.gsgg.characters.controller;
+package com.gsgg.gsggbe.characters.controller;
 
-import com.gsgg.characters.service.CrtMainService;
+import com.gsgg.gsggbe.characters.service.CrtMainService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public class CrtMainController {
 
     @GetMapping("/api/getCrtInfos")
     public List<Map<String, Object>> getCrtInfos() {
-        log.info("getCrtInfos");
         return this.crtMainService.selectCrtInfos();
     }
 }

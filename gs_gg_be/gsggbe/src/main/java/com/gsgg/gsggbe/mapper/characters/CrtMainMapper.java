@@ -1,4 +1,4 @@
-package com.gsgg.characters.mapper;
+package com.gsgg.gsggbe.mapper.characters;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -7,6 +7,6 @@ import java.util.Map;
 
 @Mapper
 public interface CrtMainMapper {
-    List<Map<String, Object>> selectCrtInfos();
 
+    List<Map<String, Object>> selectCrtInfos();
 }
