@@ -38,12 +38,10 @@ export default {
   methods: {
     getSummonerByName() {
       if (!this.summonerName.trim()) return;
-      
-      // 소환사 정보 조회 API 호출
-      const url = `/api/lol/summoner`;
+  
       let param = { summonerName: this.summonerName };
       
-      this.getApi(url, param, this.success, this.fail);
+      this.getApi('/summoner', param, this.success, this.fail);
     },
     success(response) {
       console.log('API 호출 성공:', response);

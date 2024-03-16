@@ -1,4 +1,4 @@
-package com.gsgg.gsggbe.test.mbTest;
+package com.gsgg.records.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class LolApiController {
     }
 
     // 소환사 이름으로 소환사 정보를 조회하는 GET 메소드
-    @GetMapping("/api/lol/summoner")
+    @GetMapping("/summoner")
     public Mono<Map> getSummonerInfo(@RequestParam(value="summonerName") String summonerName) {
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
