@@ -17,17 +17,18 @@ export default {
     //mounted
     mounted() {
       let url = "/api/getCrtInfos";   //연결 url
-      // let param = "just in case"      //전달 인자
-      //api 연결 성공시 함수
-      let success = (data) => {
-          console.log(data)
+      let crtInfos = {};              //캐릭터 정보 배열
+      let success = (result) => {
+          crtInfos = result.data;     //결과값을 캐릭터 정보 배열에
+          
+          for(let info of crtInfos) {
+              console.log(info.name);
+          }
+          
       };
-
-      //api 연결 실패시 함수
       let fail = (data) => {
-          console.log('getCrtInfos', data);
-      }
-
+        console.log('fail', data);
+      };
       apiCall.get(url, '', success, fail)
     }
 };
