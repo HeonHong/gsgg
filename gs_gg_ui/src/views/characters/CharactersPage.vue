@@ -10,25 +10,27 @@
 </template>
 <script>
 import CharacterBox from './CharacterBox.vue';
-import apiCall from '@/js/mixins/api/api-call';
+// import apiCall from '@/js/mixins/api/api-call';
 export default {
-    setup() {
-        let url = "/api/test";  //연결 url
-        let param = "key"       //api 사용 param
+    //mounted
+    mounted() {
+        // let url = "/api/test";  //연결 url
+        // let param = "key"       //api 사용 param
 
-        //api 성공시 함수
-        let success = () => {
-            console.log('success');
-        };
+        // //api 성공시 함수
+        // let success = () => {
+        //     console.log('success');
+        // };
 
-        //api 실패시 함수
-        let fail = () => {
-            console.log('fail')
-        }
-        console.log(url, param, success, fail);
+        // //api 실패시 함수
+        // let fail = () => {
+        //     console.log('fail')
+        // }
 
-        apiCall.get(url, param, success, fail);
+        // apiCall.get(url, param, success, fail);
     },
+
+    //components
     components: {
         CharacterBox: CharacterBox,
     },

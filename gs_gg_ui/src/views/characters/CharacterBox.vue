@@ -12,23 +12,44 @@
   </div>
 </template>
 <script>
-export default {};
+import apiCall from '@/js/mixins/api/api-call';
+export default {
+    //mounted
+    mounted() {
+      let url = "/api/getCrtInfos";   //연결 url
+      let crtInfos = {};              //캐릭터 정보 배열
+      let success = (result) => {
+          crtInfos = result.data;     //결과값을 캐릭터 정보 배열에
+          
+          for(let info of crtInfos) {
+              console.log(info.name);
+          }
+          
+      };
+      let fail = (data) => {
+        console.log('fail', data);
+      };
+      apiCall.get(url, '', success, fail)
+    }
+};
 </script>
 <style>
 .window-div{
+    display: grid;
     width: 100%;
     height: 100%;
 }
 .outine-div {
-  width: 200px;
-  height: 250px;
+  display: grid;
+  width: 14.5vw;
+  height: 19.5vw;
   border: 1px solid black;
 }
 .portrait-div {
-  height: 70%;
+  height: 13vw;
 }
 #crt-desc-div {
-  height: 30%;
+  height: 5vw;
 }
 #crt-name {
   display: block;
