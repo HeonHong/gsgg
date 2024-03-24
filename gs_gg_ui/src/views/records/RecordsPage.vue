@@ -44,12 +44,23 @@ export default {
       this.getApi('/summoner', param, this.success, this.fail);
     },
     success(response) {
-      console.log('API 호출 성공:', response);
-      this.summonerInfo = response;
+      console.log('API 호출 성공:', response.data);
+      this.summonerInfo = response.data;
+      this.getMatchesByPuuid(this.summonerInfo.puuid);
     },
     fail(error) {
       console.error('API 호출 실패:', error.message);
       alert('API 호출에 실패했습니다.');
+    },
+
+    getMatchesByPuuid(puuid) {
+      let param = { puuid: puuid };
+
+      this.getApi('/matches', param, this.successMatches, this.fail);
+    },
+    successMatches(response) {
+      console.log('매치 정보 조회 성공:', response.data);
+      this.matchInfo = response.data; // 매치 정보를 저장
     },
   }
 }
