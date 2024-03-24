@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div>{{liveNum}}</div>
+        <div>실시간 사용자 수 : {{liveNum}}</div>
         유저이름:
         <input v-model="userName" type="text">
         내용: <input v-model="message" type="text" @keyup="sendMessage">
@@ -22,18 +22,18 @@ export default {
             userName: "",
             message: "",
             recvList: [],
-            liveNum:1,
+            liveNum:0,
         }
     },
     created() {
-        this.connect()
+        this.connect();
+        window.addEventListener('beforeunload',this.liveCheck.bind(this,1));
     },
     methods: {
         connect() {
             const serverURL = process.env.VUE_APP_API_BASE_URL;
             let socket = new SockJS(serverURL);
             this.stompClient = Stomp.over(socket);
-            // console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
             this.stompClient.connect(
                 {},
                 frame => {
@@ -43,10 +43,12 @@ export default {
                         console.log('구독으로 받은 메시지 입니다.', res.body);
                         this.recvList.push(JSON.parse(res.body))
                     });
-                    this.stompClient.subscribe("/liveCheck", res => {
-                        console.log('구독으로 받은 메시지 입니다.', res.body);
+                    this.stompClient.subscribe("/live", res => {
+                        console.log('구독으로 받은 live 메시지 입니다.', res.body);
                         this.liveNum=res.body;
                     });
+                    this.liveCheck(0);
+
                 },
                 error => {
                     console.log('소켓 연결 실패', error);
@@ -70,15 +72,21 @@ export default {
                 this.stompClient.send("/receive", JSON.stringify(msg), {});
             }
         },
-        liveCheck(liveNum){
+        liveCheck(isExit){
           if (this.stompClient && this.stompClient.connected) {
                 
-                this.stompClient.send("/sendLiveCheck", liveNum, {});
+                this.stompClient.send("/liveCheck", isExit, {});
             }
         }
     },
     mounted(){
-      this.liveCheck(++this.liveNum);
-    }
+        
+    },
+    deactivated(){
+    },
+    beforeUnmount() {
+        window.removeEventListener('beforeunload',this.liveCheck.bind(this,1));
+
+    },
 }
 </script>

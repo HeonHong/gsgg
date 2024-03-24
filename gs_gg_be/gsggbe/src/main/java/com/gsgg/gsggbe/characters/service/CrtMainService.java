@@ -38,12 +38,6 @@ public class CrtMainService {
                 result = result + line;
             }
 
-//            Gson gson = new Gson();
-//            Type type = new TypeToken<Map<String, Object>>(){}.getType();
-//            Map<String, Object> championData = gson.fromJson(result, type);
-//
-//            Object champions = championData.get("data");
-
             Gson gson = new Gson();
             // JSON 전체 구조를 Map으로 파싱
             Type type = new TypeToken<Map<String, Object>>() {
@@ -61,9 +55,7 @@ public class CrtMainService {
             // 결과 확인
             System.out.println(championList);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-//            log.error(e.getMessage());
-//            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
 
         return championList;

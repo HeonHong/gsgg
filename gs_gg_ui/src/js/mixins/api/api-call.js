@@ -31,8 +31,8 @@ function onFail(error,failFunc){
 export default{
   get:function getApi(url,params,success,fail){
     let param=null;
-    if(!params)param={params};
-    
+    if(params!=null)param={params};
+        
     commSwitch.on('LoadingBar'); 
     axios.get(url,param)
     .then((data)=>response(data,success))
