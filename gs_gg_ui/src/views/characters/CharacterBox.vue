@@ -1,36 +1,27 @@
 <template lang="">
   <div class="window-div">
-    <div class="outine-div">
+    <div class="outline-div">
       <div class="portrait-div">
 
       </div>
       <div id="crt-desc-div">
-        <div id="crt-name">character name</div>
+        <div id="crt-name" @click="logCrtInfos">character name</div>
         <div id="crt-main-line">main line: top, mid. bottom</div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import apiCall from '@/js/mixins/api/api-call';
 export default {
-    //mounted
-    mounted() {
-      let url = "/api/getCrtInfos";   //연결 url
-      let crtInfos = {};              //캐릭터 정보 배열
-      let success = (result) => {
-          crtInfos = result.data;     //결과값을 캐릭터 정보 배열에
-          
-          for(let info of crtInfos) {
-              console.log(info.name);
-          }
-          
-      };
-      let fail = (data) => {
-        console.log('fail', data);
-      };
-      apiCall.get(url, '', success, fail)
+  props: {
+      crtInfos: Array
+  },
+
+  methods: {
+    logCrtInfos() {
+      console.log(this.crtInfos)
     }
+  }
 };
 </script>
 <style>
@@ -39,7 +30,7 @@ export default {
     width: 100%;
     height: 100%;
 }
-.outine-div {
+.outline-div {
   display: grid;
   width: 14.5vw;
   height: 19.5vw;
