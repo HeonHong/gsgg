@@ -35,28 +35,33 @@ export default {
         let success = (result) => {
             this.crtInfos = result.data;    //결과값을 캐릭터 정보 배열에 저장
 
-            //페이징을 위한 수 세팅
-            let setPageNums = () => {
+            //페이징을 위한 수, 캐릭터 배열 세팅
+            let setPageNumsAndArrCrtInfos = () => {
                 let perPageNum  = 30;                                   //한 페이지에 display 될 캐릭터의 개수
                 let totNum      = this.crtInfos.length;                 //캐릭터 정보 배열 크기
                 let totPageNum  =  Math.ceil(totNum / perPageNum);      //필요 페이지 크기
 
                 this.pageNums   = totPageNum;
+                
+                //캐릭터 정보를 페이지 별로 나눔(30개씩)
+                let arrTmp = [];
 
                 for(let i=0; i < totNum; i++) {
-                    let arrTmp = [];
                     arrTmp.push(this.crtInfos[i]);
 
-                    if(i % 30 == 0) {
+
+                    if(arrTmp.length == perPageNum) {       //임시배열의 크기가 페이지당 캐릭터의 수와 같을 경우
                         this.arrCrtInfos.push(arrTmp);
                         arrTmp = [];
+
+                    } else if(i == totNum - 1) {            //마지막 페이지 캐릭터의 수가 30개 보다 작을 경우
+                        this.arrCrtInfos.push(arrTmp);
                     }
                 }
-
-                console.log(this.arrCrtInfos[2].length)
             }
 
-            setPageNums();
+            //페이징 세팅
+            setPageNumsAndArrCrtInfos();
         };
 
         let fail = (data) => {
@@ -76,23 +81,31 @@ export default {
     methods: {
         crtInfosChg(num) {
             console.log(num)
+        },
+
+        setArrCrtInfosPerPage() {
+
         }
     },
 }
 </script>
 <style>
-.out-div{
+.out-div {
     padding: 20px;
     height: 200vh;
 }
-#page-box{
+#page-box {
     display: flex;
-    border: 1px solid black;
+    font: 15px var(--main-font);
     justify-content: center;
+
 }
 .page-num-box {
     width: 5vh;
-    border: 1px solid red;
     text-align: center;
+}
+.page-num-box:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 </style>
