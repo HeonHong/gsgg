@@ -2,9 +2,12 @@
     <div class="main-container">
     <!-- header 및 logo -->
     <div class="header">
-        <!-- <h1 @click="goToMainPage">GS.GG</h1> -->
         <div class="logo-img">
             <img src="@/assets/GS_GG Logo_NoBG.png" @click="goToMainPage"/>
+        </div>
+        <div class="header-login">
+            <span @click="login">로그인</span>&nbsp;&nbsp;&nbsp;
+            <span>회원가입</span>&nbsp;&nbsp;
         </div>
     </div>
 
@@ -12,19 +15,11 @@
     <div class="tab-btn-grp" :style="{'grid-template-columns': gridTemplateColumns }">
         <TabButtons v-for="objBtn in arrTabBtns" :key="objBtn"
         :objBtn="objBtn" 
-        @componentChg="componentChg($event)"/>
+        @componentChg="componentChg"/>
     </div>
-
-
-    <!-- test 영역 테스트 후 삭제 예정-->
-    <!-- <EpInput label='검색'></EpInput>
-    <button @click="test">test button12</button>
-    <button @click="test2">test button2</button>  -->
-
 
     <!-- 컴포넌트 캐싱 -->
     <!-- 캐싱하지 않는 경우 routerView만 사용해도 무방  -->
-
     <router-view v-slot="{Component}">
         <keep-alive>
             <component :is="Component" ></component>
@@ -74,6 +69,9 @@ export default {
         },
         btnFunc() {
             console.log("눌렸냐?");
+        },
+        login(){
+            this.$router.push('/loginpage')
         }
     },
 
@@ -83,8 +81,8 @@ export default {
         LoadingBar,
         AlertMdl
     },
-    computed:{
-        gridTemplateColumns(){
+    computed: {
+        gridTemplateColumns() {
             return `repeat(${this.arrTabBtns.length},1fr)`
         }
     },
@@ -95,7 +93,7 @@ export default {
             arrTabBtns: [
                 { id: 0, tabName: "전적검색", pagePath: '/' },
                 { id: 1, tabName: "챔피언 소개", pagePath: '/characters' },
-                {id: 2, tabName: "갈등을 빚자", pagePath: '/userVs'},
+                { id: 2, tabName: "갈등을 빚자", pagePath: '/userVs' },
                 { id: 3, tabName: "TestPage", pagePath: '/test' },
                 { id: 4, tabName: "SocketTest", pagePath: '/sockettest' },
             ],
@@ -127,5 +125,4 @@ export default {
     display: flex;
     width: fit-content;
 } */
-
 </style>

@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "@/views/HomePage.vue";
-// import CharactersPage from "@/views/characters/CharactersPage.vue";
-// import RecordsPage from "@/views/records/RecordsPage.vue";
 import menus from "./menu/menus";
 
 

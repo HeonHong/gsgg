@@ -8,6 +8,7 @@
             <h3>유저이름: {{ item.userName }}</h3>
             <h3>내용: {{ item.content }}</h3>
         </div>
+        <!-- <EpButton label="로그인" @click="login"/> -->
     </div>
 </template>
 
@@ -16,7 +17,6 @@ import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
 export default {
-    name: 'App',
     data() {
         return {
             userName: "",
@@ -77,7 +77,7 @@ export default {
                 
                 this.stompClient.send("/liveCheck", isExit, {});
             }
-        }
+        },
     },
     mounted(){
         
@@ -85,8 +85,8 @@ export default {
     deactivated(){
     },
     beforeUnmount() {
+        //window 전역 객체라서 remove해주지 않으면 메모리 누수 발생
         window.removeEventListener('beforeunload',this.liveCheck.bind(this,1));
-
     },
 }
 </script>
