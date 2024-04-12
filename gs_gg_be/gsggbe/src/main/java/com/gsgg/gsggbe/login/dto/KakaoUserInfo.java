@@ -16,6 +16,8 @@ public class KakaoUserInfo {
 
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
+
+    private boolean isMember = false;
 }
 @Data
 class KakaoProperty{

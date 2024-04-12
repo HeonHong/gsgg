@@ -98,6 +98,13 @@ export default {
                 { id: 4, tabName: "SocketTest", pagePath: '/sockettest' },
             ],
         }
+    },
+    mounted(){
+        // if(Object.keys(this.$route.params).length!==0){
+
+            console.log(this.$route.params.id); 
+        // }
+
     }
 }
 </script>

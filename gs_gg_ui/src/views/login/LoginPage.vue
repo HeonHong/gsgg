@@ -18,11 +18,11 @@ export default {
             });
         },
         getKakaoToken(code){
-            console.log("토큰",code);
             this.postApi('/login/kakao/auth',code,this.succeedLogin,this.fail);
         },
-        succeedLogin(data){
-            this.$router.push({path:'/',params:data});
+        succeedLogin(res){
+            console.log("data안옴?",res.data);
+            this.$router.push({path:'/', params:res.data.id});
         },
         fail(err){
             console.log(err.message);
