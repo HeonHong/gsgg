@@ -1,3 +1,4 @@
+<!-- HomePage.vue -->
 <template lang="">
     <div class="main-container">
     <!-- header 및 logo -->
@@ -6,8 +7,15 @@
             <img src="@/assets/GS_GG Logo_NoBG.png" @click="goToMainPage"/>
         </div>
         <div class="header-login">
+            <div v-if="!isLoggedIn">
             <span @click="login">로그인</span>&nbsp;&nbsp;&nbsp;
             <span>회원가입</span>&nbsp;&nbsp;
+            </div>
+            <div v-if="isLoggedIn">
+            <img :src="profileImage"/>
+            <span>{{name}}</span>&nbsp;&nbsp;&nbsp;
+            <span @click="isLoggedIn=false">로그아웃</span>&nbsp;&nbsp;
+            </div>
         </div>
     </div>
 
@@ -35,6 +43,7 @@
 import axios from 'axios';
 import TabButtons from '@/components/TabButtons.vue';
 import apiCall from "@/js/mixins/api/api-call.js"
+import commonUtils from "@/js/common-utils.js"
 
 //공통 버튼 테스트
 import LoadingBar from '@/components/LoadingBar.vue';
@@ -42,14 +51,11 @@ import AlertMdl from '@/components/AlertMdl.vue';
 
 export default {
     mixins: [apiCall],
-
-    //methods
     methods: {
         //헤더 GS.GG 클릭 시 Main 화면으로 이동
         goToMainPage() {
             this.$router.push({ path: '/' });
         },
-
         //메인 탭 클릭시 component change 이벤트
         componentChg(idNum) {
             this.$router.push(this.arrTabBtns[idNum].pagePath);
@@ -68,9 +74,8 @@ export default {
                 .then(res => console.log(res))
         },
         btnFunc() {
-            console.log("눌렸냐?");
         },
-        login(){
+        login() {
             this.$router.push('/loginpage')
         }
     },
@@ -97,15 +102,23 @@ export default {
                 { id: 3, tabName: "TestPage", pagePath: '/test' },
                 { id: 4, tabName: "SocketTest", pagePath: '/sockettest' },
             ],
+            isLoggedIn:false,
+            name:'',
+            profileImage:'',
         }
     },
-    mounted(){
-        // if(Object.keys(this.$route.params).length!==0){
+    mounted() {
+        let kakaoInfo = localStorage.getItem('kakaoInfo');
+        console.log(kakaoInfo);
+        if(!commonUtils.isNull(kakaoInfo)) {
+            let userInfo=JSON.parse(kakaoInfo);
+            this.isLoggedIn=true;
+            this.name=userInfo.properties.nickname;
+            this.profileImage=userInfo.properties.profile_image;
+        }
+        // localStorage.clear();
+    },
 
-            console.log(this.$route.params.id); 
-        // }
-
-    }
 }
 </script>
 

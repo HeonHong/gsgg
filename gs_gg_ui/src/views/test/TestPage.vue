@@ -9,27 +9,27 @@
         </div>
         <div class="grid-default">
             로딩 기능 샘플
-            <EpButton :width="'30rem'" :height="'10rem'" :color="'var(--color1)'" :label="'로딩 3초'" @btnClick="loading"/>
+            <EpButton :width="'7rem'" :height="'4rem'" :color="'var(--color1)'" :label="'로딩 3초'" @click="loading"/>
         </div>
         <div class="grid-default">
             alert 모달 샘플(구현중)
-            <EpButton :width="'30rem'" :height="'10rem'" :color="'var(--color2)'" :label="'Alert 모달'" @btnClick="alert"/>
+            <EpButton :width="'7rem'" :height="'4rem'" :color="'var(--color2)'" :fontColor="'var(--color1)'" :label="'Alert 모달'" @btnClick="alert"/>
         </div>
         <div>
 
-            <EpButton :width="'30rem'" :height="'10rem'" :color="'var(--color3)'" :label="'common button'" @btnClick="test"/>
+            <EpButton :width="'7rem'" :height="'4rem'" :color="'var(--color3)'" :label="'common button'" @btnClick="test"/>
         </div>
         <div>
 
-            <EpButton :width="'30rem'" :height="'10rem'" :color="'var(--color4)'" :label="'common button'" @btnClick="test"/>
+            <EpButton :width="'7rem'" :height="'4rem'" :color="'var(--color4)'" :label="'common button'" @btnClick="test"/>
         </div>
         <div>
 
-            <EpButton :width="'30rem'" :height="'10rem'" :color="'var(--color5)'" :label="'common button'" @btnClick="test"/>
+            <EpButton :width="'7rem'" :height="'4rem'" :color="'var(--color5)'" :label="'common button'" @btnClick="test"/>
         </div>
-        <EpButton :width="'30rem'" :height="'10rem'" :color="'var(--color2)'" :label="'common button'" @btnClick="test"/>
-        <EpButton :width="'30rem'" :height="'10rem'" :color="'var(--color3)'" :label="'common button'" @btnClick="test"/>
-        <EpButton :width="'30rem'" :height="'10rem'" :color="'var(--color4)'" :label="'common button'" @btnClick="test"/>
+        <EpButton :width="'10rem'" :height="'10rem'" :color="'var(--color2)'" :label="'common button'" @btnClick="test"/>
+        <EpButton :width="'10rem'" :height="'10rem'" :color="'var(--color3)'" :label="'common button'" @btnClick="test"/>
+        <EpButton :width="'10rem'" :height="'10rem'"  :label="'common button'" @btnClick="test"/>
 
     </div>
 </template>

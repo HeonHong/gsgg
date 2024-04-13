@@ -21,8 +21,10 @@ export default {
             this.postApi('/login/kakao/auth',code,this.succeedLogin,this.fail);
         },
         succeedLogin(res){
-            console.log("data안옴?",res.data);
-            this.$router.push({path:'/', params:res.data.id});
+            //localStorage 저장 시, 문자열들로 저장됨.
+            //res.data 그대로 저장하면 [object Object]로 저장되니까 조심할 것!
+            localStorage.setItem('kakaoInfo',JSON.stringify(res.data));
+            this.$router.push({path:'/'});
         },
         fail(err){
             console.log(err.message);
@@ -32,8 +34,6 @@ export default {
         if(window.location.search.includes('code')){
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
-            console.log(code);
-
             this.getKakaoToken(code);
         }
     }

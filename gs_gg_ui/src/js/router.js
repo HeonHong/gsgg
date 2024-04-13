@@ -20,6 +20,7 @@ const routes = [
     path: "/",
     name: "/",
     component: HomePage,
+    props:true,
     children: mainRoutes, // Hompage 주소 '/'를 고정값으로 가지고 있는다
   },
 ];
