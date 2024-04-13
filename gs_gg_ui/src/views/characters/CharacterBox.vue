@@ -2,11 +2,11 @@
   <div class="window-div">
     <div class="outline-div">
       <div class="portrait-div">
-
+        <img class="crt-img" :src="require(`@/assets/champion_img/${crtInfos.image.full}`)">
       </div>
       <div id="crt-desc-div">
-        <div id="crt-name" @click="logCrtInfos">character name</div>
-        <div id="crt-main-line">main line: top, mid. bottom</div>
+        <div id="crt-name" @click="logCrtInfos">{{crtInfos.name}}</div>
+        <!-- <div id="crt-main-line">main line: top, mid. bottom</div> -->
       </div>
     </div>
   </div>
@@ -14,7 +14,7 @@
 <script>
 export default {
   props: {
-      crtInfos: Array
+      crtInfos: Object
   },
 
   methods: {
@@ -33,7 +33,8 @@ export default {
 .outline-div {
   display: grid;
   width: 14.5vw;
-  height: 19.5vw;
+  height: 16.5vw;
+  align-content: center;
   border: 1px solid black;
 }
 .portrait-div {
@@ -43,14 +44,15 @@ export default {
   height: 5vw;
 }
 #crt-name {
-  display: block;
-  text-align: center;
-  align-content: center;
-  height: 50%;
+  display: flex;
+  font: var(--main-font);
+  font-size: 18px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
-#crt-main-line {
-  text-align: center;
-  align-content: center;
-  height: 50%;
+.crt-img {
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -1,8 +1,7 @@
 <template lang="">
     <div class="out-div">
-        캐릭터 소개 페이지
-        <div>
-            <CharacterBox :crtInfos="crtInfos"/>
+        <div id="crt-box" v-for="data, i in crtInfosProps" :key="i">
+            <CharacterBox :crt-infos="data" :key="selectedIndex"/>
         </div>
     </div>
     <div>
@@ -22,9 +21,11 @@ export default {
     //data
     data() {
         return {
-            crtInfos    : null,         //캐릭터 정보 배열
-            pageNums    : 0,            //총 페이지 크기
-            arrCrtInfos : [],           //30개로 나눈 캐릭터 정보 배열
+            crtInfos        : null,         //캐릭터 정보 배열
+            pageNums        : 0,            //총 페이지 크기
+            arrCrtInfos     : [],           //30개로 나눈 캐릭터 정보 배열
+            crtInfosProps   : [],
+            selectedIndex   : 0,
         }
     },
     
@@ -35,33 +36,12 @@ export default {
         let success = (result) => {
             this.crtInfos = result.data;    //결과값을 캐릭터 정보 배열에 저장
 
-            //페이징을 위한 수, 캐릭터 배열 세팅
-            let setPageNumsAndArrCrtInfos = () => {
-                let perPageNum  = 30;                                   //한 페이지에 display 될 캐릭터의 개수
-                let totNum      = this.crtInfos.length;                 //캐릭터 정보 배열 크기
-                let totPageNum  =  Math.ceil(totNum / perPageNum);      //필요 페이지 크기
-
-                this.pageNums   = totPageNum;
-                
-                //캐릭터 정보를 페이지 별로 나눔(30개씩)
-                let arrTmp = [];
-
-                for(let i=0; i < totNum; i++) {
-                    arrTmp.push(this.crtInfos[i]);
-
-
-                    if(arrTmp.length == perPageNum) {       //임시배열의 크기가 페이지당 캐릭터의 수와 같을 경우
-                        this.arrCrtInfos.push(arrTmp);
-                        arrTmp = [];
-
-                    } else if(i == totNum - 1) {            //마지막 페이지 캐릭터의 수가 30개 보다 작을 경우
-                        this.arrCrtInfos.push(arrTmp);
-                    }
-                }
-            }
-
             //페이징 세팅
-            setPageNumsAndArrCrtInfos();
+            this.setPageNumsAndArrCrtInfos();
+
+            //props 전달을 위한 배열 초기값 설정
+            this.crtInfosProps = this.arrCrtInfos[0];
+
         };
 
         let fail = (data) => {
@@ -80,19 +60,46 @@ export default {
     //methods
     methods: {
         crtInfosChg(num) {
-            console.log(num)
+            this.selectedIndex = num-1;
+            this.crtInfosProps = [...this.arrCrtInfos[this.selectedIndex]]  //페이지 이동시 props 전달을 위한 새로운 배열 생성
+            window.scrollTo(0,0);   //스크롤 맨 위로 이동
         },
 
-        setArrCrtInfosPerPage() {
+        //페이징을 위한 수, 캐릭터 배열 세팅
+        setPageNumsAndArrCrtInfos() {
+            let perPageNum  = 30;                                   //한 페이지에 display 될 캐릭터의 개수
+            let totNum      = this.crtInfos.length;                 //캐릭터 정보 배열 크기
+            let totPageNum  =  Math.ceil(totNum / perPageNum);      //필요 페이지 크기
 
+            this.pageNums   = totPageNum;
+            
+            //캐릭터 정보를 페이지 별로 나눔(30개씩)
+            let arrTmp = [];
+
+            for(let i=0; i < totNum; i++) {
+                arrTmp.push(this.crtInfos[i]);
+
+
+                if(arrTmp.length == perPageNum) {       //임시배열의 크기가 페이지당 캐릭터의 수와 같을 경우
+                    this.arrCrtInfos.push(arrTmp);
+                    arrTmp = [];
+
+                } else if(i == totNum - 1) {            //마지막 페이지 캐릭터의 수가 30개 보다 작을 경우
+                    this.arrCrtInfos.push(arrTmp);
+                }
+            }
         }
     },
 }
 </script>
 <style>
 .out-div {
+    display: grid;
     padding: 20px;
-    height: 200vh;
+    grid-template-columns: repeat(5, 1fr);
+}
+#crt-box {
+    margin-bottom: 5vh;
 }
 #page-box {
     display: flex;
