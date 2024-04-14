@@ -1,8 +1,10 @@
 <template lang="">
     <div class="out-div">
-        <nav>
-            <CharacterSortBar/>
-        </nav>
+        <div id="sort-nav">
+            <nav>
+                <CharacterSortBar/>
+            </nav>
+        </div>
         <div id="crt-box-outline">
             <div id="crt-box" v-for="data, i in crtInfosProps" :key="i">
                 <CharacterBox :crt-infos="data" :key="selectedIndex"/>
