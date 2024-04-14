@@ -24,6 +24,7 @@
 body {
     width: 100%;
     height: 100%;
+    /* 반응형 할 거면 풀기 */
     min-width: 136rem;
 }
 .header {
