@@ -34,7 +34,6 @@
         </keep-alive>
     </router-view>
     <LoadingBar/>
-    <AlertMdl/>
 </div>
 </template>
 
@@ -47,7 +46,6 @@ import commonUtils from "@/js/common-utils.js"
 
 //공통 버튼 테스트
 import LoadingBar from '@/components/LoadingBar.vue';
-import AlertMdl from '@/components/AlertMdl.vue';
 
 export default {
     mixins: [apiCall],
@@ -84,7 +82,6 @@ export default {
     components: {
         TabButtons,  //메인 탭
         LoadingBar,
-        AlertMdl
     },
     computed: {
         gridTemplateColumns() {
@@ -102,19 +99,19 @@ export default {
                 { id: 3, tabName: "TestPage", pagePath: '/test' },
                 { id: 4, tabName: "SocketTest", pagePath: '/sockettest' },
             ],
-            isLoggedIn:false,
-            name:'',
-            profileImage:'',
+            isLoggedIn: false,
+            name: '',
+            profileImage: '',
         }
     },
     mounted() {
         let kakaoInfo = localStorage.getItem('kakaoInfo');
         console.log(kakaoInfo);
-        if(!commonUtils.isNull(kakaoInfo)) {
-            let userInfo=JSON.parse(kakaoInfo);
-            this.isLoggedIn=true;
-            this.name=userInfo.properties.nickname;
-            this.profileImage=userInfo.properties.profile_image;
+        if (!commonUtils.isNull(kakaoInfo)) {
+            let userInfo = JSON.parse(kakaoInfo);
+            this.isLoggedIn = true;
+            this.name = userInfo.properties.nickname;
+            this.profileImage = userInfo.properties.profile_image;
         }
         // localStorage.clear();
     },
