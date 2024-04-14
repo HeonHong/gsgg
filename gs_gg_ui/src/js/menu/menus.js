@@ -31,7 +31,13 @@ const menus = [
     name: "SocketTest",
     componentPath: "test/SocketTest",
 
+  },
+  {
+    path: "loginpage",
+    name: "LoginPage",
+    componentPath: "login/LoginPage",
   }
+
 ];
 
 export default menus;

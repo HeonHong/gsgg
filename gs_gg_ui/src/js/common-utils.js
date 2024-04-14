@@ -14,7 +14,10 @@ export default {
     if(target == '') {
       return true;
     }
-
+    
+    if(target == {}){
+      return true
+    }
     return false;
   },
 
