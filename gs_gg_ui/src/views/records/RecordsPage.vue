@@ -33,6 +33,7 @@ export default {
     return {
       summonerName: '',
       summonerInfo: null,
+      matchInfo: [],
     };
   },
   methods: {
@@ -41,26 +42,33 @@ export default {
   
       let param = { summonerName: this.summonerName };
       
-      this.getApi('/summoner', param, this.success, this.fail);
+      this.getApi('/summoner', param, this.successSummoner, this.fail);
     },
-    success(response) {
-      console.log('API 호출 성공:', response.data);
+    successSummoner(response) {
+      console.log('소환사 정보 조회 성공:', response.data);
       this.summonerInfo = response.data;
       this.getMatchesByPuuid(this.summonerInfo.puuid);
+    },
+    getMatchesByPuuid(puuid) {
+      let param = { puuid: puuid };
+      this.getApi('/matches', param, this.successMatches, this.fail);
+    },
+    successMatches(response) {
+    console.log('매치 ID 목록 조회 성공:', response.data);
+    this.getMatchDetails(response.data); // 전체 ID 목록을 한 번에 전달
+    },
+    getMatchDetails(matchIds) {
+      // 쿼리 파라미터로 matchIds를 전달하기 위해 URL을 조합
+      const queryString = matchIds.map(id => `matchIds=${id}`).join('&');
+      this.getApi(`/matches/details?${queryString}`, {}, this.successMatchDetails, this.fail);
+    },
+    successMatchDetails(response) {
+      console.log('매치 상세 정보 조회 성공:', response.data);
+      this.matchInfo = response.data; // 전체 데이터를 배열에 저장
     },
     fail(error) {
       console.error('API 호출 실패:', error.message);
       alert('API 호출에 실패했습니다.');
-    },
-
-    getMatchesByPuuid(puuid) {
-      let param = { puuid: puuid };
-
-      this.getApi('/matches', param, this.successMatches, this.fail);
-    },
-    successMatches(response) {
-      console.log('매치 정보 조회 성공:', response.data);
-      this.matchInfo = response.data; // 매치 정보를 저장
     },
   }
 }
