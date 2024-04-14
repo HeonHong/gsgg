@@ -32,13 +32,14 @@ body {
     background: var(--color1);
     color: white;
     cursor: pointer;
-    min-width: 100vw;
+    /* min-width: 100vw; */
     display: grid;
     grid-template-columns:repeat(3,1fr) ;
     grid-template-rows: repeat(5,1fr);
 }
 .tab-btn-grp {
     display: grid;
+    width: 100%;
     /* grid-template-columns: repeat(auto-fill, 20%); */
 }
 .logo-img{
