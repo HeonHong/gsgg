@@ -33,7 +33,7 @@ export default {
   width: 13rem;
   height: 19rem;
   align-content: center;
-  border: 0.2rem solid var(--color1);
+  border: 0.2rem solid var(--color3);
 }
 .portrait-div {
   height: 65%;
@@ -41,7 +41,7 @@ export default {
 #crt-desc-div {
   height: 35%;
   font: var(--main-font);
-  font-size: 1.8rem;
+  font-size: 1.5rem;
 }
 #crt-name {
   display: flex;

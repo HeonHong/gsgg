@@ -1,7 +1,12 @@
 <template lang="">
     <div class="out-div">
-        <div id="crt-box" v-for="data, i in crtInfosProps" :key="i">
-            <CharacterBox :crt-infos="data" :key="selectedIndex"/>
+        <nav>
+            <CharacterSortBar/>
+        </nav>
+        <div id="crt-box-outline">
+            <div id="crt-box" v-for="data, i in crtInfosProps" :key="i">
+                <CharacterBox :crt-infos="data" :key="selectedIndex"/>
+            </div>
         </div>
     </div>
     <div>
@@ -15,8 +20,10 @@
     </div>
 </template>
 <script>
-import CharacterBox from './CharacterBox.vue';
-import apiCall from '@/js/mixins/api/api-call';
+import CharacterBox from './CharacterBox.vue';              //캐립터 정보가 담긴 box component
+import CharacterSortBar from './CharacterSortBar.vue';      //검색 조건을 조정할 수 있는 바
+import apiCall from '@/js/mixins/api/api-call';             //서버 통신 api-call
+import '@/css/charactersStyle/CharacterPage.css';           //css 파일
 export default {
     //data
     data() {
@@ -55,6 +62,7 @@ export default {
     //components
     components: {
         CharacterBox: CharacterBox,
+        CharacterSortBar: CharacterSortBar,
     },
 
     //methods
@@ -92,28 +100,4 @@ export default {
 }
 </script>
 <style>
-.out-div {
-    display: grid;
-    padding: 20px;
-    grid-template-columns: repeat(5, 1fr);
-    justify-content: center;
-    justify-items: center;
-}
-#crt-box {
-    margin-bottom: 5vh;
-}
-#page-box {
-    display: flex;
-    font: 15px var(--main-font);
-    justify-content: center;
-
-}
-.page-num-box {
-    width: 1.4rem;
-    text-align: center;
-}
-.page-num-box:hover {
-    cursor: pointer;
-    text-decoration: underline;
-}
 </style>
