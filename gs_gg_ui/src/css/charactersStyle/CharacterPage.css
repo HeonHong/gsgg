@@ -1,0 +1,28 @@
+.out-div {
+    /* display: grid; */
+    padding: 20px;
+    /* grid-template-columns: repeat(6, 1fr); */
+    justify-content: center;
+    justify-items: center;
+}
+#crt-box-outline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+#crt-box {
+    margin-bottom: 2.5rem;
+}
+#page-box {
+    display: flex;
+    font: 15px var(--main-font);
+    justify-content: center;
+
+}
+.page-num-box {
+    width: 1.4rem;
+    text-align: center;
+}
+.page-num-box:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
