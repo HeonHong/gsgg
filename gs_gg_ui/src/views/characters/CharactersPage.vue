@@ -79,7 +79,6 @@ export default {
             for(let i=0; i < totNum; i++) {
                 arrTmp.push(this.crtInfos[i]);
 
-
                 if(arrTmp.length == perPageNum) {       //임시배열의 크기가 페이지당 캐릭터의 수와 같을 경우
                     this.arrCrtInfos.push(arrTmp);
                     arrTmp = [];
@@ -97,6 +96,8 @@ export default {
     display: grid;
     padding: 20px;
     grid-template-columns: repeat(5, 1fr);
+    justify-content: center;
+    justify-items: center;
 }
 #crt-box {
     margin-bottom: 5vh;
@@ -108,7 +109,7 @@ export default {
 
 }
 .page-num-box {
-    width: 5vh;
+    width: 1.4rem;
     text-align: center;
 }
 .page-num-box:hover {
