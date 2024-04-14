@@ -120,26 +120,4 @@ export default {
 </script>
 
 <style>
-/* :root{
-    --color1:#283959;
-    --color2:#A6A9F5;
-    --color3:#936CF5;
-    --color4:#699AF5;
-    --color5:#0FC2C0;
-}
-.header{
-    display: flex;
-    height:100px;
-    background:var(--color1);
-    color:white;
-    cursor: pointer;
-}
-.search{
-    display:flex;
-    justify-content: flex-end;
-}    
-.tab-btn-grp{
-    display: flex;
-    width: fit-content;
-} */
 </style>
