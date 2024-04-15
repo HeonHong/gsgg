@@ -6,4 +6,7 @@
     <select id="isMember" parameterType="String" resultType="int">
         select count(a.kakao_id) from member a where a.kakao_id = #{id}
     </select>
+    <select id="findUser" parameterType="String" resultType="com.gsgg.gsggbe.login.dto.UserDTO">
+        select * from user where username = #{username}
+    </select>
 </mapper>
