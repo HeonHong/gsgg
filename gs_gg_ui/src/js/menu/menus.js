@@ -4,12 +4,7 @@ const menus = [
     name: "ErrorPage",
     componentPath: "ErrorPage",
   },
-  {
-    path: "test",
-    name: "TestPage",
-    componentPath: "test/TestPage",
-  },
-  // 케릭터 소개 페이지
+  // 캐릭터 소개 페이지
   {
     path: "characters",
     name: "CharactersPage",
@@ -20,6 +15,29 @@ const menus = [
     name: "RecordsPage",//컴포넌트 이름
     componentPath: "records/RecordsPage",//실제 주소
   },
+  {
+    path: "userVs",
+    name: "UserVsPage",
+    componentPath: "uservs/UserVsPage",
+  },
+  // 테스트 페이지 관련
+  {
+    path: "test",
+    name: "TestPage",
+    componentPath: "test/TestPage",
+  },
+  {
+    path: "sockettest",
+    name: "SocketTest",
+    componentPath: "test/SocketTest",
+
+  },
+  {
+    path: "loginpage",
+    name: "LoginPage",
+    componentPath: "login/LoginPage",
+  }
+
 ];
 
 export default menus;

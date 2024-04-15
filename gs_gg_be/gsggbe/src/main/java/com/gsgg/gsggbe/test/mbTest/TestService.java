@@ -12,7 +12,6 @@ public class TestService {
     TestMapper testMapper;
     public String test() {
         List<String> testResponse = testMapper.selectTest();
-        System.out.println(testResponse);
         return null;
     }
 }

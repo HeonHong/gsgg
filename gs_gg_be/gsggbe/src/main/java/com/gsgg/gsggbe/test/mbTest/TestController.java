@@ -16,7 +16,14 @@ public class TestController {
 
     @GetMapping("/api")
     public String testMethod(@RequestParam(value="test") String test) {
-        String testResponse = testService.test();
+        System.out.println("getTest"+test);
+//        String testResponse = testService.test();
+        return "test view";
+    }
+    @GetMapping("/getTest")
+    public String getTestMethod() {
+        System.out.println("getTest");
+//        String testResponse = testService.test();
         return "test view";
     }
 

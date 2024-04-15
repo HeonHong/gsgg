@@ -56,14 +56,14 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width:100px;
-    height:100px;
+    width: 10rem;
+    height: 10rem;
     /* transform: translate(-50%, -50%); */
     text-align: center;
-    line-height:100px;
+    line-height:10rem;
 }
 .loading-bar-shape{
-    border: 3px solid;
+    border: 0.3rem solid;
     border-color:  rgba(1,1,1,0.8) rgba(0,0,0,0);
     border-radius: 100%;
     animation: rotate-shape 3s infinite;
@@ -73,6 +73,7 @@
 .loading-bar-text{
     animation:text-opacity 3s infinite;
 }
+
 
 
 @keyframes rotate-shape{
