@@ -15,7 +15,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/login/kakao/auth")
+    @PostMapping("/kakao/auth")
     public KakaoUserInfo KakaoAuth(@RequestBody String code) {
         boolean isMember = false;
         if (code.equals(null)) {
@@ -23,7 +23,6 @@ public class LoginController {
         }
         String accessToken = loginService.getToken(code);
         KakaoUserInfo userInfo = loginService.getMebrInfo(accessToken);
-        log.info("제대로 가져 옴? {}",userInfo);
         return userInfo;
     }
 }
