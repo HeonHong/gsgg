@@ -4,6 +4,6 @@
 
 <mapper namespace="com.gsgg.gsggbe.mapper.characters.CrtMainMapper">
     <select id="selectCrtInfos" resultType="java.util.HashMap">
-        select * from dual
+        select * from user
     </select>
 </mapper>

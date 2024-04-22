@@ -53,7 +53,7 @@ public class CrtMainService {
             championList = new ArrayList<>(data.values());
 
             // 결과 확인
-//            System.out.println(championList);
+            System.out.println(championList);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
