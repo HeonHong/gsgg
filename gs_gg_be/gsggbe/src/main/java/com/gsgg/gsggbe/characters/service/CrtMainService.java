@@ -58,6 +58,9 @@ public class CrtMainService {
             log.error(e.getMessage());
         }
 
+        List<Map<String, Object>> result = this.crtMainMapper.selectCrtInfos();
+        log.info("result={}", result);
+
         return championList;
     }
 }
