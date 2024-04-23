@@ -6,4 +6,18 @@
     <select id="selectCrtInfos" resultType="java.util.HashMap">
         select * from user
     </select>
+
+    <insert id="mergeCrtinfos" parameterType="java.util.ArrayList">
+        INSERT INTO TEST_CRT
+        (
+            COL_1
+            , COL_2
+            , COL_3
+        ) VALUES (
+            #{key}
+            , #{name}
+            , SYSDATE()
+        )
+
+    </insert>
 </mapper>

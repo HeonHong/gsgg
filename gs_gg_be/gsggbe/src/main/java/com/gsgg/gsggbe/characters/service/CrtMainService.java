@@ -53,13 +53,16 @@ public class CrtMainService {
             championList = new ArrayList<>(data.values());
 
             // 결과 확인
-            System.out.println(championList);
+//            System.out.println(championList.get(0));
+            log.info("result=========================================\n"+championList.get(0));
+
         } catch (Exception e) {
             log.error(e.getMessage());
         }
 
-        List<Map<String, Object>> result = this.crtMainMapper.selectCrtInfos();
-        log.info("result={}", result);
+        championList.forEach(this.crtMainMapper::mergeCrtinfos);
+//        List<Map<String, Object>> result = this.crtMainMapper.selectCrtInfos();
+//        log.info("result={}", result);
 
         return championList;
     }

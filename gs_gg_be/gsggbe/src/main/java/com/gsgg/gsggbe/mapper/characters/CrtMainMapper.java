@@ -9,4 +9,6 @@ import java.util.Map;
 public interface CrtMainMapper {
 
     List<Map<String, Object>> selectCrtInfos();
+
+    void mergeCrtinfos(Map<String, Object> championList);
 }
