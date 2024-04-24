@@ -15,7 +15,7 @@ public class SchedulerJob {
     private final CrtMainService crtMainService;
 
 
-    @Scheduled(fixedRate = 50000)
+    @Scheduled(fixedRate = 1000000)
     public void setCrtInfoToDB() {
         crtMainService.selectCrtInfos();
     }
