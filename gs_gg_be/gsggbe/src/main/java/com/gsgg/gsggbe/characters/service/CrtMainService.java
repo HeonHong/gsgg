@@ -25,7 +25,11 @@ public class CrtMainService {
 
     private final CrtMainMapper crtMainMapper;
 
-    public List<Map<String, Object>> selectCrtInfos() {
+    /**
+     * 2024-04-26
+     * API를 통해 캐릭터 정보를 수신
+     */
+    public void selectCrtInfos() {
 
         List<Map<String, Object>> championList = new ArrayList<>();
 
@@ -66,19 +70,22 @@ public class CrtMainService {
         }
 
         //TB_CHARACTER 테이블 저장 데이터 세팅
-        List<Map<String, Object>> crtBasicInfo = this.setDBCrt(championList);
+        List<Map<String, Object>> crtBasicInfo = this.setCrtBasicInfo(championList);
         //CRT_BASIC 테이블 저장
         crtBasicInfo.forEach(this.crtMainMapper::mergeCrtBasicInfo);
 
         System.out.println(crtBasicInfo);
-
-
-
-        return championList;
     }
 
-    //TB_CHARACTER 테이블 저장 데이터 세팅
-    private List<Map<String, Object>> setDBCrt(List<Map<String, Object>> params) {
+    /**
+     * 2024-04-26
+     * TB_CRT_BASIC 테이블 저장 데이터 세팅
+     * API를 통해 받아온 데이터를 TB_CRT_BASIC 테이블 저장을 위해 가공
+     *
+     * @param params List<Map<String, Object>>
+     * @return List<Map<String, Object>>
+     */
+    private List<Map<String, Object>> setCrtBasicInfo(List<Map<String, Object>> params) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         params.forEach(data -> {
