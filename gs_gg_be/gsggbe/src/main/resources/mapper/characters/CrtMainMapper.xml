@@ -7,30 +7,17 @@
         select * from user
     </select>
 
-    <insert id="mergeCrtinfos" parameterType="java.util.ArrayList">
-        INSERT INTO TEST_CRT
-        (
-            COL_1
-            , COL_2
-            , COL_3
-        ) VALUES (
-            #{key}
-            , #{name}
-            , SYSDATE()
-        )
-
-    </insert>
-
-
     <insert id="mergeCrtBasicInfo">
-        INSERT INTO TB_CHARACTER (
+        INSERT INTO TB_CRT_BASIC (
             CRT_ID
-            , NAME
+            , KOR_NAME
+            , ENG_NAME
             , CREATE_DATE
             , MODIFIED_DATE
         ) VALUES (
             #{key}
             , #{kor_name}
+            , #{eng_name}
             , SYSDATE()
             , SYSDATE()
         )

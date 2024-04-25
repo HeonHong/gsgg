@@ -58,15 +58,8 @@ public class CrtMainService {
 
             //이름순 정렬 및 리스트 저장
             championList = tmpList.stream()
-                            .sorted(Comparator.comparing(crt -> crt.get("name").toString()))
+                                    .sorted(Comparator.comparing(crt -> crt.get("name").toString()))
                                     .toList();
-
-
-
-            // 결과 확인
-//            championList.forEach(crt -> {
-//                System.out.println(crt.get("name").toString());
-//            });
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -74,17 +67,12 @@ public class CrtMainService {
 
         //TB_CHARACTER 테이블 저장 데이터 세팅
         List<Map<String, Object>> crtBasicInfo = this.setDBCrt(championList);
+        //CRT_BASIC 테이블 저장
+        crtBasicInfo.forEach(this.crtMainMapper::mergeCrtBasicInfo);
 
         System.out.println(crtBasicInfo);
 
-        crtBasicInfo.forEach(this.crtMainMapper::mergeCrtBasicInfo);
 
-
-
-        //API 정보 DB 저장
-//        championList.forEach(this.crtMainMapper::mergeCrtinfos);
-//        List<Map<String, Object>> result = this.crtMainMapper.selectCrtInfos();
-//        log.info("result={}", result);
 
         return championList;
     }
