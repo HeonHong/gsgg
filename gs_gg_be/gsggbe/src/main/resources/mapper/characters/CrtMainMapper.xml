@@ -20,4 +20,21 @@
         )
 
     </insert>
+
+
+    <insert id="mergeCrtBasicInfo">
+        INSERT INTO TB_CHARACTER (
+            CRT_ID
+            , NAME
+            , CREATE_DATE
+            , MODIFIED_DATE
+        ) VALUES (
+            #{key}
+            , #{kor_name}
+            , SYSDATE()
+            , SYSDATE()
+        )
+        ON DUPLICATE KEY UPDATE
+            CRT_ID = #{key}
+    </insert>
 </mapper>

@@ -13,8 +13,10 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,6 +28,7 @@ public class CrtMainService {
     public List<Map<String, Object>> selectCrtInfos() {
 
         List<Map<String, Object>> championList = new ArrayList<>();
+
         try {
             String urlstr = "https://ddragon.leagueoflegends.com/cdn/14.5.1/data/ko_KR/champion.json";
             URL rioturl = new URL(urlstr);
@@ -50,20 +53,57 @@ public class CrtMainService {
             Map<String, Map<String, Object>> data = gson.fromJson(gson.toJson(fullData.get("data")), dataType);
 
             // 챔피언 데이터를 리스트로 변환
-            championList = new ArrayList<>(data.values());
+            // 한글 이름순 정렬 전 임시 List
+            List<Map<String, Object>> tmpList = new ArrayList<>(data.values());
+
+            //이름순 정렬 및 리스트 저장
+            championList = tmpList.stream()
+                            .sorted(Comparator.comparing(crt -> crt.get("name").toString()))
+                                    .toList();
+
+
 
             // 결과 확인
-//            System.out.println(championList.get(0));
-            log.info("result=========================================\n"+championList.get(0));
+//            championList.forEach(crt -> {
+//                System.out.println(crt.get("name").toString());
+//            });
 
         } catch (Exception e) {
             log.error(e.getMessage());
         }
 
-        championList.forEach(this.crtMainMapper::mergeCrtinfos);
+        //TB_CHARACTER 테이블 저장 데이터 세팅
+        List<Map<String, Object>> crtBasicInfo = this.setDBCrt(championList);
+
+        System.out.println(crtBasicInfo);
+
+        crtBasicInfo.forEach(this.crtMainMapper::mergeCrtBasicInfo);
+
+
+
+        //API 정보 DB 저장
+//        championList.forEach(this.crtMainMapper::mergeCrtinfos);
 //        List<Map<String, Object>> result = this.crtMainMapper.selectCrtInfos();
 //        log.info("result={}", result);
 
         return championList;
     }
+
+    //TB_CHARACTER 테이블 저장 데이터 세팅
+    private List<Map<String, Object>> setDBCrt(List<Map<String, Object>> params) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        params.forEach(data -> {
+            result.add(Map.of(
+                    "version",  data.get("version"),
+                    "key",      data.get("key"),
+                    "eng_name", data.get("id"),
+                    "kor_name", data.get("name")
+            ));
+        });
+
+        return result;
+    }
+
+
 }
