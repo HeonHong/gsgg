@@ -90,10 +90,11 @@ public class CrtMainService {
 
         params.forEach(data -> {
             result.add(Map.of(
-                    "version",  data.get("version"),
-                    "key",      data.get("key"),
-                    "eng_name", data.get("id"),
-                    "kor_name", data.get("name")
+                    "version",    data.get("version"),
+                    "key",        data.get("key"),
+                    "eng_name",   data.get("id"),
+                    "kor_name",   data.get("name"),
+                    "version_no", data.get("version_no")
             ));
         });
 

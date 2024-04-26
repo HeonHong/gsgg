@@ -14,12 +14,14 @@
             , ENG_NAME
             , CREATE_DATE
             , MODIFIED_DATE
+            , VERSION_NO
         ) VALUES (
             #{key}
             , #{kor_name}
             , #{eng_name}
             , SYSDATE()
             , SYSDATE()
+            , #{version_no}
         )
         ON DUPLICATE KEY UPDATE
             CRT_ID = #{key}
