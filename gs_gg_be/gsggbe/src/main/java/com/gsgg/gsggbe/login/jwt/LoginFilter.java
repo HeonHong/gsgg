@@ -13,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -46,7 +47,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     //로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         log.info("로그인 정보 조회 성공 {}", response);
         //인증된 주체(customUserDetails) 정보를 가지고 온다
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -60,12 +61,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //Http인증방식은 RFC7235 정의에 따라 아래 인증 헤더 형태를 가져야 함.
         //Authorization은 타입 인증토큰
         response.addHeader("Authorization","Bearer " + token);
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("로그인을 성공하였습니다.");
     }
 
     //로그인 실패시 실행하는 메소드
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        log.info("로그인 아이디 없음 {}", response);
-        response.setStatus(401);
+        //여기에 찍히는 message는 CustomUserDetailsService에서 던진 예외 메시지가 아니다
+        //attemptAuthentication에서 던진 메시지다.
+        log.error(failed.getMessage());
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);//401에러
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(failed.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

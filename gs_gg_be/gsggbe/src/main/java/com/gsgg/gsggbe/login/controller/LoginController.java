@@ -42,18 +42,17 @@ public class LoginController {
         log.info("세션 사용자 role확인하기 {}", role);
         return "Login Controller" + username + role;
     }
+/*
+
     @PostMapping("/login")
-    public String mainLogIn() {
-        log.info("LoginController 확인하기");
-        //세션 사용자 아이디 확인
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-        GrantedAuthority auth = iter.next();
-        String role = auth.getAuthority();
-        return "Main Controller" + username + role;
+    public void mainLogIn() {
+        해당 컨트롤러는 필요없다.
+        "/login"으로 된 post 요청이 들어 올 경우,
+        LoginFilter(UsernamePasswordAuthenticationFilter)에서 가로챈다.
+        그 다음 CustomUserDetailsService에서 확인한 뒤
+        successfulAuthentication 혹은 unSuccessfulAuthentication 으로 값을 반환한다
     }
+*/
 
     @PostMapping("/kakao/auth")
     public KakaoUserInfo KakaoAuth(@RequestBody String code) {
