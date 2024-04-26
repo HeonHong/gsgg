@@ -69,12 +69,43 @@ public class CrtMainService {
             log.error(e.getMessage());
         }
 
-        //TB_CHARACTER 테이블 저장 데이터 세팅
-        List<Map<String, Object>> crtBasicInfo = this.setCrtBasicInfo(championList);
-        //CRT_BASIC 테이블 저장
-        crtBasicInfo.forEach(this.crtMainMapper::mergeCrtBasicInfo);
+        //TB_CRT_BASIC 테이블 저장 데이터 세팅
+        List<Map<String, Object>> crtBasicInfoList = this.setCrtBasicInfo(championList);
+        //TB_CRT_BASIC 테이블 저장
+        crtBasicInfoList.forEach(this.crtMainMapper::mergeCrtBasicInfo);
 
-        System.out.println(crtBasicInfo);
+        //TB_CRT_DESC 테이블 저장 데이터 세팅
+        List<Map<String, Object>> crtDescInfoList = this.setCrtDesc(championList);
+        //TB_CRT_DESC 테이블 저장
+        crtDescInfoList.forEach(this.crtMainMapper::mergeCrtDescInfo);
+
+
+
+        System.out.println(crtDescInfoList);
+    }
+
+    /**
+     * 2024-04-26
+     * TB_CRT_DESC 테이블 저장 데이터 세팅
+     * API를 통해 받아온 데이터를 TB_CRT_DESC 테이블 저장을 위해 가공
+     *
+     * @param championList List<Map<String, Object>>
+     * @return List<Map<String, Object>>
+     */
+    private List<Map<String, Object>> setCrtDesc(List<Map<String, Object>> championList) {
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        championList.forEach(data -> {
+            result.add(Map.of(
+                    "version_no",   data.get("version"),
+                    "key",          data.get("key"),
+                    "desc_id",      data.get("key"),
+                    "desc_content", data.get("blub")
+            ));
+        });
+
+        return result;
     }
 
     /**
@@ -82,19 +113,19 @@ public class CrtMainService {
      * TB_CRT_BASIC 테이블 저장 데이터 세팅
      * API를 통해 받아온 데이터를 TB_CRT_BASIC 테이블 저장을 위해 가공
      *
-     * @param params List<Map<String, Object>>
+     * @param championList List<Map<String, Object>>
      * @return List<Map<String, Object>>
      */
-    private List<Map<String, Object>> setCrtBasicInfo(List<Map<String, Object>> params) {
+    private List<Map<String, Object>> setCrtBasicInfo(List<Map<String, Object>> championList) {
+
         List<Map<String, Object>> result = new ArrayList<>();
 
-        params.forEach(data -> {
+        championList.forEach(data -> {
             result.add(Map.of(
-                    "version",    data.get("version"),
-                    "key",        data.get("key"),
-                    "eng_name",   data.get("id"),
-                    "kor_name",   data.get("name"),
-                    "version_no", data.get("version_no")
+                    "version_no",   data.get("version"),
+                    "key",          data.get("key"),
+                    "eng_name",     data.get("id"),
+                    "kor_name",     data.get("name")
             ));
         });
 

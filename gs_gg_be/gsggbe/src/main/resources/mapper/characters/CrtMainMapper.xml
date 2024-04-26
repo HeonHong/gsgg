@@ -24,6 +24,28 @@
             , #{version_no}
         )
         ON DUPLICATE KEY UPDATE
-            CRT_ID = #{key}
+            CRT_ID      = #{key},
+            version_no  = #{version_no}
+    </insert>
+
+    <insert id="mergeCrtDescInfo">
+        INSERT INTO TB_CRT_DESC (
+            DESC_ID
+            , CRT_ID
+            , DESC_CONTENT
+            , CREATE_DATE
+            , MODIFIED_DATE
+            , VERSION_NO
+        ) VALUES (
+            #{desc_id}
+            , #{key}
+            , #{desc_content}
+            , SYSDATE()
+            , SYSDATE()
+            , #{version_no}
+        )
+        ON DUPLICATE KEY UPDATE
+        DESC_ID     = #{desc_id},
+        version_no  = #{version_no}
     </insert>
 </mapper>
