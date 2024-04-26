@@ -18,9 +18,8 @@
                 :label="'Alert 모달'" @click="alert" />
         </div>
         <div>
-
             <EpButton :width="'7rem'" :height="'4rem'" :color="'var(--color3)'" :label="'common button'"
-                @click="test" />
+                @click="login" />
         </div>
         <div>
 
@@ -91,6 +90,9 @@ export default {
         },
         cancel(){
             this.isOn=false;
+        },
+        login(){
+            this.postApi('/login', null, this.success, this.fail);
         }
     },
     watch: {

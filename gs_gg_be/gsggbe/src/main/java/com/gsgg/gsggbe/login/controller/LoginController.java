@@ -2,18 +2,58 @@ package com.gsgg.gsggbe.login.controller;
 
 import com.gsgg.gsggbe.login.dto.KakaoToken;
 import com.gsgg.gsggbe.login.dto.KakaoUserInfo;
+import com.gsgg.gsggbe.login.service.CustomUserDetailsService;
 import com.gsgg.gsggbe.login.service.LoginService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class LoginController {
     //https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-token
 
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
+
+    private final CustomUserDetailsService customUserDetailsService;
+    private String role;
+
+    @PostMapping("/")
+    public String main() {
+        log.info("LoginController 들어오는지 확인하기");
+        //세션 사용자 아이디 확인
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("세션 사용자 아이디 확인하기 {}", username);
+
+        //세션 사용자 Role확인하기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+        GrantedAuthority auth = iter.next();
+        String role = auth.getAuthority();
+        log.info("세션 사용자 role확인하기 {}", role);
+        return "Login Controller" + username + role;
+    }
+    @PostMapping("/login")
+    public String mainLogIn() {
+        log.info("LoginController 확인하기");
+        //세션 사용자 아이디 확인
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+        GrantedAuthority auth = iter.next();
+        String role = auth.getAuthority();
+        return "Main Controller" + username + role;
+    }
 
     @PostMapping("/kakao/auth")
     public KakaoUserInfo KakaoAuth(@RequestBody String code) {

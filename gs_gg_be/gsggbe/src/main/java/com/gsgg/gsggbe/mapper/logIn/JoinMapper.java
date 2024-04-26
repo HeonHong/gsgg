@@ -7,5 +7,5 @@ public interface JoinMapper {
 
     int isExist(String userId);
 
-    void saveUser(JoinDTO joinDTO);
+    int saveUser(JoinDTO joinDTO);
 }
