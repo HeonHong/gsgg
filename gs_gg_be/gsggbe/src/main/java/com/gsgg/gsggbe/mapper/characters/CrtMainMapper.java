@@ -11,4 +11,6 @@ public interface CrtMainMapper {
     List<Map<String, Object>> selectCrtInfos();
 
     void mergeCrtBasicInfo(Map<String, Object> stringObjectMap);
+
+    void mergeCrtDescInfo(Map<String, Object> stringObjectMap);
 }
