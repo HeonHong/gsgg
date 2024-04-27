@@ -13,4 +13,6 @@ public interface CrtMainMapper {
     void mergeCrtBasicInfo(Map<String, Object> stringObjectMap);
 
     void mergeCrtDescInfo(Map<String, Object> stringObjectMap);
+
+    void mergeCrtImg(Map<String, Object> stringObjectMap);
 }

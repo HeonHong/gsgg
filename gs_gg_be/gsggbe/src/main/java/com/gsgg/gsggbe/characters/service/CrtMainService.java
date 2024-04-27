@@ -6,9 +6,11 @@ import com.gsgg.gsggbe.mapper.characters.CrtMainMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,7 +31,9 @@ public class CrtMainService {
      * 2024-04-26
      * API를 통해 캐릭터 정보를 수신
      */
+    @Transactional
     public void selectCrtInfos() {
+        log.info("==================schedule start");
 
         List<Map<String, Object>> championList = new ArrayList<>();
 
@@ -79,33 +83,13 @@ public class CrtMainService {
         //TB_CRT_DESC 테이블 저장
         crtDescInfoList.forEach(this.crtMainMapper::mergeCrtDescInfo);
 
+        //TB_CRT_IMG 테이블 저장 데이터 세팅
+        List<Map<String, Object>> crtDescImgList = this.setCrtImg(championList);
+        //TB_CRT_DESC 테이블 저장
+        crtDescImgList.forEach(this.crtMainMapper::mergeCrtImg);
 
 
-        System.out.println(crtDescInfoList);
-    }
-
-    /**
-     * 2024-04-26
-     * TB_CRT_DESC 테이블 저장 데이터 세팅
-     * API를 통해 받아온 데이터를 TB_CRT_DESC 테이블 저장을 위해 가공
-     *
-     * @param championList List<Map<String, Object>>
-     * @return List<Map<String, Object>>
-     */
-    private List<Map<String, Object>> setCrtDesc(List<Map<String, Object>> championList) {
-
-        List<Map<String, Object>> result = new ArrayList<>();
-
-        championList.forEach(data -> {
-            result.add(Map.of(
-                    "version_no",   data.get("version"),
-                    "key",          data.get("key"),
-                    "desc_id",      data.get("key"),
-                    "desc_content", data.get("blub")
-            ));
-        });
-
-        return result;
+        log.info("==================schedule end");
     }
 
     /**
@@ -122,15 +106,62 @@ public class CrtMainService {
 
         championList.forEach(data -> {
             result.add(Map.of(
-                    "version_no",   data.get("version"),
-                    "key",          data.get("key"),
+                    "crt_id",       data.get("key"),
                     "eng_name",     data.get("id"),
-                    "kor_name",     data.get("name")
+                    "kor_name",     data.get("name"),
+                    "version_no",   data.get("version")
+                    ));
+        });
+
+        return result;
+    }
+
+
+    /**
+     * 2024-04-26
+     * TB_CRT_DESC 테이블 저장 데이터 세팅
+     * API를 통해 받아온 데이터를 TB_CRT_DESC 테이블 저장을 위해 가공
+     *
+     * @param championList List<Map<String, Object>>
+     * @return List<Map<String, Object>>
+     */
+    private List<Map<String, Object>> setCrtDesc(List<Map<String, Object>> championList) {
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        championList.forEach(data -> {
+            result.add(Map.of(
+                    "desc_id",      data.get("key"),
+                    "crt_id",       data.get("key"),
+                    "desc_content", data.get("blurb"),
+                    "version_no",   data.get("version")
             ));
         });
 
         return result;
     }
 
+    /**
+     * 2024-04-27
+     * TB_CRT_IMG 테이블 저장 데이터 세팅
+     * API를 통해 받아온 데이터를 TB_CRT_IMG 테이블 저장을 위해 가공
+     *
+     * @param championList List<Map<String, Object>>
+     * @return List<Map<String, Object>>
+     */
+    private List<Map<String, Object>> setCrtImg(List<Map<String, Object>> championList) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        championList.forEach(data -> {
+            result.add(Map.of(
+                    "pic_id",       data.get("key"),
+                    "crt_id",       data.get("key"),
+                    "version_no",   data.get("version"),
+                    "img_name",     ((Map)data.get("image")).get("full").toString()
+            ));
+        });
+
+        return result;
+    }
 
 }
