@@ -51,8 +51,8 @@ public class JWTFilter extends OncePerRequestFilter {
         String role = jwtUtil.getRole(token);
 
         UserDTO userDTO = new UserDTO();
-        userDTO.setId("tempId");
-        userDTO.setPassword("tempPwd");
+//        userDTO.setId("tempId");
+//        userDTO.setPassword("tempPwd");
         userDTO.setRole(role);
         userDTO.setUsername(username);
         CustomUserDetails customUserDetails = new CustomUserDetails(userDTO);

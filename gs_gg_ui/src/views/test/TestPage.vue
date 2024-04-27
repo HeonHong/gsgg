@@ -92,7 +92,7 @@ export default {
             this.isOn=false;
         },
         login(){
-            this.postApi('/login', null, this.success, this.fail);
+            // this.postApi('/login', null, this.success, this.fail);
         }
     },
     watch: {

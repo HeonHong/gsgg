@@ -1,17 +1,20 @@
 import { createStore } from "vuex";
 
-export default createStore({
-    state:{
-        switchName:'',
+export const store = createStore({
+    state: {
+        //로그인용 JWT토큰
+        userToken: null,
     },
-    mutations:{
-        setSwitch(state,switchName){
-            state.switchName=switchName;
+    mutations: {
+        setUserToken(state, token) {
+            state.userToken = token;
+        },
+        removeUserToken(state) {
+            state.userToken = null;
         }
     },
-    getters:{
-        getSwitch(state){
-            return state.switchName
-        }
+    getters: {
+
     }
 });
+

@@ -13,6 +13,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 //스프링 시큐리티의 인가 및 설정 클래스
 @Configuration
@@ -43,16 +48,31 @@ public class SecurityConfig {
     //AuthenticationManager Bean 등록
     //코드 중복과 유지보수성을 줄여 재사용성 높이기 위해 선언
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
+    //https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     //httpServletRequest에 대해 일치하는지 판단하여 해당 요청에 필터 적용 여부 호가인
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //HttpSecurity객체는 웹 기반 보안에 대한 구성을 위한 메소드 제공
         //보안, 로그인, 로그아웃 등
+
+        //cors설정
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         //csrf disable
         //JWT는 사용자의 세션 상태를 클라이언트에서 관리 > 서버측에서 세션 상태 유지x
@@ -72,18 +92,15 @@ public class SecurityConfig {
 
         //경로별 인가 작업 설정
         http
-                .authorizeHttpRequests((auth) -> auth
-                        //아무 조건 없이 접근 가능한 경로
-                        .requestMatchers("/login","/", "/join").permitAll()
-                        //사용자 권한별 접근 가능 경로 설정
+                .authorizeHttpRequests((auth)->auth
+                        //인증이 필요한 경우 아래와 같이 작성
+                        //.requestMatchers("/admin").authenticated()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        //다른 api 호출은 인가된 사람만 들어갈 수 있게 설정
-                        //테스트 후 경로별 변경 필요
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
         //JWTFilter 등록
         http
-                .addFilterBefore(new JWTFilter(jwtUtil),LoginFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
         //커스터마이즈 된 로그인 필터
         //로그인 시 DB에 저장된 값과 비교하여 검증
         //Form Login기능을 사용할 경우, UsernamePasswordAuthenticationFilter가 자동으로 적용된다

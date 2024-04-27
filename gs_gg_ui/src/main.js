@@ -5,7 +5,7 @@ import axios from 'axios';
 import apiCall from './js/mixins/api/api-call';
 import './js/total-css';
 import apiMix from "@/js/mixins/api/api-mix.js"
-import store from './js/store/store';
+import {store} from './js/store/store';
 
 const app = createApp(App);
 const COMMON_COMPONENTS=['EpInput','EpButton'];

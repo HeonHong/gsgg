@@ -30,7 +30,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
         //클라이언트 요청에서 username, password 추출
         //관습적으로 ID를 Username으로 사용했기 때문에 UsernamePasswordAuthenticationFilter에 메소드 자체가 obtainUsername으로 되어있다
         String username = obtainUsername(request);
@@ -60,9 +59,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtUtil.createJWT(username,role,60*60*10L);
         //Http인증방식은 RFC7235 정의에 따라 아래 인증 헤더 형태를 가져야 함.
         //Authorization은 타입 인증토큰
-        response.addHeader("Authorization","Bearer " + token);
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("로그인을 성공하였습니다.");
+//        response.addHeader("Authorization","Bearer " + token);
+//        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("Bearer " + token);
     }
 
     //로그인 실패시 실행하는 메소드
