@@ -33,7 +33,7 @@ public class CrtMainService {
      * commit test
      */
     @Transactional
-    public void selectCrtInfos() {
+    public void setAPICharacterInfos() {
         log.info("==================schedule start");
 
         List<Map<String, Object>> championList = new ArrayList<>();
