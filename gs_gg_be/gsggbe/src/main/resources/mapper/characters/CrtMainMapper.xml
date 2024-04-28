@@ -4,7 +4,17 @@
 
 <mapper namespace="com.gsgg.gsggbe.mapper.characters.CrtMainMapper">
     <select id="selectCrtInfos" resultType="java.util.HashMap">
-        select * from user
+        SELECT  A.CRT_ID
+                , A.KOR_NAME
+                , A.ENG_NAME
+                , A.VERSION_NO
+                , B.DESC_ID
+                , B.DESC_CONTENT
+                , C.FILE_NAME
+        FROM        TB_CRT_BASIC A
+        INNER JOIN  TB_CRT_DESC B ON A.CRT_ID = B.CRT_ID
+        INNER JOIN  TB_CRT_IMG  C ON A.CRT_ID = C.CRT_ID
+        ORDER BY    A.KOR_NAME
     </select>
 
     <insert id="mergeCrtBasicInfo">
@@ -24,7 +34,7 @@
             , #{version_no}
         )
         ON DUPLICATE KEY UPDATE
-            CRT_ID      = #{key},
+            CRT_ID      = #{crt_id},
             version_no  = #{version_no}
     </insert>
 
