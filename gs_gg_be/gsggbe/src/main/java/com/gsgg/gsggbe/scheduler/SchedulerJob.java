@@ -14,8 +14,8 @@ public class SchedulerJob {
     @Autowired
     private final CrtMainService crtMainService;
 
-
-    @Scheduled(fixedRate = 1000000)
+    //스케줄링 돌아가는 시간 설정, 서버 올라간 후 무조건 돌아가기 때문에 주석 처리
+    //@Scheduled(fixedRate = 1000000)
     public void setCrtInfoToDB() {
         crtMainService.selectCrtInfos();
     }
