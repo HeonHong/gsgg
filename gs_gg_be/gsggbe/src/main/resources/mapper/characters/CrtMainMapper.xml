@@ -24,7 +24,7 @@
             , #{version_no}
         )
         ON DUPLICATE KEY UPDATE
-            CRT_ID      = #{key},
+            CRT_ID      = #{crt_id},
             version_no  = #{version_no}
     </insert>
 
