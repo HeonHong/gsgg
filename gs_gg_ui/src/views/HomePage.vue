@@ -7,14 +7,14 @@
             <img src="@/assets/GS_GG Logo_NoBG.png" @click="goToMainPage"/>
         </div>
         <div class="header-login">
-            <div v-if="!isLoggedIn">
+            <div v-if="$store.state.userToken==null">
             <span @click="login">로그인</span>&nbsp;&nbsp;&nbsp;
             <span>회원가입</span>&nbsp;&nbsp;
             </div>
-            <div v-if="isLoggedIn">
+            <div v-if="$store.state.userToken!=null">
             <img :src="profileImage"/>
             <span>{{name}}</span>&nbsp;&nbsp;&nbsp;
-            <span @click="isLoggedIn=false">로그아웃</span>&nbsp;&nbsp;
+            <span @click="logOut">로그아웃</span>&nbsp;&nbsp;
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
 import axios from 'axios';
 import TabButtons from '@/components/TabButtons.vue';
 import apiCall from "@/js/mixins/api/api-call.js"
-import commonUtils from "@/js/common-utils.js"
+// import commonUtils from "@/js/common-utils.js"
 
 //공통 버튼 테스트
 import LoadingBar from '@/components/LoadingBar.vue';
@@ -75,6 +75,9 @@ export default {
         },
         login() {
             this.$router.push('/loginpage')
+        },
+        logOut() {
+            this.$store.commit('removeUserToken');
         }
     },
 
@@ -99,20 +102,19 @@ export default {
                 { id: 3, tabName: "TestPage", pagePath: '/test' },
                 { id: 4, tabName: "SocketTest", pagePath: '/sockettest' },
             ],
-            isLoggedIn: false,
             name: '',
             profileImage: '',
         }
     },
     mounted() {
-        let kakaoInfo = localStorage.getItem('kakaoInfo');
-        console.log(kakaoInfo);
-        if (!commonUtils.isNull(kakaoInfo)) {
-            let userInfo = JSON.parse(kakaoInfo);
-            this.isLoggedIn = true;
-            this.name = userInfo.properties.nickname;
-            this.profileImage = userInfo.properties.profile_image;
-        }
+        // let kakaoInfo = localStorage.getItem('kakaoInfo');
+        // console.log(kakaoInfo);
+        // if (!commonUtils.isNull(kakaoInfo)) {
+        //     let userInfo = JSON.parse(kakaoInfo);
+        //     this.isLoggedIn = true;
+        //     this.name = userInfo.properties.nickname;
+        //     this.profileImage = userInfo.properties.profile_image;
+        // }
         // localStorage.clear();
     },
 

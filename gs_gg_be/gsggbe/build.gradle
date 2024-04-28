@@ -29,6 +29,21 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.projectlombok:lombok:1.18.22'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	//jwt 버전별로 구현 방법 상이.
+	//추가 작업 시, 버전 확인 필.
+
+	//토큰 생성을 위한 객체들 추상화
+	//IoC 및 내부로직 캡슐화
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	//구현부분 담당
+	//런타임 범위에서만 선언
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	//Jackson JSON처리 라이브러리 확장
+	//JWTs와 JWKs를 처리
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
 
 	implementation 'com.google.code.gson:gson:2.8.8'
 	implementation group: 'org.json', name: 'json', version: '20231013'

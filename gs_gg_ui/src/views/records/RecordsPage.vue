@@ -10,9 +10,13 @@
       <div id="summoner-info-box">
         <div id="summoner-info-section">
           <div id="summoner-info" v-if="summonerInfo">
-            <!-- api 연동 전 ui 확인용-->
-            <p><strong>{{ summonerInfo.name }}</strong></p>
-            <p><strong>{{ summonerInfo.summonerLevel }}</strong></p>
+            <div id="summoner-profile">
+              <img :src="`https://ddragon.leagueoflegends.com/cdn/14.8.1/img/profileicon/${summonerInfo.profileIconId}.png`" alt="프로필 아이콘" class="profile-icon">
+              <div class="level-badge"><h1>{{ summonerInfo.summonerLevel }}</h1></div>
+              <div class="profile-details">
+                <h1>{{ summonerID.gameName}} <span class="tag-line">#{{ summonerID.tagLine }}</span></h1>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -32,6 +36,7 @@ export default {
   data() {
     return {
       summonerName: '',
+      summonerID: null,
       summonerInfo: null,
       matchInfo: [],
     };
@@ -39,16 +44,33 @@ export default {
   methods: {
     getSummonerByName() {
       if (!this.summonerName.trim()) return;
+
+      const [name, tagLine] = this.summonerName.split('#'); // 라이엇 계정 방식 변경으로 인해 태그라인도 입력 받아야함
   
-      let param = { summonerName: this.summonerName };
+      let param = { summonerName: name };
+
+      if (tagLine) {
+        param.tagLine = tagLine;
+      }
       
-      this.getApi('/summoner', param, this.successSummoner, this.fail);
+      this.getApi('/summonerId', param, this.successPuuid, this.fail);
+    },
+    successPuuid(response) {
+      console.log('소환사 ID 조회 성공:', response.data);
+      this.summonerID = response.data;
+      this.getSummonerByPuuid(this.summonerID.puuid);
+    },
+
+    getSummonerByPuuid(puuid) {
+      let param = {puuid: puuid};
+      this.getApi('/summonerInfo', param, this.successSummoner, this.fail);
     },
     successSummoner(response) {
       console.log('소환사 정보 조회 성공:', response.data);
       this.summonerInfo = response.data;
       this.getMatchesByPuuid(this.summonerInfo.puuid);
     },
+
     getMatchesByPuuid(puuid) {
       let param = { puuid: puuid };
       this.getApi('/matches', param, this.successMatches, this.fail);
@@ -57,6 +79,7 @@ export default {
     console.log('매치 ID 목록 조회 성공:', response.data);
     this.getMatchDetails(response.data); // 전체 ID 목록을 한 번에 전달
     },
+
     getMatchDetails(matchIds) {
       // 쿼리 파라미터로 matchIds를 전달하기 위해 URL을 조합
       const queryString = matchIds.map(id => `matchIds=${id}`).join('&');
@@ -151,6 +174,59 @@ export default {
   padding: 20px;
   background-color: #ffffff;
   border-radius: 4px;
+}
+
+#summoner-profile {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.profile-icon {
+  width: 80px; 
+  height: 80px;
+  border-radius: 15%; 
+  margin-right: 20px;
+  position: relative;
+  overflow: hidden; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.level-badge {
+  position: relative;
+  top: 30px;
+  right: 90px; 
+  transform: translate(50%, 50%);
+  background-color: #4e4d4d;
+  border-radius: 15%;
+  width: 30px;
+  height: 15px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  border: 2px solid #4e4d4d;
+  box-shadow: 0 2px 4px rgba(51, 37, 37, 0.25); 
+  font-size: 5px;
+  color: #fff;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-details h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.tag-line {
+  font-size: 0.9rem;
+  color: #777;
 }
 
 #match-info-section {
