@@ -6,7 +6,7 @@
       </div>
       <div id="crt-desc-div">
         <div id="crt-name" @click="logCrtInfos">{{crtInfos.name}}</div>
-        <!-- <div id="crt-main-line">main line: top, mid. bottom</div> -->
+        <div id="crt-main-line">미드, 정글</div>
       </div>
     </div>
   </div>
@@ -26,30 +26,34 @@ export default {
 </script>
 <style>
 .window-div{
-    display: grid;
     width: 100%;
     height: 100%;
 }
 .outline-div {
-  display: grid;
-  width: 14.5vw;
-  height: 16.5vw;
+  width: 13rem;
+  height: 19rem;
   align-content: center;
-  border: 1px solid black;
+  border: 0.2rem solid var(--color3);
 }
 .portrait-div {
-  height: 13vw;
+  height: 65%;
 }
 #crt-desc-div {
-  height: 5vw;
+  height: 35%;
+  font: var(--main-font);
+  font-size: 1.5rem;
 }
 #crt-name {
   display: flex;
-  font: var(--main-font);
-  font-size: 18px;
+  height: 50%;
   align-items: center;
   justify-content: center;
-  height: 100%;
+}
+#crt-main-line {
+  display: flex;
+  height: 50%;
+  align-items: center;
+  justify-content: center;
 }
 .crt-img {
   width: 100%;

@@ -4,6 +4,69 @@
 
 <mapper namespace="com.gsgg.gsggbe.mapper.characters.CrtMainMapper">
     <select id="selectCrtInfos" resultType="java.util.HashMap">
-        select * from test
+        select * from user
     </select>
+
+    <insert id="mergeCrtBasicInfo">
+        INSERT INTO TB_CRT_BASIC (
+            CRT_ID
+            , KOR_NAME
+            , ENG_NAME
+            , CREATE_DATE
+            , MODIFIED_DATE
+            , VERSION_NO
+        ) VALUES (
+            #{crt_id}
+            , #{kor_name}
+            , #{eng_name}
+            , SYSDATE()
+            , SYSDATE()
+            , #{version_no}
+        )
+        ON DUPLICATE KEY UPDATE
+            CRT_ID      = #{key},
+            version_no  = #{version_no}
+    </insert>
+
+    <insert id="mergeCrtDescInfo">
+        INSERT INTO TB_CRT_DESC (
+            DESC_ID
+            , CRT_ID
+            , DESC_CONTENT
+            , CREATE_DATE
+            , MODIFIED_DATE
+            , VERSION_NO
+        ) VALUES (
+            #{desc_id}
+            , #{crt_id}
+            , #{desc_content}
+            , SYSDATE()
+            , SYSDATE()
+            , #{version_no}
+        )
+        ON DUPLICATE KEY UPDATE
+            DESC_ID     = #{desc_id},
+            version_no  = #{version_no}
+    </insert>
+
+    <insert id="mergeCrtImg">
+        INSERT INTO TB_CTR_IMG (
+            PIC_ID
+            , CRT_ID
+            , CREATE_DATE
+            , MODIFIED_DATE
+            , VERSION_NO
+            , FILE_NAME
+        ) VALUES (
+            #{pic_id}
+            , #{crt_id}
+            , SYSDATE()
+            , SYSDATE()
+            , #{version_no}
+            , #{img_name}
+        )
+        ON DUPLICATE KEY UPDATE
+            PIC_ID      = #{pic_id},
+            version_no  = #{version_no}
+    </insert>
 </mapper>
