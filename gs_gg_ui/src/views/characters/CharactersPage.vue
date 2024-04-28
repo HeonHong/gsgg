@@ -2,7 +2,7 @@
     <div class="out-div">
         <div id="sort-nav">
             <nav>
-                <CharacterSortBar/>
+                <CharacterSortNav/>
             </nav>
         </div>
         <div id="crt-box-outline">
@@ -23,7 +23,7 @@
 </template>
 <script>
 import CharacterBox from './CharacterBox.vue';              //캐립터 정보가 담긴 box component
-import CharacterSortBar from './CharacterSortBar.vue';      //검색 조건을 조정할 수 있는 바
+import CharacterSortNav from './CharacterSortNav.vue';      //검색 조건을 조정할 수 있는 바
 import apiCall from '@/js/mixins/api/api-call';             //서버 통신 api-call
 import '@/css/charactersStyle/CharacterPage.css';           //css 파일
 export default {
@@ -50,7 +50,6 @@ export default {
 
             //props 전달을 위한 배열 초기값 설정
             this.crtInfosProps = this.arrCrtInfos[0];
-
         };
 
         let fail = (data) => {
@@ -64,7 +63,7 @@ export default {
     //components
     components: {
         CharacterBox: CharacterBox,
-        CharacterSortBar: CharacterSortBar,
+        CharacterSortNav: CharacterSortNav,
     },
 
     //methods
