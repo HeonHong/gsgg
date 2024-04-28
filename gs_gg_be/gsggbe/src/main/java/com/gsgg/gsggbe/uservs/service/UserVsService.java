@@ -9,7 +9,7 @@ import java.net.http.HttpClient;
 
 @Service
 public class UserVsService {
-    private String apiKey = "RGAPI-e274a55a-e41b-42e0-b50d-1e63bdac3248";
+    private String apiKey = "RGAPI-3c872789-bc9e-4668-b5f1-ad8d49383207";
     public void selectUserInfo() {
         String SummonerName = "hideonbush"; // 닉네임
         String requestURL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+
