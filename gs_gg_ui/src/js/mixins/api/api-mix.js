@@ -15,5 +15,8 @@ export default{
         deleteApi(url,param,success,fail){
             this.$apiCall.delete(url,param,success,fail);
         },
+        postFApi(url,param,success,fail){
+            this.$apiCall.postF(url,param,success,fail);
+        },
     }
 }

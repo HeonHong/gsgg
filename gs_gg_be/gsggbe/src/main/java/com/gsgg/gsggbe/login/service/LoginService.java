@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 @Slf4j
 @Service
@@ -26,7 +28,6 @@ public class LoginService {
 
     //카카오 액세스 토큰 가져오기
     public String getToken(String code) {
-
 
         KakaoToken kakaoToken = new KakaoToken();
         String accessToken = null;
@@ -73,6 +74,8 @@ public class LoginService {
         } catch (IOException e) {
             log.error("카카오 토큰 받기 실패");
         }
+
+
 
         return kakaoToken.getAccessToken();
     }

@@ -1,6 +1,6 @@
-import axios from "axios";
+// import axios from "axios";
 import { commSwitch } from "@/js/comm-switch";
-
+import { axiosInstance, axiosFormInstance} from "./index.js";
 
 function response(data,sucFunc){
   sucFunc(data);
@@ -34,10 +34,13 @@ export default{
     if(params!=null)param={params};
         
     commSwitch.on('LoadingBar'); 
-    axios.get(url,param)
+    axiosInstance.get(url,param)
     .then((data)=>response(data,success))
     .catch((error)=>onFail(error,fail));
     
+/*     axios.get(url,param)
+    .then((data)=>response(data,success))
+    .catch((error)=>onFail(error,fail)); */
     // let queryStringUrl=null;
     // queryStringUrl=queryString(url,params);   
     // axios.get(queryStringUrl)
@@ -46,23 +49,43 @@ export default{
   },
   post:function postApi(url,param,success,fail){
     commSwitch.on('LoadingBar');
-    axios.post(url,param)
+    axiosInstance.post(url,param)
       .then((data)=>response(data,success))
       .catch((error)=>onFail(error,fail));
+   /*  axios.post(url,param)
+      .then((data)=>response(data,success))
+      .catch((error)=>onFail(error,fail)); */
   },
   put:function putApi(url,param,success,fail){
     commSwitch.on('LoadingBar');
-    axios.put(url,param)
+    axiosInstance.put(url,param)
       .then((data)=>response(data,success))
       .catch((error)=>onFail(error,fail));
+/*     axios.put(url,param)
+      .then((data)=>response(data,success))
+      .catch((error)=>onFail(error,fail)); */
   },
   delete:function deleteApi(url,params,success,fail){
     let param={params}; 
 
     commSwitch.on('LoadingBar');
-    axios.delete(url,param)
+    axiosInstance.delete(url,param)
       .then((data)=>response(data,success))
       .catch((error)=>onFail(error,fail));
+    /* axios.delete(url,param)
+      .then((data)=>response(data,success))
+      .catch((error)=>onFail(error,fail)); */
   },
+ 
+  postF:function postFApi(url,param,success,fail){
+    commSwitch.on('LoadingBar');
+    axiosFormInstance.post(url,param)
+      .then((data)=>response(data,success))
+      .catch((error)=>onFail(error,fail));
+   /*  axios.post(url,param)
+      .then((data)=>response(data,success))
+      .catch((error)=>onFail(error,fail)); */
+  },
+ 
 }
 

@@ -13,8 +13,10 @@ public class JoinController {
 
     @PostMapping("/join")
     public String joinProcess(JoinDTO joinDTO){
-        joinService.joinProcess(joinDTO);
-        return "ok";
+        int isSucess=joinService.joinProcess(joinDTO);
+        if(isSucess==1) return "성공하였습니다.";
+
+        return "실패하였습니다.";
     }
 
 }
