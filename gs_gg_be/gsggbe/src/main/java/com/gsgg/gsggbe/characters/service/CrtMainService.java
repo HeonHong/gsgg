@@ -30,6 +30,7 @@ public class CrtMainService {
     /**
      * 2024-04-26
      * API를 통해 캐릭터 정보를 수신
+     * commit test
      */
     @Transactional
     public void selectCrtInfos() {
