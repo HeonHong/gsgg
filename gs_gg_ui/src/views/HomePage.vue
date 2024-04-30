@@ -9,7 +9,7 @@
         <div class="header-login">
             <div v-if="$store.state.userToken==null">
             <span @click="login">로그인</span>&nbsp;&nbsp;&nbsp;
-            <span>회원가입</span>&nbsp;&nbsp;
+            <span @click="join">회원가입</span>&nbsp;&nbsp;
             </div>
             <div v-if="$store.state.userToken!=null">
             <img :src="profileImage"/>
@@ -74,10 +74,13 @@ export default {
         btnFunc() {
         },
         login() {
-            this.$router.push('/loginpage')
+            this.$router.push('/login');
         },
         logOut() {
             this.$store.commit('removeUserToken');
+        },
+        join(){
+            this.$router.push('/join');
         }
     },
 

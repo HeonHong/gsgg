@@ -2,7 +2,7 @@
     <div>
         <EpInput :model-value="username" @update:model-value="newVal => username = newVal"></EpInput>
         <EpInput :model-value="password" @update:model-value="newVal => password = newVal"></EpInput>
-        <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" :label="'로그인'" @click="login" />
+        <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="'로그인'" @click="login" />
     </div>
     <div>
         <a id="kakao-login-btn" @click="kakaoAutorize()">

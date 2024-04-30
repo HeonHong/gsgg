@@ -8,7 +8,7 @@ import apiMix from "@/js/mixins/api/api-mix.js"
 import {store} from './js/store/store';
 
 const app = createApp(App);
-const COMMON_COMPONENTS=['EpInput','EpButton'];
+const COMMON_COMPONENTS=['EpInput','EpButton','EpSelectBox'];
 
 function loadComponents(){
 

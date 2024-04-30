@@ -4,14 +4,14 @@
             <span>{{label}}</span>
         </div>
         <div class="input-form">
-            <input class="og-input-form" :value="modelValue" @input="update" type="text">
+            <input class="og-input-form" :value="modelValue" @input="update" type="text" :placeholder="placeholder">
         </div>   
     </div>
 </template>
 <script>
 export default {
     //공통컴포넌트만 리스트형으로 받기
-    props:['label','size','modelValue'],
+    props:['label','size','modelValue','placeholder'],
     emits:['update:modelValue'],
     data(){
         return{
