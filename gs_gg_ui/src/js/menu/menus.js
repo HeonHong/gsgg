@@ -33,15 +33,10 @@ const menus = [
 
   },
   {
-    path: "login",
+    path: "loginpage",
     name: "LoginPage",
     componentPath: "login/LoginPage",
-  },
-  {
-    path: "join",
-    name: "JoinPage",
-    componentPath: "login/JoinPage",
-  },
+  }
 
 ];
 
