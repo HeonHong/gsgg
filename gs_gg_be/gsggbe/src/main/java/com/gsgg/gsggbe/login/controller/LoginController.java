@@ -2,7 +2,7 @@ package com.gsgg.gsggbe.login.controller;
 
 import com.gsgg.gsggbe.login.dto.KakaoToken;
 import com.gsgg.gsggbe.login.dto.KakaoUserInfo;
-import com.gsgg.gsggbe.login.service.CustomUserDetailsService;
+//import com.gsgg.gsggbe.login.service.CustomUserDetailsService;
 import com.gsgg.gsggbe.login.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    private final CustomUserDetailsService customUserDetailsService;
+//    private final CustomUserDetailsService customUserDetailsService;
     private String role;
 
     @PostMapping("/")
