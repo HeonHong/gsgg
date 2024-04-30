@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -102,7 +103,7 @@ public class LoginService {
                 br.close();
                 int cnt = logInMapper.isMember(userInfo.getId());
                 log.info("userInfo {} cnt {}", userInfo.getKakaoAccount(), cnt);
-                if(cnt != 0) userInfo.setMember(true);
+                if(cnt != 0) throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
             } else {
                 log.error("카카오 고객정보 조회 네트워크 오류");
             }
