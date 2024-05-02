@@ -7,6 +7,7 @@
         select count(a.id) from user a where a.id = #{userId}
     </select>
     <insert id="saveUser" parameterType="com.gsgg.gsggbe.login.dto.JoinDTO">
-        insert into user (id,password,username,role) values (#{userId},#{password},#{username},#{role})
+        insert into user (name, username,password,birthday,mobileNum,role) values
+        (#{name},#{username},#{password},#{birthday},#{mobileNum},#{role})
     </insert>
 </mapper>
