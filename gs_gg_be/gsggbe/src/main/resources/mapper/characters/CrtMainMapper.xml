@@ -60,7 +60,7 @@
     </insert>
 
     <insert id="mergeCrtImg">
-        INSERT INTO TB_CTR_IMG (
+        INSERT INTO TB_CRT_IMG (
             PIC_ID
             , CRT_ID
             , CREATE_DATE
