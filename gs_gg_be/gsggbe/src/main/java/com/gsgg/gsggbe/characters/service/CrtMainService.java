@@ -30,9 +30,10 @@ public class CrtMainService {
     /**
      * 2024-04-26
      * API를 통해 캐릭터 정보를 수신
+     * commit test
      */
     @Transactional
-    public void selectCrtInfos() {
+    public void setAPICharacterInfos() {
         log.info("==================schedule start");
 
         List<Map<String, Object>> championList = new ArrayList<>();
@@ -164,4 +165,20 @@ public class CrtMainService {
         return result;
     }
 
+    /**
+     * 2024-04-28
+     * 캐릭터 정보 반환
+     * API를 통해 받아온 데이터를 TB_CRT_IMG 테이블 저장을 위해 가공
+     *
+     * @return List<Map<String, Object>> champion info list
+     */
+    public List<Map<String, Object>> selectCrtInfos() {
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        result = this.crtMainMapper.selectCrtInfos();
+
+        log.info("reulst==============={}", result);
+        return result;
+    }
 }

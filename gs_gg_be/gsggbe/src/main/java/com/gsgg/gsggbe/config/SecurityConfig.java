@@ -52,6 +52,8 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+
+    //vue단에서 처리안했으면 WebMVCConfigurer도 설정 필요
     //https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

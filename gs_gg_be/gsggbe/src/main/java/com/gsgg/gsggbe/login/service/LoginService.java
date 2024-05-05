@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -28,7 +29,6 @@ public class LoginService {
 
     //카카오 액세스 토큰 가져오기
     public String getToken(String code) {
-
         KakaoToken kakaoToken = new KakaoToken();
         String accessToken = null;
 
@@ -36,7 +36,7 @@ public class LoginService {
         StringBuilder postData = new StringBuilder();
         postData.append("grant_type=authorization_code");
         postData.append("&client_id=" + clientId);
-        postData.append("&redirect_uri=http://localhost:3000/loginpage");
+        postData.append("&redirect_uri=http://localhost:3000/login");
         postData.append("&code=" + code);
         byte[] postDataBytes = new byte[0];
         try {
@@ -51,14 +51,15 @@ public class LoginService {
             conn.getOutputStream().write(postDataBytes);
 
             int resCode = conn.getResponseCode();
+
             if (resCode == 200) {
 //              데이터 클 경우 점진적 데이터 처리용
 //              아래에서 InputStreamReader로 바이트 데이터를 문자로 처리해서 받아옴
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
 //                    인스턴스 변경 필요할 경우 ObjectMapper 사용
-                    ObjectMapper om = new ObjectMapper();
-                    kakaoToken = om.readValue(br, KakaoToken.class);
+                ObjectMapper om = new ObjectMapper();
+                kakaoToken = om.readValue(br, KakaoToken.class);
 
 
 //                    accessToken = String.valueOf(tokenJ.get("access_token"));
@@ -67,21 +68,23 @@ public class LoginService {
 //              처음에 finally에 뒀는데 BufferedReader 생성 중 예외 발생하면 애초에 생성이 안되서 닫을 게 없어짐.
                 br.close();
             } else {
-                log.error("카카오 토큰 받기 네트워크 오류");
+                String responseMessage = conn.getResponseMessage();
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                String errorResult = br.readLine();
+                log.error("rescode {}, responseMessage {}, errorResult {}", resCode,responseMessage, errorResult);
+                br.close();
             }
-
 
         } catch (IOException e) {
             log.error("카카오 토큰 받기 실패");
         }
 
-
-
+        log.info("kakaoToken.getAccessToken() {}", kakaoToken.getAccessToken());
         return kakaoToken.getAccessToken();
     }
 
     //가져온 토큰으로 회원 정보 조회
-    public KakaoUserInfo getMebrInfo(String accessToken) {
+    public KakaoUserInfo getKakaoUserInfo(String accessToken) {
         KakaoUserInfo userInfo = null;
         try {
             URL url = new URL("https://kapi.kakao.com/v2/user/me");
@@ -100,9 +103,7 @@ public class LoginService {
                     userInfo = om.readValue(br, KakaoUserInfo.class);
                 }
                 br.close();
-                int cnt = logInMapper.isMember(userInfo.getId());
-                log.info("userInfo {} cnt {}", userInfo.getKakaoAccount(), cnt);
-                if(cnt != 0) userInfo.setMember(true);
+
             } else {
                 log.error("카카오 고객정보 조회 네트워크 오류");
             }
@@ -114,5 +115,10 @@ public class LoginService {
     }
 
 
-
+    public String getUserName(String id) {
+        log.info("id무임? {} ",id);
+        String username = logInMapper.getUsername(id);
+        if (username==null)  return null;
+        else return username;
+    }
 }

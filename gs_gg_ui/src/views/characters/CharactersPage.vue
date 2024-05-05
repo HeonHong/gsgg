@@ -1,29 +1,30 @@
 <template lang="">
     <div class="out-div">
         <div id="sort-nav">
-            <nav>
-                <CharacterSortBar/>
+            <nav style="width: 100%;">
+                <CharacterSortNav/>
             </nav>
         </div>
-        <div id="crt-box-outline">
-            <div id="crt-box" v-for="data, i in crtInfosProps" :key="i">
-                <CharacterBox :crt-infos="data" :key="selectedIndex"/>
+        <div id="right-div">
+            <div id="crt-box-outline">
+                <div id="crt-box" v-for="data, i in crtInfosProps" :key="i">
+                    <CharacterBox :crt-infos="data" :key="selectedIndex"/>
+                </div>
+            </div>
+            <div id="page-box">
+                <div class="page-num-box" 
+                v-for="num in this.pageNums" :key="num"
+                @click="crtInfosChg(num)">
+                {{num}}
+                </div>
             </div>
         </div>
     </div>
-    <div>
-        <div id="page-box">
-            <div class="page-num-box" 
-            v-for="num in this.pageNums" :key="num"
-            @click="crtInfosChg(num)">
-            {{num}}
-            </div>
-        </div>
-    </div>
+        
 </template>
 <script>
 import CharacterBox from './CharacterBox.vue';              //캐립터 정보가 담긴 box component
-import CharacterSortBar from './CharacterSortBar.vue';      //검색 조건을 조정할 수 있는 바
+import CharacterSortNav from './CharacterSortNav.vue';      //검색 조건을 조정할 수 있는 바
 import apiCall from '@/js/mixins/api/api-call';             //서버 통신 api-call
 import '@/css/charactersStyle/CharacterPage.css';           //css 파일
 export default {
@@ -50,7 +51,6 @@ export default {
 
             //props 전달을 위한 배열 초기값 설정
             this.crtInfosProps = this.arrCrtInfos[0];
-
         };
 
         let fail = (data) => {
@@ -64,7 +64,7 @@ export default {
     //components
     components: {
         CharacterBox: CharacterBox,
-        CharacterSortBar: CharacterSortBar,
+        CharacterSortNav: CharacterSortNav,
     },
 
     //methods

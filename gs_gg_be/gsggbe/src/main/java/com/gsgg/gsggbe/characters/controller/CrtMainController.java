@@ -17,7 +17,7 @@ public class CrtMainController {
     private final CrtMainService crtMainService;
 
     @GetMapping("/api/getCrtInfos")
-    public void getCrtInfos() {
-        this.crtMainService.selectCrtInfos();
+    public List<Map<String, Object>> getCrtInfos() {
+        return this.crtMainService.selectCrtInfos();
     }
 }

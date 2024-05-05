@@ -1,7 +1,10 @@
 package com.gsgg.gsggbe.login.controller;
 
+import com.gsgg.gsggbe.login.dto.CustomUserDetails;
 import com.gsgg.gsggbe.login.dto.KakaoToken;
 import com.gsgg.gsggbe.login.dto.KakaoUserInfo;
+//import com.gsgg.gsggbe.login.service.CustomUserDetailsService;
+import com.gsgg.gsggbe.login.jwt.JWTUtil;
 import com.gsgg.gsggbe.login.service.CustomUserDetailsService;
 import com.gsgg.gsggbe.login.service.LoginService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -23,7 +27,11 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    private final CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService userDetailsService;
+    private final JWTUtil jwtUtil;
+
+
+    //    private final CustomUserDetailsService customUserDetailsService;
     private String role;
 
     @PostMapping("/")
@@ -55,13 +63,21 @@ public class LoginController {
 */
 
     @PostMapping("/kakao/auth")
-    public KakaoUserInfo KakaoAuth(@RequestBody String code) {
+    public String KakaoAuth(@RequestBody String code) {
         boolean isMember = false;
-        if (code.equals(null)) {
-            log.info("카카오 토큰 확인용 인가 코드 없음");
-        }
+
         String accessToken = loginService.getToken(code);
-        KakaoUserInfo userInfo = loginService.getMebrInfo(accessToken);
-        return userInfo;
+        KakaoUserInfo userInfo = loginService.getKakaoUserInfo(accessToken);
+        String username = loginService.getUserName(userInfo.getId());
+        if (username==null) return null;
+
+        CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        GrantedAuthority auth = iterator.next();
+        String role = auth.getAuthority();
+        String token = jwtUtil.createJWT(username, role, 60 * 60 * 10L);
+
+        return token;
     }
 }

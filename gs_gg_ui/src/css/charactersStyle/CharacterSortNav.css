@@ -1,0 +1,25 @@
+#window{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 1.5rem;
+}
+#search-div{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  width: 80%;
+}
+#search-input{
+    width: 100%;
+    height: 2.5rem;
+}
+#sort-div{
+    display: grid;
+    gap: 3rem;
+    width: 100%;
+    justify-content: center;
+    border: 1px solid black;
+}
+.sort_box{
+}
