@@ -1,5 +1,6 @@
 package com.gsgg.gsggbe.login.service;
 
+import com.gsgg.gsggbe.login.constants.RoleConstants;
 import com.gsgg.gsggbe.login.dto.JoinDTO;
 import com.gsgg.gsggbe.mapper.logIn.JoinMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +17,9 @@ public class JoinService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JoinMapper joinMapper;
     public int joinProcess(JoinDTO joinDTO){
-        String userId = joinDTO.getUserId();
-        String username = joinDTO.getUsername();
-        String password = joinDTO.getPassword();
+//        String userId = joinDTO.getUsername();
+//        String name = joinDTO.getName();
+//        String password = joinDTO.getPassword();
 //        int isExist = joinMapper.isExist(userId);
 //        if (isExist!=0){
 //            return 0;
@@ -26,7 +27,8 @@ public class JoinService {
 
         //BCryptPasswordEncoder로 비밀번호 해싱처리
         joinDTO.setPassword(bCryptPasswordEncoder.encode((CharSequence) joinDTO.getPassword()));
-        joinDTO.setRole("ROLE_ADMIN");
+//어드민 계정 만들기 분리 예정
+        //        joinDTO.setRole(RoleConstants.ADMINISTRATOR);
 
         int isSuccess;
 
