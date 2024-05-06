@@ -2,7 +2,7 @@
     <div>
         <div>
             <EpInput :model-value="username" @update:model-value="newVal => username = newVal"></EpInput>
-            <EpInput :model-value="password" @update:model-value="newVal => password = newVal"></EpInput>
+            <EpPassword :model-value="password" @update:model-value="newVal => password = newVal"></EpPassword>
             <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="로그인" @click="login" />
         </div>
         <div>
@@ -62,7 +62,6 @@ export default {
             console.log("err" + err);
         },
         confirm() {
-            console.log("여기 아닌가?");
             this.isOn=false;
             this.$router.push('/join');
         },

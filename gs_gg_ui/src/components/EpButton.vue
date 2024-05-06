@@ -1,11 +1,9 @@
+<!-- EpButton -->
 <template>
-    <!-- <div class="ep-button">
-        <button @click="btnClick" class="common-btn">{{this.label}}</button>
-    </div> -->
-
-    <button ref="buttonRef" class="dynamic-button">{{ props.label }}</button>
-    <!-- <input type="button" ref="buttonRef" class="dynamic-button" :value="props.label" > -->
-
+    <div class="btn-container">
+        <button ref="buttonRef" @click="emitClick" class="dynamic-button">{{ props.label }}</button>
+        <!-- <input type="button" @click="emitClick" ref="buttonRef" class="dynamic-button" :value="props.label" > -->
+    </div>
 </template>
 
 
@@ -24,7 +22,7 @@ export default {
         // });
 
 
-        const { width, height, color, fontColor} = toRefs(props);
+        const { width, height, color, fontColor } = toRefs(props);
 
         const buttonRef = ref(null);
 
@@ -36,8 +34,8 @@ export default {
                 buttonRef.value.style.setProperty('--button-height', height.value);
                 // buttonRef.value.style.setProperty('--button-color', color); 
                 // color는 문자열이 아니라 참조값이라서 color.value로 가져와야함.
-                if(color?.value!=undefined) buttonRef.value.style.setProperty('--button-color', color.value); 
-                if(fontColor?.value!=undefined) buttonRef.value.style.setProperty('--button-font-color', fontColor.value); 
+                if (color?.value != undefined) buttonRef.value.style.setProperty('--button-color', color.value);
+                if (fontColor?.value != undefined) buttonRef.value.style.setProperty('--button-font-color', fontColor.value);
             }
         });
 
@@ -47,9 +45,13 @@ export default {
         }
 
     },
-    props: ['width', 'height', 'color', 'label','fontColor'],
-    methods:{
-        emitClick(){
+    props: ['width', 'height', 'color', 'label', 'fontColor'],
+    emits: ['click'],
+    methods: {
+        emitClick(e) {
+            //이벤트 버블링 방지 필요
+            //하지 않는 경우 오류 예시 : AlertMdl에서 confirm과 cancel이 동시에 호출되는 오류 발생 
+            e.stopPropagation();
             this.$emit('click')
         }
     }
@@ -64,12 +66,15 @@ export default {
     /* 기본값 설정 */
     height: var(--button-height, 4rem);
     /* 기본값 설정 */
-    background-color: var(--button-color,var(--color1));
+    background-color: var(--button-color, var(--color1));
     /* background-color: var(--color1); */
     /* 기본값 설정 */
     border-radius: 5px;
-    border:none;
-    color:var(--button-font-color,var(--color6));
+    border: none;
+    color: var(--button-font-color, var(--color6));
+}
+.btn-container{
+    display: flex;
 }
 
 /* .common-btn{
