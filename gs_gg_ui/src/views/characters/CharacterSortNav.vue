@@ -1,7 +1,7 @@
 <template lang="">
     <div id="window">
         <div id="search-div">
-            <input type="text" id="search-input" placeholder="챔피언 이름 검색(가렌, ㄱㄹ)"/>
+            <input type="text" id="search-input" placeholder="챔피언 이름 검색(가렌, ㄱㄹ)" v-model="searchVal" @keyup="onKeyupSearch(searchVal)"/>
         </div>
         <div id="sort-div">
             <div class="sort-box" v-for="data in this.sort_list" :key="data.key">
@@ -14,6 +14,11 @@
 <script>
 import '@/css/charactersStyle/CharacterSortNav.css';           //css 파일
 export default {
+    //props
+    props: {
+        crtKorNames: Array
+    },
+    
     //data
     data() {
         return {
@@ -23,7 +28,9 @@ export default {
                 {key: 3, sort_name: "eng_name",     sort_content: "영어 이름순 정렬"},
                 {key: 4, sort_name: "eng_name_rev", sort_content: "영어 이름 역순 정렬"},
             ],
-            selectedItem: null,
+            selectedItem:   null,
+            searchVal:      null,
+            searchRresult:  [],
         }
     },
 
@@ -36,6 +43,13 @@ export default {
     methods: {
         testconsole(param) {
             console.log(param)
+        },
+
+        //onKeyupSearch
+        onKeyupSearch(searchVal) {
+            this.searchRresult = this.crtKorNames.filter(data => data.indexOf(searchVal) > -1);
+
+            console.log(this.searchRresult)
         }
     }
 }
