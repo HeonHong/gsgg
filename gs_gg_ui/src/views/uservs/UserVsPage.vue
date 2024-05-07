@@ -2,7 +2,7 @@
   <div id="main">
     <div class="topUserVs">
         <div class="btn-group">
-          <label>
+          <label class="btn-light">
             <input value="랭크전"/>
           </label>
           <label>
@@ -10,10 +10,10 @@
           </label>
         </div>
         <div class="input-group">
-          <input placeholder="나" />
-          <input placeholder="상대" />
+          <input placeholder="나" v-model="mySummonerName"/>
+          <input placeholder="상대" v-model="yourSummonerName" />
           <div class="input-group-append">
-            <button class="search-btn" type="button">검색</button>
+            <button class="search-btn" type="button" @click="getSummonerInfo">검색</button>
           </div>
         </div>
     </div>
@@ -31,8 +31,31 @@
 </template>
 
 <script>
+import apiMix from '@/js/mixins/api/api-mix';
 export default {
-
+  mixins: [apiMix],
+  data() {
+    return {
+      mySummonerName: '',
+      yourSummonerName: '',
+    }
+  }, 
+  methods: {
+    getSummonerInfo() { 
+      console.log(' this ', this.mySummonerName);
+      let param = { mySummonerName: this.mySummonerName }
+      param.tagLine = '#KR1';
+    
+      // this.getApi('/summonerId', param, this.getSummonerInfoCallback, this.fail );
+      this.getApi('/getUserInfo', param, this.getSummonerInfoCallback, this.fail );
+    },
+    getSummonerInfoCallback(res) {
+      console.log("res ", res);
+    },
+    fail(err) {
+      console.error(err);
+    }
+  }
 }
 </script>
 

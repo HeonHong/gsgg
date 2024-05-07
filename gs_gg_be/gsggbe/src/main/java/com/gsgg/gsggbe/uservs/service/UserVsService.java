@@ -5,26 +5,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.net.http.HttpClient;
-
 @Service
 public class UserVsService {
-    private String apiKey = "RGAPI-3c872789-bc9e-4668-b5f1-ad8d49383207";
-    public void selectUserInfo() {
-        String SummonerName = "hideonbush"; // 닉네임
-        String requestURL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+
-                SummonerName + "?api_key=" + apiKey;
-        System.out.println(" selectUserInfo");
+    // 종욱님 key
+    private final String apiKey = "RGAPI-3c872789-bc9e-4668-b5f1-ad8d49383207";
+
+    public Mono<String> selectUserInfo(String summonerName, String region) {
         try {
+            String requestURL = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + summonerName + "/" + region
+                    +"?api_key=" + apiKey;
             WebClient client = WebClient.create();
-            Mono<String> stringMono = client.get()
+            return client.get()
                     .uri(requestURL)
                     .retrieve()
-                    .bodyToMono(String.class);
-            System.out.println(stringMono.flux().toStream().findFirst());
-            System.out.println("종료");
-        } catch ( Exception e ) {
-            System.out.println(" error ee " + e);
+                    .bodyToMono(String.class)
+                    .doOnNext(result -> System.out.println("Response: " + result)) // 성공
+                    .doOnError(error -> System.err.println("Error: " + error)); // 실패
+        } catch (Exception e) {
+            System.out.println(" 에러¡ ");
+            return Mono.error(e);
         }
     }
+
 }

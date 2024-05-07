@@ -13,7 +13,10 @@ public class UserVsController {
 
     @GetMapping("/getUserInfo")
     public void getUserInfo() {
-        System.out.println("userInfo");
-        this.userVsService.selectUserInfo();
+        System.out.println("getUserInfo 확인");
+        this.userVsService.selectUserInfo("hide on bush", "KR1").subscribe(
+                result -> System.out.println("Response: " + result), // 성공한 경우의 동작
+                error -> System.err.println("Error: " + error) // 에러 발생 시의 동작
+        );
     }
 }
