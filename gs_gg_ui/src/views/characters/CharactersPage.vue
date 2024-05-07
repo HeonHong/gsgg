@@ -2,7 +2,7 @@
     <div class="out-div">
         <div id="sort-nav">
             <nav style="width: 100%;">
-                <CharacterSortNav :crt-kor-names="crtKorNames"/>
+                <CharacterSortNav :crt-kor-names="crtKorNames" @result-array="recieveResult"/>
             </nav>
         </div>
         <div id="right-div">
@@ -101,6 +101,11 @@ export default {
                     this.arrCrtInfos.push(arrTmp);
                 }
             }
+        },
+
+        //recieveResult
+        recieveResult(result) {
+            console.log(result);
         }
     },
 }

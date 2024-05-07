@@ -50,6 +50,8 @@ export default {
             this.searchRresult = this.crtKorNames.filter(data => data.indexOf(searchVal) > -1);
 
             console.log(this.searchRresult)
+
+            this.$emit('resultArray', this.searchRresult);
         }
     }
 }
