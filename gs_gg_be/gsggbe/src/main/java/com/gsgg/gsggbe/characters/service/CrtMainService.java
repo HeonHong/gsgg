@@ -178,7 +178,6 @@ public class CrtMainService {
 
         result = this.crtMainMapper.selectCrtInfos();
 
-        log.info("reulst==============={}", result);
         return result;
     }
 }

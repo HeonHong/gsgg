@@ -105,7 +105,12 @@ export default {
 
         //recieveResult
         recieveResult(result) {
-            console.log(result);
+
+            var tmpArr = this.crtInfos.filter(data => result.includes(data.KOR_NAME));
+
+            this.crtInfosProps = tmpArr;
+            
+            
         }
     },
 }
