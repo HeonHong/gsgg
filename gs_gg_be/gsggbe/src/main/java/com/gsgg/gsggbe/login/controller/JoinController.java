@@ -16,6 +16,7 @@ public class JoinController {
         if (username.equals("")) return 1;
         
         int isUser = joinService.isUserExist(username);
+        System.out.println("idUser"+isUser);
         return isUser;
 
     }

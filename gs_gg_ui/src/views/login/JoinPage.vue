@@ -50,13 +50,13 @@ export default {
             level: 0,
             isOn: false,
             message: "본인인증 구현 불가(nice api비용처리 불가) 바로 회원가입 하시겠습니까?",
-            isAvailable: 1,
+            userCnt: -1,//response값에 따라 재랜더링이 필요하기 때문에 -1로 설정
             idMessage: "",
             pwdCheck: "",
         }
     },
     watch: {
-        isAvailable(newVal) {
+        userCnt(newVal) {
             if (newVal == 0 || newVal == "0") this.idMessage = "사용가능한 아이디입니다."
             else this.idMessage = "사용 불가능한 아이디입니다."
         }
@@ -64,10 +64,21 @@ export default {
     computed: {
         pwdMsg() {
             if(this.joinData.password==""){ 
-                return ""
+                    return ""
             }else{
-                if (this.pwdCheck == this.joinData.password) return "비밀번호가 일치합니다"
-                else return "비밀번호가 일치하지 않습니다."
+                let regex=/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])\w{8,16}$/g;
+                if(!this.joinData.password.match(regex)){
+                    return "비밀번호는 대소문자,숫자를 포함하여야 합니다."
+                }else{
+    
+                        if(this.pwdCheck != "" ){
+                            if (this.pwdCheck == this.joinData.password) return "비밀번호가 일치합니다"
+                            else return "비밀번호가 일치하지 않습니다."
+        
+                        }else return "" 
+                  
+                } 
+
             }
         }
     },
@@ -95,11 +106,16 @@ export default {
             this.$router.push('/');
         },
         checkId() {
-            let param = { username: this.joinData.username };
-            this.getApi('/check-id', param, this.checkSuccess, this.checkFail);
+            let regex=/^(?=.*[a-z])(?=.*[0-9])\w{8,16}$/g;
+            if(!regex.test(this.joinData.username)){
+                this.idMessage="아이디는 소문자,숫자를 포함한 8글자 이상 16글자 이하로 가능합니다."
+            }else{
+                let param = { username: this.joinData.username };
+                this.getApi('/check-id', param, this.checkSuccess, this.checkFail);
+            }
         },
         checkSuccess(res) {
-            this.isAvailable = res.data;
+            this.userCnt = res.data;
         },
         checkFail() {
             this.idMessage = '확인 중 오류가 발생하였습니다';
