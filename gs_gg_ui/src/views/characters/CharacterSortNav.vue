@@ -1,7 +1,7 @@
 <template lang="">
     <div id="window">
         <div id="search-div">
-            <input type="text" id="search-input" placeholder="챔피언 이름 검색(가렌, ㄱㄹ)" v-model="searchVal" @keyup="onKeyupSearch(searchVal)"/>
+            <input type="text" id="search-input" placeholder="챔피언 이름 검색(가렌, ㄱㄹ)" :value="searchVal" @keyup="onKeyupSearch"/>
         </div>
         <div id="sort-div">
             <div class="sort-box" v-for="data in this.sort_list" :key="data.key">
@@ -46,10 +46,9 @@ export default {
         },
 
         //onKeyupSearch
-        onKeyupSearch(searchVal) {
-            this.searchRresult = this.crtKorNames.filter(data => data.indexOf(searchVal) > -1);
-
-            // console.log(this.searchRresult)
+        onKeyupSearch(event) {
+            this.searchVal = event.target.value;
+            this.searchRresult = this.crtKorNames.filter(data => data.indexOf(this.searchVal) > -1);
 
             this.$emit('resultArray', this.searchRresult);
         }
