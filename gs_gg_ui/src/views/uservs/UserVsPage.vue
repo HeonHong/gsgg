@@ -2,6 +2,7 @@
   <div id="main">
     <div class="topUserVs">
         <div class="btn-group">
+          <!-- radio type으로 수정 할 예정 -->
           <label class="btn-light">
             <input value="랭크전"/>
           </label>
@@ -16,11 +17,11 @@
             <button class="search-btn" type="button" @click="getSummonerInfo">검색</button>
           </div>
         </div>
+      </div>
     </div>
     <div>
       <div id="con1" class="con">
         <h3>같은팀으로 만나서</h3>
-      </div>
     </div>
     <div>
       <div id="con2" class="con">
