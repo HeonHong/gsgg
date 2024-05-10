@@ -4,8 +4,8 @@
             <input type="text" id="search-input" placeholder="챔피언 이름 검색(가렌, ㄱㄹ)" :value="searchVal" @keyup="onKeyupSearch"/>
         </div>
         <div id="sort-div">
-            <div class="sort-box" v-for="data in this.sort_list" :key="data.key">
-                <input type="radio" name="crt-sort" class="crt-sort" v-model="selectedItem" :value="data" id={{data.key}} @click="testconsole(data.sort_name)"/>
+            <div class="sort-box" v-for="data in this.sort_list" :key="data.key" >
+                <input type="radio" name="crt-sort" class="crt-sort" v-model="selectedItem" :value="data" id={{data.key}} @click="emitSort(data.id)"/>
                 <label for="test" id={{data.sort_name}}>{{data.sort_content}}</label>    
             </div>
         </div>
@@ -23,14 +23,15 @@ export default {
     data() {
         return {
             sort_list: [
-                {key: 1, sort_name: "kor_name",     sort_content: "이름순 정렬"},
-                {key: 2, sort_name: "kor_name_rev", sort_content: "이름 역순 정렬"},
-                {key: 3, sort_name: "eng_name",     sort_content: "영어 이름순 정렬"},
-                {key: 4, sort_name: "eng_name_rev", sort_content: "영어 이름 역순 정렬"},
+                {key: 1, id: "kor",     sort_name: "kor_name",     sort_content: "이름순 정렬"},
+                {key: 2, id: "kor_rev", sort_name: "kor_name_rev", sort_content: "이름 역순 정렬"},
+                {key: 3, id: "eng",     sort_name: "eng_name",     sort_content: "영어 이름순 정렬"},
+                {key: 4, id: "eng_rev", sort_name: "eng_name_rev", sort_content: "영어 이름 역순 정렬"},
             ],
-            selectedItem:   null,
-            searchVal:      null,
-            searchRresult:  [],
+            selectedItem:   null,   
+            searchVal:      null,   //검색 조건
+            searchRresult:  [],     //검색 결과 이름 배열
+            sortVal:        null,
         }
     },
 
@@ -41,8 +42,8 @@ export default {
 
     //methos
     methods: {
-        testconsole(param) {
-            console.log(param)
+        emitSort(param) {
+            this.$emit('sortString', param);
         },
 
         //onKeyupSearch
