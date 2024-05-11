@@ -14,7 +14,7 @@
           <input placeholder="나" v-model="mySummonerName"/>
           <input placeholder="상대" v-model="yourSummonerName" />
           <div class="input-group-append">
-            <button class="search-btn" type="button" @click="getSummonerInfo">검색</button>
+            <button class="search-btn" type="button" @click="getUserPuuid">검색</button>
           </div>
         </div>
       </div>
@@ -39,20 +39,49 @@ export default {
     return {
       mySummonerName: '',
       yourSummonerName: '',
+      summonerInfo: '', 
+      param: {}
     }
   }, 
   methods: {
-    getSummonerInfo() { 
-      console.log(' this ', this.mySummonerName);
-      let param = { mySummonerName: this.mySummonerName }
-      param.tagLine = '#KR1';
+    getUserPuuid() { 
+      this.param = { mySummonerName: this.mySummonerName }
+      this.param.tagLine = 'KR1';
+      this.getApi('/getUserPuuid', this.param, this.getUserPuuidCallback, this.fail );
+    },
+    getUserPuuidCallback(res) {
+      this.summonerInfo = res.data;
+      this.getMatchId(this.summonerInfo.puuid);
+    },
+
+    // getUserId(puuid) {
+    //   this.param = {puuid: puuid};
+    //   this.getApi("/getUserId", this.param, this.getUserIdCallback, this.fail );
+    // },
+    // getUserIdCallback(res){
+    //   this.summonerInfo = res.data; 
+    //   console.log("afsds", this.summonerInfo);
+    //   //this.getSummonerInfo(this.summonerInfo.id);
+    // },
     
-      // this.getApi('/summonerId', param, this.getSummonerInfoCallback, this.fail );
-      this.getApi('/getUserInfo', param, this.getSummonerInfoCallback, this.fail );
+    getMatchId(puuid) {
+      this.param = {puuid: puuid};
+      this.getApi("/getMatchId", this.param, this.getMatchIdCallback, this.fail );
     },
-    getSummonerInfoCallback(res) {
-      console.log("res ", res);
+    getMatchIdCallback(res){
+      this.summonerInfo = res.data; 
+      //this.getSummonerInfo(this.summonerInfo.id);
     },
+    
+    // getSummonerInfo(id) {
+    //   this.param = { id: id}
+    //   this.getApi("/getSummonerInfo", this.param, this.getSummonerInfoCallback, this.fail)
+    // },
+    // getSummonerInfoCallback(res) {
+    //   this.summonerInfo = res.data;
+    //   console.log(" summonerInfo 성공 ", this.summonerInfo);
+    // },
+
     fail(err) {
       console.error(err);
     }

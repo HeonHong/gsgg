@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @AllArgsConstructor
@@ -12,22 +13,39 @@ public class UserVsController {
 
     private final UserVsService userVsService;
 
-    @GetMapping("/getUserInfo")
-    public void getUserInfo(@RequestParam("mySummonerName") String mySummonerName,
-                            @RequestParam("tagLine") String tagLine) {
+    // puuid 조회
+    @GetMapping("/getUserPuuid")
+    public Mono<String> getUserPuuid(@RequestParam("mySummonerName") String mySummonerName,
+                                    @RequestParam("tagLine") String tagLine) {
         System.out.println("getUserInfo 확인");
-        this.userVsService.selectUserInfo(mySummonerName, tagLine).subscribe(
-                result -> System.out.println("Response: " + result), // 성공한 경우의 동작
-                error -> System.err.println("Error: " + error) // 에러 발생 시의 동작
-        );
+        System.out.println("getUserInfo 확인 mySummonerName " + mySummonerName);
+        System.out.println("getUserInfo 확인 tagLine " + tagLine);
+        return this.userVsService.getUserPuuid(mySummonerName, tagLine)
+                .doOnNext(result -> System.out.println("Response: " + result))
+                .doOnError(error -> System.err.println("Error: " + error));
     }
 
-    @GetMapping("/getUserInfo2")
-    public void getUserInfo2() {
-        System.out.println("getUserInfo 확인");
-        this.userVsService.selectUserInfo("hide on bush", "KR1").subscribe(
-                result -> System.out.println("Response: " + result), // 성공한 경우의 동작
-                error -> System.err.println("Error: " + error) // 에러 발생 시의 동작
-        );
+    // puuid 로 id 조회
+    @GetMapping("/getUserId")
+    public Mono<String> getUserId( @RequestParam String puuid){
+        return this.userVsService.getUserId(puuid)
+                .doOnNext( result -> System.out.println( " res " + result))
+                .doOnError(error -> System.err.println("Error: " + error));
     }
+
+    // id 로 전적 검색
+    @GetMapping("/getSummonerInfo")
+    public Mono<String> getSummonerInfo( @RequestParam String id){
+        return this.userVsService.getSummonerInfo(id)
+                .doOnNext( result -> System.out.println( " res " + result))
+                .doOnError(error -> System.err.println("Error: " + error));
+    }
+
+    @GetMapping("/getMatchId")
+    public Mono<String> getMatchId( @RequestParam String puuid){
+        return this.userVsService.getMatchId(puuid)
+                .doOnNext( result -> System.out.println( " res " + result))
+                .doOnError(error -> System.err.println("Error: " + error));
+    }
+
 }
