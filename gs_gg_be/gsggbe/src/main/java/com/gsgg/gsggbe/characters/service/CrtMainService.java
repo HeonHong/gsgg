@@ -168,7 +168,6 @@ public class CrtMainService {
     /**
      * 2024-04-28
      * 캐릭터 정보 반환
-     * API를 통해 받아온 데이터를 TB_CRT_IMG 테이블 저장을 위해 가공
      *
      * @return List<Map<String, Object>> champion info list
      */
@@ -178,7 +177,6 @@ public class CrtMainService {
 
         result = this.crtMainMapper.selectCrtInfos();
 
-        log.info("reulst==============={}", result);
         return result;
     }
 }

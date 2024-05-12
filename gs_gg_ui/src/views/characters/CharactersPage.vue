@@ -2,7 +2,7 @@
     <div class="out-div">
         <div id="sort-nav">
             <nav style="width: 100%;">
-                <CharacterSortNav/>
+                <CharacterSortNav :crt-kor-names="crtKorNames" @result-array="recieveResult" @sort-string="sortString"/>
             </nav>
         </div>
         <div id="right-div">
@@ -31,11 +31,13 @@ export default {
     //data
     data() {
         return {
+            crtInfosOri     : null,         //서버 통신된 배열 그대로(초기 통신 이후 수정 안함)
             crtInfos        : null,         //캐릭터 정보 배열
+            crtKorNames     : [],           //캐릭터 한국 이름 배열
             pageNums        : 0,            //총 페이지 크기
             arrCrtInfos     : [],           //30개로 나눈 캐릭터 정보 배열
-            crtInfosProps   : [],
-            selectedIndex   : 0,
+            crtInfosProps   : [],           //최종 캐릭터 정보 배열 - box 전달됨 / 페이징 되어 있음
+            selectedIndex   : 0,            //선택된 페이지 인덱스
         }
     },
     
@@ -44,7 +46,11 @@ export default {
         let url = "/api/getCrtInfos";   //연결 url
 
         let success = (result) => {
+            this.crtInfosOri = result.data ; //origin 배열에 저장
             this.crtInfos = result.data;    //결과값을 캐릭터 정보 배열에 저장
+
+            //한글 이름 배열 세팅
+            this.crtKorNames = result.data.map(crt => crt.KOR_NAME);
 
             //페이징 세팅
             this.setPageNumsAndArrCrtInfos();
@@ -85,11 +91,13 @@ export default {
             
             //캐릭터 정보를 페이지 별로 나눔(30개씩)
             let arrTmp = [];
-
+            //전달용 배열 초기화
+            this.arrCrtInfos = [];
+            
             for(let i=0; i < totNum; i++) {
                 arrTmp.push(this.crtInfos[i]);
 
-                if(arrTmp.length == perPageNum) {       //임시배열의 크기가 페이지당 캐릭터의 수와 같을 경우
+                if(arrTmp.length == perPageNum) {       //임시배열의 크기가 페이지당 캐릭터의 수와 같을 경우(30개가 찼을 경우)
                     this.arrCrtInfos.push(arrTmp);
                     arrTmp = [];
 
@@ -97,6 +105,72 @@ export default {
                     this.arrCrtInfos.push(arrTmp);
                 }
             }
+        },
+
+        //recieveResult(챔피언 검색 결과)
+        recieveResult(result) {
+            this.crtInfos = this.crtInfosOri.filter(data => result.includes(data.KOR_NAME));
+
+             //페이징 세팅
+             this.setPageNumsAndArrCrtInfos();
+
+            //props 전달을 위한 배열 초기값 설정
+            this.crtInfosProps = this.arrCrtInfos[0];
+
+            // document.getElementById('page-box').style.display = 'none';
+            
+        },
+
+        //sortString(챔피언 정렬)
+        sortString(result) {
+            var sortFunc;
+            switch (result) {
+                case "kor":
+                    sortFunc = (a, b) => {
+                        if(a.KOR_NAME > b.KOR_NAME) return 1;
+                        if(a.KOR_NAME < b.KOR_NAME) return -1;
+                        if(a.KOR_NAME === b.KOR_NAME) return 0;
+                    };
+                break;
+            
+                case "kor_rev":
+                    sortFunc = (a, b) => {
+                        if(a.KOR_NAME < b.KOR_NAME) return 1;
+                        if(a.KOR_NAME > b.KOR_NAME) return -1;
+                        if(a.KOR_NAME === b.KOR_NAME) return 0;
+                    };
+                break;
+
+                case "eng":
+                    sortFunc = (a, b) => {
+                        if(a.ENG_NAME > b.ENG_NAME) return 1;
+                        if(a.ENG_NAME < b.ENG_NAME) return -1;
+                        if(a.ENG_NAME === b.ENG_NAME) return 0;
+                    };
+                break;
+
+                case "eng_rev":
+                    sortFunc = (a, b) => {
+                        if(a.ENG_NAME < b.ENG_NAME) return 1;
+                        if(a.ENG_NAME > b.ENG_NAME) return -1;
+                        if(a.ENG_NAME === b.ENG_NAME) return 0;
+                    };
+                break;
+                    
+                default:
+                    break;
+                    
+                }
+
+            var tmpArr = [];
+            tmpArr = this.crtInfos.sort((a, b) => sortFunc(a, b));
+            this.crtInfos = tmpArr;
+
+            //페이징 세팅
+            this.setPageNumsAndArrCrtInfos();
+
+            //props 전달을 위한 배열 초기값 설정
+            this.crtInfosProps = this.arrCrtInfos[0];
         }
     },
 }
