@@ -4,7 +4,7 @@
         <div class="alert-modal-window">
             <div class="alert-modal-message">{{ message }}</div>
             <div class="alert-modal-btns">
-                <EpButton label="취소" width="5rem" height="3.5rem" @click="cancel" />&nbsp; &nbsp; &nbsp;
+                <EpButton v-if="type=='confirm'" label="취소" width="5rem" height="3.5rem" @click="cancel" />&nbsp; &nbsp; &nbsp;
                 <EpButton label="확인" width="5rem" height="3.5rem" @click="confirm" />
             </div>
         </div>
@@ -14,7 +14,7 @@
 // import { commSwitch } from '@/js/comm-switch';
 export default {
     name: "AlertMdl",
-    props:['message','isOn'],
+    props:['message','isOn','type'],
     data() {
         return {
             
