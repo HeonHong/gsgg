@@ -5,7 +5,8 @@ import com.gsgg.gsggbe.login.dto.JoinDTO;
 public interface JoinMapper {
 
 
-    int isExist(String userId);
+    int isUserExist(String username);
 
     int saveUser(JoinDTO joinDTO);
+
 }
