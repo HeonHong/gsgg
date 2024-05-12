@@ -11,7 +11,7 @@
     </div>
 </template>
 <script>
-import { commSwitch } from '@/js/comm-switch';
+// import { commSwitch } from '@/js/comm-switch';
 export default {
     name: "AlertMdl",
     props:['message','isOn'],
@@ -21,7 +21,7 @@ export default {
         }
     },
     created() {
-        commSwitch.setSwitch('AlertMdl', this)
+        // commSwitch.setSwitch('AlertMdl', this)
     },
     methods: {
         confirm() {
