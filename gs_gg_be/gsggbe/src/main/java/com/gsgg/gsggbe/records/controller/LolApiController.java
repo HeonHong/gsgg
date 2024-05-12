@@ -67,7 +67,7 @@ public class LolApiController {
                                         .queryParam("api_key", apiKey)
                                         .build(matchId))
                                 .retrieve()
-                                .bodyToMono(Map.class),
-                        5); // 동시 요청 처리 제한
+                                .bodyToMono(Map.class)
+                        ); // 동시 요청 처리 제한
     }
 }

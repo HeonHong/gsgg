@@ -21,8 +21,18 @@
         </div>
       </div>
       <div id="match-info-box">
-        <div id="match_info_section">
-          <div id="match_info">
+        <div id="match_info_section" v-for="match in matchDetail" :key="match.gameId" class="match-card">
+          <div class="match-summary">
+            <div class="game-result" :class="{'win': match.win, 'loss': !match.win}">
+              <span>{{ match.win ? 'Victory' : 'Defeat' }}</span>
+            </div>
+            <div class="game-details">
+              <span>K/D/A: {{ match.kills }}/{{ match.deaths }}/{{ match.assists }}</span>
+            </div>
+          </div>
+          <div class="champion-info">
+            <img :src="`https://ddragon.leagueoflegends.com/cdn/14.9.1/img/champion/${match.championName}.png`" alt="champion">
+            <span>{{ match.championName }}</span>
           </div>
         </div>
       </div>
@@ -39,6 +49,7 @@ export default {
       summonerID: null,
       summonerInfo: null,
       matchInfo: [],
+      matchDetail: [],
     };
   },
   methods: {
@@ -86,8 +97,13 @@ export default {
       this.getApi(`/matches/details?${queryString}`, {}, this.successMatchDetails, this.fail);
     },
     successMatchDetails(response) {
-      console.log('매치 상세 정보 조회 성공:', response.data);
+      console.log('매치 상세 정보 조회 성공:', response.data)
+      console.log('매치 상세 정보' , response.data.info.participants);
       this.matchInfo = response.data; // 전체 데이터를 배열에 저장
+      this.matchDetail = response.data.info.participants.filter(participant =>
+        participant.riotIdGameName.toLowerCase() === this.summonerID.gameName.toLowerCase() &&
+        participant.riotIdTagLine.toLowerCase() === this.summonerID.tagLine.toLowerCase()
+      );
     },
     fail(error) {
       console.error('API 호출 실패:', error.message);
@@ -236,5 +252,66 @@ export default {
 #match-info {
   margin: 10px 0;
   border: 5px;
+}
+
+#match-info-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.match-card {
+  width: 90%;
+  background: #fff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.match-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.game-result {
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.win {
+  background-color: #a3cfec;
+}
+
+.loss {
+  background-color: #e2b6b3;
+}
+
+.game-details {
+  font-size: 12px;
+}
+
+.champion-info {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.champion-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.champion-info span {
+  font-size: 14px;
+  font-weight: bold;
 }
 </style>
