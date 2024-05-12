@@ -7,14 +7,14 @@
             <img src="@/assets/GS_GG Logo_NoBG.png" @click="goToMainPage"/>
         </div>
         <div class="header-login">
-            <div v-if="!isLoggedIn">
+            <div v-if="$store.state.userToken==null">
             <span @click="login">로그인</span>&nbsp;&nbsp;&nbsp;
-            <span>회원가입</span>&nbsp;&nbsp;
+            <span @click="join">회원가입</span>&nbsp;&nbsp;
             </div>
-            <div v-if="isLoggedIn">
+            <div v-if="$store.state.userToken!=null">
             <img :src="profileImage"/>
             <span>{{name}}</span>&nbsp;&nbsp;&nbsp;
-            <span @click="isLoggedIn=false">로그아웃</span>&nbsp;&nbsp;
+            <span @click="logOut">로그아웃</span>&nbsp;&nbsp;
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
 import axios from 'axios';
 import TabButtons from '@/components/TabButtons.vue';
 import apiCall from "@/js/mixins/api/api-call.js"
-import commonUtils from "@/js/common-utils.js"
+// import commonUtils from "@/js/common-utils.js"
 
 //공통 버튼 테스트
 import LoadingBar from '@/components/LoadingBar.vue';
@@ -74,7 +74,13 @@ export default {
         btnFunc() {
         },
         login() {
-            this.$router.push('/loginpage')
+            this.$router.push('/login');
+        },
+        logOut() {
+            this.$store.commit('removeUserToken');
+        },
+        join(){
+            this.$router.push('/join');
         }
     },
 
@@ -99,20 +105,19 @@ export default {
                 { id: 3, tabName: "TestPage", pagePath: '/test' },
                 { id: 4, tabName: "SocketTest", pagePath: '/sockettest' },
             ],
-            isLoggedIn: false,
             name: '',
             profileImage: '',
         }
     },
     mounted() {
-        let kakaoInfo = localStorage.getItem('kakaoInfo');
-        console.log(kakaoInfo);
-        if (!commonUtils.isNull(kakaoInfo)) {
-            let userInfo = JSON.parse(kakaoInfo);
-            this.isLoggedIn = true;
-            this.name = userInfo.properties.nickname;
-            this.profileImage = userInfo.properties.profile_image;
-        }
+        // let kakaoInfo = localStorage.getItem('kakaoInfo');
+        // console.log(kakaoInfo);
+        // if (!commonUtils.isNull(kakaoInfo)) {
+        //     let userInfo = JSON.parse(kakaoInfo);
+        //     this.isLoggedIn = true;
+        //     this.name = userInfo.properties.nickname;
+        //     this.profileImage = userInfo.properties.profile_image;
+        // }
         // localStorage.clear();
     },
 
@@ -120,26 +125,4 @@ export default {
 </script>
 
 <style>
-/* :root{
-    --color1:#283959;
-    --color2:#A6A9F5;
-    --color3:#936CF5;
-    --color4:#699AF5;
-    --color5:#0FC2C0;
-}
-.header{
-    display: flex;
-    height:100px;
-    background:var(--color1);
-    color:white;
-    cursor: pointer;
-}
-.search{
-    display:flex;
-    justify-content: flex-end;
-}    
-.tab-btn-grp{
-    display: flex;
-    width: fit-content;
-} */
 </style>

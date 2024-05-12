@@ -21,14 +21,27 @@ public class LolApiController {
         this.webClientAsia = webClientBuilder.baseUrl("https://asia.api.riotgames.com").build();
     }
 
-    // 소환사 이름으로 소환사 정보를 조회
-    @GetMapping("/summoner")
-    public Mono<Map> getSummonerInfo(@RequestParam(value="summonerName") String summonerName) {
+    // 닉네임과 태그라인으로 Puuid를 조회
+    @GetMapping("/summonerId")
+    public Mono<Map> getSummonerPuuid(@RequestParam(value="summonerName") String summonerName,
+                                     @RequestParam(value="tagLine") String tagLine) {
+        return this.webClientAsia.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/riot/account/v1/accounts/by-riot-id/{summonerName}/{tagLine}")
+                        .queryParam("api_key", apiKey)
+                        .build(summonerName,tagLine))
+                .retrieve()
+                .bodyToMono(Map.class);
+    }
+
+    // Puuid로 소환사 정보를 조회
+    @GetMapping("/summonerInfo")
+    public Mono<Map> getSummonerInfo(@RequestParam(value="puuid") String puuid) {
         return this.webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/lol/summoner/v4/summoners/by-name/{summonerName}")
+                        .path("/lol/summoner/v4/summoners/by-puuid/{puuid}")
                         .queryParam("api_key", apiKey)
-                        .build(summonerName))
+                        .build(puuid))
                 .retrieve()
                 .bodyToMono(Map.class);
     }
@@ -54,7 +67,7 @@ public class LolApiController {
                                         .queryParam("api_key", apiKey)
                                         .build(matchId))
                                 .retrieve()
-                                .bodyToMono(Map.class),
-                        5); // 동시 요청 처리 제한
+                                .bodyToMono(Map.class)
+                        ); // 동시 요청 처리 제한
     }
 }

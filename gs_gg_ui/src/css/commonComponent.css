@@ -39,6 +39,10 @@
     outline: none;
 }
 
+.og-pwd-img{
+    width:1.5rem;
+    height:1.5rem;
+}
 
 /* 로딩바 */
 .loading-bar-container {
