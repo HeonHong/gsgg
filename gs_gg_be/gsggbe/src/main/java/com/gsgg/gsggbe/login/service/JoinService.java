@@ -42,4 +42,8 @@ public class JoinService {
         System.out.println(isSuccess);
         return isSuccess;
     }
+
+    public int isUserExist(String username) {
+        return joinMapper.isUserExist(username);
+    }
 }

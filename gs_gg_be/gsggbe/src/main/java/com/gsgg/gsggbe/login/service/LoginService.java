@@ -79,7 +79,6 @@ public class LoginService {
             log.error("카카오 토큰 받기 실패");
         }
 
-        log.info("kakaoToken.getAccessToken() {}", kakaoToken.getAccessToken());
         return kakaoToken.getAccessToken();
     }
 
@@ -116,7 +115,7 @@ public class LoginService {
 
 
     public String getUserName(String id) {
-        log.info("id무임? {} ",id);
+        //카카오 아이디가 존재 시, 원래 아이디 가져오기
         String username = logInMapper.getUsername(id);
         if (username==null)  return null;
         else return username;
