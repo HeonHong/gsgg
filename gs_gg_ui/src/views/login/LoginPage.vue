@@ -1,8 +1,8 @@
 <template>
     <div>
         <div>
-            <EpInput :model-value="username" @update:model-value="newVal => username = newVal"></EpInput>
-            <EpPassword :model-value="password" @update:model-value="newVal => password = newVal"></EpPassword>
+            <EpInput :model-value="username" label="아이디" @update:model-value="newVal => username = newVal"></EpInput>
+            <EpPassword :model-value="password" label="비밀번호" @update:model-value="newVal => password = newVal"></EpPassword>
             <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="로그인" @click="login" />
         </div>
         <div>

@@ -2,28 +2,36 @@
 <template>
     <div>
         <div>
-            <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="본인인증" @click="next" />
-            <!-- <div v-if="level == 1"> -->
-            <div class="form-container">
-                <div class="form-line">
-                    <!-- 중복확인 후 아이디 변경 시, 다시 중복확인 필요 -->
-                    <EpInput v-model="joinData.username" placeholder="아이디를 입력하세요"></EpInput>
-                    <EpButton label="중복확인" width="6rem" height="3rem" @click="checkId" />&nbsp; &nbsp; &nbsp;
-                </div>
-                {{ idMsg }}
-                <!-- 비밀번호 정규식 확인 필요 -->
-                <EpPassword v-model="joinData.password" placeholder="비밀번호를 입력하세요"></EpPassword>
-                <EpPassword v-model="pwdCheck" placeholder="비밀번호를 입력하세요"></EpPassword>
-                <div>{{ pwdMsg }}</div>
-                <EpInput v-model="joinData.name" placeholder="이름을 입력하세요"></EpInput>
-                <EpInput v-model="joinData.mobileNum" placeholder="휴대전화번호를 입력하세요"></EpInput>
-                <EpInput v-model="joinData.birthday" placeholder="생년월일을 입력하세요"></EpInput>
-                <!-- 비활성화 필요 -->
-                <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="회원가입" @click="join" />
+            <div v-if="level == 0">
+                <EpInput v-model="joinData.name" label="이름"></EpInput>
+                <EpInput v-model="joinData.mobileNum" label="휴대폰번호"></EpInput>
+                <EpInput v-model="joinData.birthday" label="생년월일"></EpInput>
+                {{ msg }}
+                <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="본인인증"
+                    @click="identityCheck" />
             </div>
+            <div v-if="level == 1">
+                <div class="form-container">
+                    <EpInput v-model="joinData.name" label="이름" readonly="true"></EpInput>
+                    <EpInput v-model="joinData.mobileNum" label="휴대폰번호" readonly="true"></EpInput>
+                    <EpInput v-model="joinData.birthday" label="생년월일" readonly="true"></EpInput>
+                    <div class="form-line">
+                        <!-- 중복확인 후 아이디 변경 시, 다시 중복확인 필요 -->
+                        <EpInput v-model="joinData.username" label="아이디"></EpInput>
+                        <EpButton label="중복확인" width="6rem" height="3rem" @click="userNameCheck" />
+                        &nbsp; &nbsp; &nbsp;
+                    </div>
+                    {{ msg.username }}
+                    <!-- 비밀번호 정규식 확인 필요 -->
+                    <EpPassword v-model="joinData.password" label="비밀번호"></EpPassword>
+                    <EpPassword v-model="pwdCheck" label="중복확인"></EpPassword>
+                    <div>{{ msg.password }}</div>
+                    <!-- 비활성화 필요 -->
+                    <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="회원가입" @click="join" />
+                </div>
+            </div>
+            <AlertMdl :isOn="isOn" :message="message" @cancel="cancel" @confirm="confirm"></AlertMdl>
         </div>
-        <AlertMdl :isOn="isOn" :message="message" @cancel="cancel" @confirm="confirm"></AlertMdl>
-        <!-- </div> -->
     </div>
 </template>
 <script>
@@ -51,42 +59,74 @@ export default {
             isOn: false,
             message: "본인인증 구현 불가(nice api비용처리 불가) 바로 회원가입 하시겠습니까?",
             userCnt: -1,//response값에 따라 재랜더링이 필요하기 때문에 -1로 설정
-            idMsg: "",
             pwdCheck: "",
-            validation: {
-                id: false,
-                password: false,
-                mobileNum: false,
-            }
+            msg: "",
         }
     },
     watch: {
         userCnt(newVal) {
             if (newVal == 0 || newVal == "0") {
-                this.idMsg = "사용가능한 아이디입니다."
-                this.validation.id = true;
-            } else this.idMsg = "사용 불가능한 아이디입니다."
+                this.msg = "사용가능한 아이디입니다."
+            } else if (newVal > 0) {
+                this.msg = "사용 불가능한 아이디입니다.";
+            } else if (newVal == -1) {
+                this.msg = ""
+            }
         },
-        'joinData.id'() {
-            this.validation.id = false;
+        'joinData.username'() {
+            this.userCnt = -1;
         }
     },
     computed: {
-        pwdMsg() {
-            if(this.valPwd && this.pwdCheck==this.joinData.password ) return "사용 가능한 비밀번호 입니다."
-            else if(!this.valPwd&&this.joinData.password!='') return "비밀번호는 영문 대소문자, 숫자를 포함한 8자리 이상 16자 이하입니다."
-            else if(this.pwdCheck!=""&&this.pwdCheck!=this.joinData.password) return "비밀번호가 다릅니다."
-            else return "" 
-        },
-        valPwd() {
-            let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])\w{8,16}$/g;
-            if (this.joinData.password.match(regex)) return true;
-            else return false;
-        }
+
     },
     methods: {
+        identityCheck() {
+            if (this.joinData.name == "") {
+                this.msg = "이름은 필수값입니다."
+                return;
+            } else if (this.joinData.mobileNum == "") {
+                this.msg = "휴대폰번호는 필수값입니다."
+                return;
+            } else if (this.joinData.birthday == "") {
+                this.msg = "생년월일은 필수 값입니다."
+                return;
+            }
+            this.next();
+        },
         join() {
-            this.postApi('/join', this.joinData, this.success, this.fail)
+            if (this.userCnt != 0) {
+                this.msg.username = "중복확인을 해주세요"
+                return
+            }
+            if (!this.pwdVal(this.joinData.password, this.pwdCheck)) return;
+            // this.postApi('/join', this.joinData, this.success, this.fail)
+        },
+        userNameVal(username) {
+            let regex = /^(?=.*[a-z])(?=.*[0-9])\w{8,16}$/g;
+            let regCheck = username.match(regex);
+            if (regCheck) return true;
+
+            this.msg.username = "아이디는 소문자,숫자를 포함한 8글자 이상 16글자 이하로 가능합니다."
+            return false;
+        },
+        pwdVal(ogPwd, pwdCheck) {
+            let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])\w{8,16}$/g;
+            let regCheck = ogPwd.match(regex);
+            if (regCheck && pwdCheck == ogPwd) {
+                this.msg.password = ""
+                return true;
+            }
+            if (ogPwd == "") this.msg.password = "비밀번호를 입력해주세요.";
+            else if (!regCheck && ogPwd != '') this.msg.password = "비밀번호는 영문 대소문자, 숫자를 포함한 8자리 이상 16자 이하입니다.";
+            else if (pwdCheck != ogPwd) this.msg.password = "비밀번호가 다릅니다.";
+            return false;
+        },
+        userNameCheck() {
+            if (this.userNameVal(this.joinData.username)) {
+                let param = { username: this.joinData.username };
+                this.getApi('/check-id', param, this.checkSuccess, this.checkFail);
+            }
         },
         next() {
             this.isOn = true;
@@ -107,20 +147,12 @@ export default {
             this.isOn = false;
             this.$router.push('/');
         },
-        checkId() {
-            let regex = /^(?=.*[a-z])(?=.*[0-9])\w{8,16}$/g;
-            if (!regex.test(this.joinData.username)) {
-                this.idMsg = "아이디는 소문자,숫자를 포함한 8글자 이상 16글자 이하로 가능합니다."
-            } else {
-                let param = { username: this.joinData.username };
-                this.getApi('/check-id', param, this.checkSuccess, this.checkFail);
-            }
-        },
+
         checkSuccess(res) {
             this.userCnt = res.data;
         },
         checkFail() {
-            this.idMsg = '확인 중 오류가 발생하였습니다';
+            this.msg.username = '확인 중 오류가 발생하였습니다';
         },
 
     }
@@ -130,7 +162,6 @@ export default {
 .form-container {
     /* display:flex; */
 }
-
 .form-line {
     display: flex;
     align-items: center;
