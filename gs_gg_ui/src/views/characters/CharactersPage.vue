@@ -109,6 +109,8 @@ export default {
 
         //recieveResult(챔피언 검색 결과)
         recieveResult(result) {
+            this.sortString("kor");
+
             this.crtInfos = this.crtInfosOri.filter(data => result.includes(data.KOR_NAME));
 
              //페이징 세팅
