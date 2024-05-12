@@ -48,4 +48,9 @@ public class UserVsController {
                 .doOnError(error -> System.err.println("Error: " + error));
     }
 
+    @GetMapping("/getMatchDetails")
+    public Mono<String> getMatchDetails() {
+//        return this.userVsService.getMatchDetails();
+        return null;
+    }
 }

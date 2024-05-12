@@ -63,5 +63,17 @@ public class UserVsService {
             return Mono.error(e);
         }
     }
+    public Mono<String> getMatchDetails() {
+        try {
+            String requestURL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + "param 에서가져온 matchid"
+                    +"?api_key=" + apiKey;
+            return client.get()
+                    .uri(requestURL)
+                    .retrieve()
+                    .bodyToMono(String.class);
+        } catch ( Exception e ) {
+            return Mono.error(e);
+        }
+    }
 
 }
