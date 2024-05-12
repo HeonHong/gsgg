@@ -42,12 +42,15 @@ export default {
 
     //methos
     methods: {
+        //캐릭터 정렬
         emitSort(param) {
             this.$emit('sortString', param);
         },
 
-        //onKeyupSearch
+        //onKeyupSearch(캐릭터 검색)
         onKeyupSearch(event) {
+            this.selectedItem = this.sort_list[0];  //캐릭터 정렬 순서 한글이름 순으로
+
             this.searchVal = event.target.value;
             this.searchRresult = this.crtKorNames.filter(data => data.indexOf(this.searchVal) > -1);
 
