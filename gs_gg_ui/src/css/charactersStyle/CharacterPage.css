@@ -44,3 +44,7 @@
     flex-direction: column;
     width: 80%;
 }
+#popup-div {
+    position: absolute;
+    transform: translate(50%, -170%);
+}

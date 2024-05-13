@@ -42,7 +42,6 @@ const menus = [
     name: "JoinPage",
     componentPath: "login/JoinPage",
   },
-
 ];
 
 export default menus;
