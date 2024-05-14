@@ -45,6 +45,8 @@
     width: 80%;
 }
 #popup-div {
-    position: absolute;
-    transform: translate(50%, -170%);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }

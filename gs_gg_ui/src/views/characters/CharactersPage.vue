@@ -19,11 +19,12 @@
                 </div>
             </div>
         </div>
+
+        <div id="popup-div" v-if="this.isPopupOpen == true">
+            <CharacterDescPopup @close-popup="this.isPopupOpen = false;" :objCrt="objCrt"/>
+        </div>
     </div>
     
-    <div id="popup-div" v-if="this.isPopupOpen == true">
-        <CharacterDescPopup @close-popup="this.isPopupOpen = false;"/>
-    </div>
 </template>
 <script>
 import CharacterBox from './CharacterBox.vue';              //캐립터 정보가 담긴 box component
@@ -43,6 +44,7 @@ export default {
             crtInfosProps   : [],           //최종 캐릭터 정보 배열 - box 전달됨 / 페이징 되어 있음
             selectedIndex   : 0,            //선택된 페이지 인덱스
             isPopupOpen     : false,        //팝업 오픈 상태
+            objCrt          : {}            //한개의 챔피언을 담을 객체
         }
     },
     
@@ -189,7 +191,8 @@ export default {
         selectedCrt(result) {
             this.isPopupOpen = this.isPopupOpen ? false : true;
 
-            console.log(result)
+            //캐릭터 배열에서 선택된 캐릭터 filter 후 객체에 세팅
+            this.objCrt = this.crtInfosOri.filter(data => data.CRT_ID === result);
         }
     },
 }

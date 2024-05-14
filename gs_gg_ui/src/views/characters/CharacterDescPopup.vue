@@ -1,6 +1,7 @@
 <template lang="">
     <div id="popup-window">
-        popup test
+        <div id="popup-body">
+        </div>
     </div>
 </template>
 <script>
@@ -8,6 +9,7 @@ import '@/css/charactersStyle/CharacterDescPopup.css';           //css 파일
 export default {
     //props
     props: {
+        objCrt: Object,
     },
     
     //data
@@ -18,6 +20,7 @@ export default {
 
     //mounted
     mounted() {
+        
     },
 
     //methos
