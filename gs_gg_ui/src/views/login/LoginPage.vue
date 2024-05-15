@@ -23,6 +23,7 @@ import AlertMdl from '@/components/AlertMdl.vue';
 
 
 export default {
+    name:'LoginPage',
     components: {
         AlertMdl
     },

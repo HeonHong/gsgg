@@ -39,7 +39,7 @@ const menus = [
   },
   {
     path: "join",
-    name: "JoinPage",
+    // name: "JoinPage",
     componentPath: "login/JoinPage",
   },
 

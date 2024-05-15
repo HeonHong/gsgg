@@ -18,7 +18,7 @@ const routes = [
   //전적 검색 페이지
   {
     path: "/",
-    name: "/",
+    name: "HomePage",
     component: HomePage,
     props:true,
     children: mainRoutes, // Hompage 주소 '/'를 고정값으로 가지고 있는다
