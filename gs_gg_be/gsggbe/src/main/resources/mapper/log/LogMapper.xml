@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gsgg.gsggbe.mapper.log.LogMapper">
+    <select id="selectCrtInfos" resultType="java.util.List">
+        SELECT  A.CRT_ID
+        , A.KOR_NAME
+        , A.ENG_NAME
+        , A.VERSION_NO
+        , B.DESC_ID
+        , B.DESC_CONTENT
+        , C.FILE_NAME
+        FROM        TB_CRT_BASIC A
+        INNER JOIN  TB_CRT_DESC B ON A.CRT_ID = B.CRT_ID
+        INNER JOIN  TB_CRT_IMG  C ON A.CRT_ID = C.CRT_ID
+        ORDER BY    A.KOR_NAME
+    </select>
+
+    <select id="insertLogTest" resultType="java.util.Map">
+        select *
+        from user
+    </select>
+</mapper>
