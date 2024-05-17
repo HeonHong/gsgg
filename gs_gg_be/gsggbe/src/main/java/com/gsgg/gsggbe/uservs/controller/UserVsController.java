@@ -2,10 +2,12 @@ package com.gsgg.gsggbe.uservs.controller;
 
 import com.gsgg.gsggbe.uservs.service.UserVsService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -48,9 +50,9 @@ public class UserVsController {
                 .doOnError(error -> System.err.println("Error: " + error));
     }
 
-    @GetMapping("/getMatchDetails")
-    public Mono<String> getMatchDetails() {
-//        return this.userVsService.getMatchDetails();
-        return null;
+    @PostMapping ("/getMatchDetails")
+    public Flux<Map> getMatchDetails(@RequestBody List <String> matchIds ) {
+        System.out.println(" matchIds : " + matchIds );
+        return this.userVsService.getMatchDetails( matchIds );
     }
 }

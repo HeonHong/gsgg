@@ -69,10 +69,14 @@ export default {
       this.getApi("/getMatchId", this.param, this.getMatchIdCallback, this.fail );
     },
     getMatchIdCallback(res){
-      this.summonerInfo = res.data; 
-      //this.getSummonerInfo(this.summonerInfo.id);
+      console.log(" res ", res);
+      this.param = res.data;
+      console.log("this. param ", this.param);
+      this.postApi("/getMatchDetails", this.param, this.getMatchDetailsCallback, this.fail);
     },
-    
+    getMatchDetailsCallback(res){
+      console.log("getMatchDetailsCallback data ", res);
+    },
     // getSummonerInfo(id) {
     //   this.param = { id: id}
     //   this.getApi("/getSummonerInfo", this.param, this.getSummonerInfoCallback, this.fail)

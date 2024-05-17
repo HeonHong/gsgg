@@ -3,7 +3,13 @@ package com.gsgg.gsggbe.uservs.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserVsService {
@@ -63,17 +69,16 @@ public class UserVsService {
             return Mono.error(e);
         }
     }
-    public Mono<String> getMatchDetails() {
-        try {
-            String requestURL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + "param 에서가져온 matchid"
-                    +"?api_key=" + apiKey;
-            return client.get()
-                    .uri(requestURL)
-                    .retrieve()
-                    .bodyToMono(String.class);
-        } catch ( Exception e ) {
-            return Mono.error(e);
-        }
+    public Flux<Map> getMatchDetails(List<String> matchIds) { // flux 스트림 반환
+        return Flux.fromIterable(matchIds) // flux 생성
+                .flatMap(matchId -> {
+                    String requestURL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + matchId + "?api_key=" + apiKey;
+                    return client.get()
+                            .uri(requestURL)
+                            .retrieve()
+                            .bodyToMono(Map.class)
+                            .flux();
+                }, 5) // 요청 최대 5개
+                .onErrorResume(e -> Flux.error(e));
     }
-
 }
