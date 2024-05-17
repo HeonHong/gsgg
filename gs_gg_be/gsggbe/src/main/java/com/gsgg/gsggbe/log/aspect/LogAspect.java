@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 @Aspect
 @Component
@@ -19,13 +20,18 @@ import java.util.Map;
 public class LogAspect {
     private final LogMapper logMapper;
 
-    @AfterReturning("execution(* com.gsgg.gsggbe..*(..))")
+    private final ExecutorService executorService;
+
+    @AfterReturning("execution(* com.gsgg.gsggbe..*(..)) && !execution(* com.gsgg.gsggbe.log.mapper..*(..))")
+//    @AfterReturning("execution(* com.gsgg.gsggbe..*(..)) && !execution(* com.gsgg.gsggbe.log..*(..))")
     public void logExecution(JoinPoint joinPoint) {
-        LogEntity logEntity = new LogEntity();
+        executorService.submit(() -> {
+            LogEntity logEntity = new LogEntity();
 
-//        List<Map<String, Object>> result = logMapper.insertLogTest(logEntity);
+        List<Map<String, Object>> result = logMapper.insertLogTest(logEntity);
 
-//        log.info("result==========={}", result);
-        log.info("jointPoint============{}", joinPoint.getSignature().getName());
+        log.info("result==========={}", result);
+            log.info("jointPoint============{}", joinPoint.getSignature().getDeclaringType());
+        });
     }
 }
