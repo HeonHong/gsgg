@@ -1,13 +1,13 @@
-<template lang="">
+<template>
   <div id="main">
     <div class="topUserVs">
         <div class="btn-group">
           <!-- radio type으로 수정 할 예정 -->
           <label class="btn-light">
-            <input value="랭크전"/>
+            <input value="랭크전" readonly/>
           </label>
           <label>
-            <input value="일반전"/>
+            <input value="일반전" readonly/>
           </label>
         </div>
         <div class="input-group">
@@ -17,15 +17,70 @@
             <button class="search-btn" type="button" @click="getUserPuuid">검색</button>
           </div>
         </div>
-      </div>
     </div>
-    <div>
-      <div id="con1" class="con">
-        <h3>같은팀으로 만나서</h3>
+  </div>
+  <div>
+    <div id="con1" class="con">
+        <h3 class="con-margin">같은팀으로 만나서</h3>
+        <div id="con1_2" class="table-responsive con-margin">
+          <h4>
+            승리 :
+            <span class="red"> ?? </span>
+            &nbsp;&nbsp;
+            패배 :
+            <span class="blue"> ?? </span>
+          </h4>
+          <table class="vsTable table table-striped">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col"> 날짜 </th>
+                <th scope="col"> 결과 </th>
+                <th scope="col"> 나 </th>
+                <th scope="col"> KDA </th>
+                <th scope="col"> 딜 </th>
+                <th scope="col"> 너 </th>
+                <th scope="col"> KDA </th>
+                <th scope="col"> 딜 </th>
+                <th scope="col"> More </th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
     </div>
+
     <div>
       <div id="con2" class="con">
-         <h3>적팀으로 만나서</h3>
+         <h3 class="con-margin">적팀으로 만나서</h3>
+          <div id="con1_2" class="table-responsive con-margin">
+            <h4>
+              승리 :
+              <span class="red"> ?? </span>
+              &nbsp;&nbsp;
+              패배 :
+              <span class="blue"> ?? </span>
+            </h4>
+            <table class="vsTable table table-striped">
+              <thead class="thead-dark">
+              <tr>
+                <th scope="col"> 날짜 </th>
+                <th scope="col"> 결과 </th>
+                <th scope="col"> 나 </th>
+                <th scope="col"> KDA </th>
+                <th scope="col"> 딜 </th>
+                <th scope="col"> 너 </th>
+                <th scope="col"> KDA </th>
+                <th scope="col"> 딜 </th>
+                <th scope="col"> More </th>
+              </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
       </div>
     </div>
   </div>
@@ -39,7 +94,8 @@ export default {
     return {
       mySummonerName: '',
       yourSummonerName: '',
-      summonerInfo: '', 
+      summonerInfo: '',
+      matchInfo: [],
       param: {}
     }
   }, 
@@ -75,7 +131,8 @@ export default {
       this.postApi("/getMatchDetails", this.param, this.getMatchDetailsCallback, this.fail);
     },
     getMatchDetailsCallback(res){
-      console.log("getMatchDetailsCallback data ", res);
+      console.log("getMatchDetailsCallback data ", res.data);
+      this.matchInfo = res.data;
     },
     // getSummonerInfo(id) {
     //   this.param = { id: id}
@@ -92,8 +149,4 @@ export default {
   }
 }
 </script>
-
-<style lang="">
-
-</style>
 
