@@ -1,11 +1,15 @@
 package com.gsgg.gsggbe.records.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +35,9 @@ public class LolApiController {
                         .queryParam("api_key", apiKey)
                         .build(summonerName,tagLine))
                 .retrieve()
-                .bodyToMono(Map.class);
+                .bodyToMono(Map.class)
+                .retryWhen(Retry.backoff(3, Duration.ofSeconds(1))
+                        .filter(this::isRateLimitException));
     }
 
     // Puuid로 소환사 정보를 조회
@@ -43,7 +49,9 @@ public class LolApiController {
                         .queryParam("api_key", apiKey)
                         .build(puuid))
                 .retrieve()
-                .bodyToMono(Map.class);
+                .bodyToMono(Map.class)
+                .retryWhen(Retry.backoff(3, Duration.ofSeconds(1))
+                        .filter(this::isRateLimitException));
     }
 
     // PUUID로 Match ID 조회
@@ -55,12 +63,15 @@ public class LolApiController {
                         .queryParam("api_key", apiKey)
                         .build(puuid))
                 .retrieve()
-                .bodyToMono(List.class);
+                .bodyToMono(List.class)
+                .retryWhen(Retry.backoff(3, Duration.ofSeconds(1))
+                        .filter(this::isRateLimitException));
     }
 
     @GetMapping("/matches/details")
     public Flux<Map> getMatchDetails(@RequestParam List<String> matchIds) {
         return Flux.fromIterable(matchIds)
+                .delayElements(Duration.ofMillis(100))
                 .flatMap(matchId -> this.webClientAsia.get()
                                 .uri(uriBuilder -> uriBuilder
                                         .path("/lol/match/v5/matches/{matchId}")
@@ -68,6 +79,13 @@ public class LolApiController {
                                         .build(matchId))
                                 .retrieve()
                                 .bodyToMono(Map.class)
-                        ); // 동시 요청 처리 제한
+                                .retryWhen(Retry.backoff(3, Duration.ofSeconds(1))
+                                        .filter(this::isRateLimitException))
+                        );
+    }
+
+    private boolean isRateLimitException(Throwable throwable) {
+        return throwable instanceof WebClientResponseException &&
+                ((WebClientResponseException) throwable).getStatusCode() == HttpStatus.TOO_MANY_REQUESTS;
     }
 }

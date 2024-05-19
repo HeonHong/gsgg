@@ -29,7 +29,7 @@
     <!-- 컴포넌트 캐싱 -->
     <!-- 캐싱하지 않는 경우 routerView만 사용해도 무방  -->
     <router-view v-slot="{Component}">
-        <keep-alive>
+        <keep-alive :include="cachePage">
             <component :is="Component" ></component>
         </keep-alive>
     </router-view>
@@ -79,7 +79,7 @@ export default {
         logOut() {
             this.$store.commit('removeUserToken');
         },
-        join(){
+        join() {
             this.$router.push('/join');
         }
     },
@@ -107,6 +107,7 @@ export default {
             ],
             name: '',
             profileImage: '',
+            cachePage: [],
         }
     },
     mounted() {
@@ -119,10 +120,14 @@ export default {
         //     this.profileImage = userInfo.properties.profile_image;
         // }
         // localStorage.clear();
+        
+        //캐시할 페이지 목록 만들기
+        this.$router.getRoutes().forEach(item => {
+            if (item?.name !=  undefined && item.name != '') this.cachePage.push(item.name)
+        });
     },
 
 }
 </script>
 
-<style>
-</style>
+<style></style>

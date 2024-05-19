@@ -34,22 +34,21 @@ public class LoginController {
     //    private final CustomUserDetailsService customUserDetailsService;
     private String role;
 
-    @PostMapping("/")
-    public String main() {
-        log.info("LoginController 들어오는지 확인하기");
-        //세션 사용자 아이디 확인
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.info("세션 사용자 아이디 확인하기 {}", username);
-
-        //세션 사용자 Role확인하기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-        GrantedAuthority auth = iter.next();
-        String role = auth.getAuthority();
-        log.info("세션 사용자 role확인하기 {}", role);
-        return "Login Controller" + username + role;
-    }
+//    @PostMapping("/")
+//    public String main() {
+//        //세션 사용자 아이디 확인
+//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//        log.info("세션 사용자 아이디 확인하기 {}", username);
+//
+//        //세션 사용자 Role확인하기
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+//        GrantedAuthority auth = iter.next();
+//        String role = auth.getAuthority();
+//        log.info("세션 사용자 role확인하기 {}", role);
+//        return "Login Controller" + username + role;
+//    }
 /*
 
     @PostMapping("/login")

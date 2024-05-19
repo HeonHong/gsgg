@@ -23,6 +23,7 @@ import AlertMdl from '@/components/AlertMdl.vue';
 
 
 export default {
+    name:'LoginPage',
     components: {
         AlertMdl
     },
@@ -84,7 +85,7 @@ export default {
             this.$store.commit('setUserToken', res.data);
             console.log(this.$store.state.userToken);
             // this.getApi('/admin', null, this.success, this.fail);
-            this.$router.push({ path: '/' });
+            // this.$router.push({ path: '/' });
         },
         success(res) {
             console.log("admin 다녀옴 ", res.data);
