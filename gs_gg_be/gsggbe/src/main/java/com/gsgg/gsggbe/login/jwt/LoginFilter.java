@@ -20,6 +20,7 @@ import java.util.Iterator;
 /*
 * UsernamePasswordAuthenticationFilter는 "/login"으로 들어오는 post요청 처리
 * */
+
 @RequiredArgsConstructor
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {

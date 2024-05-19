@@ -2,7 +2,8 @@
     <div>
         <div>
             <EpInput :model-value="username" label="아이디" @update:model-value="newVal => username = newVal"></EpInput>
-            <EpPassword :model-value="password" label="비밀번호" @update:model-value="newVal => password = newVal"></EpPassword>
+            <EpPassword :model-value="password" label="비밀번호" @update:model-value="newVal => password = newVal">
+            </EpPassword>
             <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="로그인" @click="login" />
         </div>
         <div>
@@ -11,7 +12,7 @@
                     alt="카카오 로그인 버튼" />
             </a>
         </div>
-        <AlertMdl :isOn="isOn" :message="message" @confirm = "confirm" @cancel="cancel"></AlertMdl>
+        <AlertMdl :isOn="isOn" :message="message" @confirm="confirm" @cancel="cancel"></AlertMdl>
 
 
     </div>
@@ -19,11 +20,8 @@
 <script>
 import AlertMdl from '@/components/AlertMdl.vue';
 
-
-
-
 export default {
-    name:'LoginPage',
+    name: 'LoginPage',
     components: {
         AlertMdl
     },
@@ -34,7 +32,6 @@ export default {
             response: "",
             isOn: false,
             message: ""
-
         }
     },
     methods: {
@@ -63,11 +60,11 @@ export default {
             console.log("err" + err);
         },
         confirm() {
-            this.isOn=false;
+            this.isOn = false;
             this.$router.push('/join');
         },
-        cancel(){
-            this.isOn=false;
+        cancel() {
+            this.isOn = false;
             this.$router.push('/');
         },
         login() {
@@ -82,20 +79,34 @@ export default {
             this.postFApi('/login', formData, this.loginSuccess, this.fail);
         },
         loginSuccess(res) {
-            this.$store.commit('setUserToken', res.data);
-            console.log(this.$store.state.userToken);
+            let token = res.data;
+            this.$store.commit('setUserToken', token);
+          
+            let payload = this.parseJWT(token);
+            this.$store.commit('setUsername', payload.username);
             this.$router.push({ path: '/' });
+        },
+        parseJWT(token){
+//https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
+              
+            let base64Url = token.split('.')[1];
+            let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            //무슨 차이인지 확인하기
+            // JSON.parse(decodeURIComponent(window.atob(token)))         
+            let jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
         },
         success(res) {
             console.log("admin 다녀옴 ", res.data);
         },
         fail(err) {
-            console.log(err.message);
+            console.log(err);
         },
     },
     mounted() {
         if (window.location.search.includes('code')) {
-            console.log("들어왔냐?");
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             this.getKakaoToken(code);
