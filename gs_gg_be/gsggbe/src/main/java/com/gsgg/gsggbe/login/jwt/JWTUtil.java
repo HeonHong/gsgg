@@ -47,7 +47,7 @@ public class JWTUtil {
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))//생성일
                 .expiration(new Date(System.currentTimeMillis()+expiredMs))//만료일
-                .signWith(secretKey)
+                .signWith(secretKey)//HMAC방식
                 .compact();
     }
 }
