@@ -22,8 +22,7 @@ public class LogAspect {
 
     private final ExecutorService executorService;
 
-    @AfterReturning("execution(* com.gsgg.gsggbe..*(..)) && !execution(* com.gsgg.gsggbe.log.mapper..*(..))")
-//    @AfterReturning("execution(* com.gsgg.gsggbe..*(..)) && !execution(* com.gsgg.gsggbe.log..*(..))")
+//    @AfterReturning("execution(* com.gsgg.gsggbe..*(..)) && !execution(* *..log..*(..))")
     public void logExecution(JoinPoint joinPoint) {
         executorService.submit(() -> {
             LogEntity logEntity = new LogEntity();
@@ -31,7 +30,7 @@ public class LogAspect {
         List<Map<String, Object>> result = logMapper.insertLogTest(logEntity);
 
         log.info("result==========={}", result);
-            log.info("jointPoint============{}", joinPoint.getSignature().getDeclaringType());
+            log.info("jointPoint============{}", joinPoint.getSignature().getName());
         });
     }
 }
