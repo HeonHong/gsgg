@@ -48,6 +48,7 @@
 <script>
 import apiMix from "@/js/mixins/api/api-mix.js"
 export default {
+  name:'RecordsPage',
   mixins: [apiMix],
   data() {
     return {
