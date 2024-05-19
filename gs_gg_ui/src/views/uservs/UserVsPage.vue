@@ -45,7 +45,26 @@
               </tr>
             </thead>
             <tbody>
-
+              <tr>
+                <td></td>  <!-- -->
+                <td>
+                  <b>
+                    <span class=""></span> <!-- 승 / 패 -->
+                  </b>
+                </td>
+                <td>
+                <!-- https://opgg-static.akamaized.net/meta/images/lol/14.9.1/champion/Zed.png-->
+                  <img>
+                </td>
+                <td></td>
+                <td></td>
+                <td>
+                  <img>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td> <!-- 돋보기 버튼 -->
+              </tr>
             </tbody>
           </table>
         </div>
@@ -54,7 +73,7 @@
     <div>
       <div id="con2" class="con">
          <h3 class="con-margin">적팀으로 만나서</h3>
-          <div id="con1_2" class="table-responsive con-margin">
+          <div id="con1_2" class="table-responsive">
             <h4>
               승리 :
               <span class="red"> ?? </span>
@@ -77,7 +96,6 @@
               </tr>
               </thead>
               <tbody>
-
               </tbody>
             </table>
           </div>
@@ -95,6 +113,8 @@ export default {
       mySummonerName: '',
       yourSummonerName: '',
       summonerInfo: '',
+      puuid:'',
+      championName:'',
       matchInfo: [],
       param: {}
     }
@@ -121,6 +141,7 @@ export default {
     // },
     
     getMatchId(puuid) {
+      this.puuid = puuid;
       this.param = {puuid: puuid};
       this.getApi("/getMatchId", this.param, this.getMatchIdCallback, this.fail );
     },
@@ -133,6 +154,7 @@ export default {
     getMatchDetailsCallback(res){
       console.log("getMatchDetailsCallback data ", res.data);
       this.matchInfo = res.data;
+
     },
     // getSummonerInfo(id) {
     //   this.param = { id: id}
