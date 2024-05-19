@@ -2,7 +2,7 @@
   <div id="records-page">
     <div id="search-box">
       <div id="search-section">
-        <input type="text" id="summoner-name"  v-model="summonerName" placeholder="소환사 이름을 입력하세요">
+        <input type="text" id="summoner-name" v-model="summonerName" placeholder="소환사 이름을 입력하세요">
         <button id="search-button" @click="getSummonerByName">검색</button>
       </div>
     </div>
@@ -14,14 +14,14 @@
               <img :src="`https://ddragon.leagueoflegends.com/cdn/14.8.1/img/profileicon/${summonerInfo.profileIconId}.png`" alt="프로필 아이콘" class="profile-icon">
               <div class="level-badge"><h1>{{ summonerInfo.summonerLevel }}</h1></div>
               <div class="profile-details">
-                <h1>{{ summonerID.gameName}} <span class="tag-line">#{{ summonerID.tagLine }}</span></h1>
+                <h1>{{ summonerID.gameName }} <span class="tag-line">#{{ summonerID.tagLine }}</span></h1>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div id="match-info-box">
-        <div id="match_info_section" v-for="match in matchDetail" :key="match.gameId" class="match-card">
+        <div id="match_info_section" v-for="match in paginatedMatches" :key="match.gameId" class="match-card">
           <div class="match-summary">
             <div class="game-result" :class="{'win': match.win, 'loss': !match.win}">
               <span>{{ match.win ? 'Victory' : 'Defeat' }}</span>
@@ -35,10 +35,16 @@
             <span>{{ match.championName }}</span>
           </div>
         </div>
+        <div class="pagination-controls" v-if="totalPages > 1">
+          <button @click="prevPage" :disabled="currentPage === 1">이전</button>
+          <span>{{ currentPage }} / {{ totalPages }}</span>
+          <button @click="nextPage" :disabled="currentPage === totalPages">다음</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import apiMix from "@/js/mixins/api/api-mix.js"
 export default {
@@ -50,7 +56,19 @@ export default {
       summonerInfo: null,
       matchInfo: [],
       matchDetail: [],
+      currentPage: 1,
+      itemsPerPage: 9
     };
+  },
+  computed: {
+    paginatedMatches() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.matchDetail.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.matchDetail.length / this.itemsPerPage);
+    }
   },
   methods: {
     getSummonerByName() {
@@ -87,28 +105,45 @@ export default {
       this.getApi('/matches', param, this.successMatches, this.fail);
     },
     successMatches(response) {
-    console.log('매치 ID 목록 조회 성공:', response.data);
-    this.getMatchDetails(response.data); // 전체 ID 목록을 한 번에 전달
+      console.log('매치 ID 목록 조회 성공:', response.data);
+      this.getMatchDetails(response.data);
     },
 
     getMatchDetails(matchIds) {
-      // 쿼리 파라미터로 matchIds를 전달하기 위해 URL을 조합
       const queryString = matchIds.map(id => `matchIds=${id}`).join('&');
       this.getApi(`/matches/details?${queryString}`, {}, this.successMatchDetails, this.fail);
     },
     successMatchDetails(response) {
-      console.log('매치 상세 정보 조회 성공:', response.data)
-      console.log('매치 상세 정보' , response.data.info.participants);
+      console.log('매치 상세 정보 조회 성공:', response.data);
       this.matchInfo = response.data; // 전체 데이터를 배열에 저장
-      this.matchDetail = response.data.info.participants.filter(participant =>
-        participant.riotIdGameName.toLowerCase() === this.summonerID.gameName.toLowerCase() &&
-        participant.riotIdTagLine.toLowerCase() === this.summonerID.tagLine.toLowerCase()
+      
+      this.matchDetail = response.data.flatMap(match => 
+        match.info.participants.filter(participant =>
+          participant.summonerName.toLowerCase() === this.summonerID.gameName.toLowerCase()
+        ).map(participant => ({
+          gameId: match.info.gameId,
+          win: participant.win,
+          kills: participant.kills,
+          deaths: participant.deaths,
+          assists: participant.assists,
+          championName: participant.championName
+        }))
       );
     },
     fail(error) {
       console.error('API 호출 실패:', error.message);
       alert('API 호출에 실패했습니다.');
     },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    }
   }
 }
 </script>
@@ -313,5 +348,32 @@ export default {
 .champion-info span {
   font-size: 14px;
   font-weight: bold;
+}
+
+pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-controls button {
+  background-color: var(--color3);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  margin: 0 10px;
+  font-size: 16px;
 }
 </style>
