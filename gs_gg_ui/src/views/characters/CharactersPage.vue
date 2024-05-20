@@ -8,7 +8,7 @@
         <div id="right-div">
             <div id="crt-box-outline">
                 <div id="crt-box" v-for="data, i in crtInfosProps" :key="i">
-                    <CharacterBox :crt-infos="data" :key="selectedIndex"/>
+                    <CharacterBox :crt-infos="data" :key="selectedIndex" @crt_id="selectedCrt" />
                 </div>
             </div>
             <div id="page-box">
@@ -19,12 +19,17 @@
                 </div>
             </div>
         </div>
+
+        <div id="popup-div" v-if="this.isPopupOpen == true">
+            <CharacterDescPopup @close-popup="this.isPopupOpen = false;" :objCrt="objCrt"/>
+        </div>
     </div>
-        
+    
 </template>
 <script>
 import CharacterBox from './CharacterBox.vue';              //캐립터 정보가 담긴 box component
 import CharacterSortNav from './CharacterSortNav.vue';      //검색 조건을 조정할 수 있는 바
+import CharacterDescPopup from './CharacterDescPopup.vue';  //캐릭터 상세 정보 팝업
 import apiCall from '@/js/mixins/api/api-call';             //서버 통신 api-call
 import '@/css/charactersStyle/CharacterPage.css';           //css 파일
 export default {
@@ -38,6 +43,8 @@ export default {
             arrCrtInfos     : [],           //30개로 나눈 캐릭터 정보 배열
             crtInfosProps   : [],           //최종 캐릭터 정보 배열 - box 전달됨 / 페이징 되어 있음
             selectedIndex   : 0,            //선택된 페이지 인덱스
+            isPopupOpen     : false,        //팝업 오픈 상태
+            objCrt          : {}            //한개의 챔피언을 담을 객체
         }
     },
     
@@ -69,8 +76,9 @@ export default {
 
     //components
     components: {
-        CharacterBox: CharacterBox,
-        CharacterSortNav: CharacterSortNav,
+        CharacterBox:       CharacterBox,
+        CharacterSortNav:   CharacterSortNav,
+        CharacterDescPopup: CharacterDescPopup,
     },
 
     //methods
@@ -109,6 +117,8 @@ export default {
 
         //recieveResult(챔피언 검색 결과)
         recieveResult(result) {
+            this.sortString("kor");
+
             this.crtInfos = this.crtInfosOri.filter(data => result.includes(data.KOR_NAME));
 
              //페이징 세팅
@@ -171,6 +181,18 @@ export default {
 
             //props 전달을 위한 배열 초기값 설정
             this.crtInfosProps = this.arrCrtInfos[0];
+        },
+
+        //캐릭터 상세 팝업 오픈
+        showPopup() {
+            console.log("qwe")
+        },
+
+        selectedCrt(result) {
+            this.isPopupOpen = this.isPopupOpen ? false : true;
+
+            //캐릭터 배열에서 선택된 캐릭터 filter 후 객체에 세팅
+            this.objCrt = this.crtInfosOri.filter(data => data.CRT_ID === result);
         }
     },
 }

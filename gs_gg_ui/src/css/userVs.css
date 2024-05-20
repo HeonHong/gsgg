@@ -65,3 +65,47 @@ body {
     min-width: 530px;
     min-height: 750px;
 }
+.con-margin {
+    margin-left: 15px;
+}
+/* 매치정보 css */
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto; /* 세로 스크롤 생기게 */
+}
+.vsTable {
+    /*display: block;*/
+    border-collapse: collapse; /* 단일 테두리 */
+    background-color: white;
+}
+.vsTable tr {
+    /*display: table-row;*/
+    /*unicode-bidi: isolate;*/
+    /*vertical-align: inherit;*/
+}
+.vsTable th:nth-of-type(1) {
+    width: 150px;
+    padding-right: 0px;
+}
+.vsTable th:nth-of-type(2) {
+    width: 57px;
+}
+.vsTable th:nth-of-type(3), .vsTable th:nth-of-type(6)  {
+    width: 55px;
+}
+.vsTable th:nth-of-type(4), .vsTable th:nth-of-type(7)  {
+    width: 80px;
+}
+.vsTable th:nth-of-type(5), .vsTable th:nth-of-type(8) {
+    width: 80px;
+}
+.vsTable th:nth-of-type(9) {
+    width: 80px;
+    padding-right: 30px;
+}
+.table .thead-dark th {
+    color: #fff;
+    background-color: #343a40;
+    /*border-color: #454d55;*/
+}

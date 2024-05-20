@@ -84,7 +84,6 @@ export default {
         loginSuccess(res) {
             this.$store.commit('setUserToken', res.data);
             console.log(this.$store.state.userToken);
-            // this.getApi('/admin', null, this.success, this.fail);
             this.$router.push({ path: '/' });
         },
         success(res) {

@@ -108,6 +108,7 @@ export default {
             name: '',
             profileImage: '',
             cachePage: [],
+            array1 : ['one','two','three']
         }
     },
     mounted() {
@@ -123,8 +124,9 @@ export default {
         
         //캐시할 페이지 목록 만들기
         this.$router.getRoutes().forEach(item => {
-            if (item?.name !=  undefined && item.name != '') this.cachePage.push(item.name)
+            if (item?.name !=  undefined && item.name != ''&&item.name!='HomePage') this.cachePage.push(item.name)
         });
+
     },
 
 }

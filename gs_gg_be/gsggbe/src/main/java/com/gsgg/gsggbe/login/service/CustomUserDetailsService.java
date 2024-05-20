@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 * AuthenticationProvier에 인증 요청이 올 때 실행.
 * 1. 사용자가 로그인 요청을 보냄
 * 2. AuthenticationFilter가 이 요청을 받아 UsernamePasswordAuthenticationToken을 생성(LoginFilter참고)
-* 3. AuthenticationManager에게 위임(LoginFitler 참고)
+* 3. AuthenticationManager에게 위임(LoginFilter 참고)
 * 4. AuthenticationManger가 AutheticationProvider를 선택하여 인증용 객체를 다시 전달
 * */
 @Service
