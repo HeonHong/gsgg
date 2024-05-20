@@ -15,18 +15,17 @@ public class JoinController {
     private final JoinService joinService;
 
     @GetMapping("/check-id")
-    public int checkId(@RequestParam String username) {
-        if (username.equals("")) return 1;
+    public ResponseEntity checkId(@RequestParam String username) {
+        if (username.isEmpty()) return ResponseEntity.badRequest().body("정보가 누락되었습니다.");
         int isUser = joinService.isUserExist(username);
-        return isUser;
-
+        return ResponseEntity.ok().body(isUser);
     }
 
     @PostMapping("/join")
     public ResponseEntity join(@RequestBody @Valid JoinDTO joinDTO, BindingResult bd) {
-        if(bd.hasErrors()) return ResponseEntity.badRequest().body("정보가 누락되었습니다.");
+        if (bd.hasErrors()) return ResponseEntity.badRequest().body("정보가 누락되었습니다.");
         int isSucess = joinService.joinProcess(joinDTO);
-        if (isSucess == 1) return ResponseEntity.ok("가입에 성공하였습니다");
+        if (isSucess == 1) return ResponseEntity.ok().body("가입에 성공하였습니다");
         return ResponseEntity.badRequest().body("가입에 실패하였습니다.");
     }
 

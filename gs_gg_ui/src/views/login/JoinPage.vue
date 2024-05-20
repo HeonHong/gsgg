@@ -137,7 +137,7 @@ export default {
         userNameCheck() {
             if (this.userNameVal(this.joinData.username)) {
                 let param = { username: this.joinData.username };
-                this.getApi('/check-id', param, this.checkSuccess, this.checkFail);
+                this.getApi('/check-id', param, this.checkSuccess, this.fail);
             }
         },
         next() {
@@ -150,7 +150,7 @@ export default {
             this.isJoined=true;
         },
         fail(err) {
-            console.log(err);
+            this.validMsg = err.response.data
         },
         confirm() {
             this.isOn = false;
@@ -164,9 +164,7 @@ export default {
         checkSuccess(res) {
             this.userCnt = res.data;
         },
-        checkFail() {
-            this.validMsg = '확인 중 오류가 발생하였습니다';
-        },
+        
 
     }
 }
