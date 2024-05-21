@@ -29,8 +29,8 @@ public class LogAspect implements HandlerInterceptor {
 
     private final ExecutorService executorService;
 
-    @AfterReturning("execution(* com.gsgg.gsggbe..*(..)) && !execution(* *..log..*(..))")
-    public void logExecution(JoinPoint joinPoint, HttpServletRequest request) {
+    @AfterReturning("execution(* com.gsgg.gsggbe.**.*service..*(..)) && !execution(* *..log..*(..))")
+    public void logExecution(JoinPoint joinPoint) {
         executorService.submit(() -> {
             try {
                 InetAddress localHost = InetAddress.getLocalHost();
@@ -57,4 +57,6 @@ public class LogAspect implements HandlerInterceptor {
             log.info("jointPoint============{}", joinPoint.getSignature().getName());
         });
     }
+
+
 }
