@@ -17,14 +17,10 @@ public class UserVsController {
 
     // puuid 조회
     @GetMapping("/getUserPuuid")
-    public Mono<String> getUserPuuid(@RequestParam("mySummonerName") String mySummonerName,
+    public Mono<Map<String, String>> getUserPuuid(@RequestParam("mySummonerName") String mySummonerName,
+                                    @RequestParam("yourSummonerName") String yourSummonerName,
                                     @RequestParam("tagLine") String tagLine) {
-        System.out.println("getUserInfo 확인");
-        System.out.println("getUserInfo 확인 mySummonerName " + mySummonerName);
-        System.out.println("getUserInfo 확인 tagLine " + tagLine);
-        return this.userVsService.getUserPuuid(mySummonerName, tagLine)
-                .doOnNext(result -> System.out.println("Response: " + result))
-                .doOnError(error -> System.err.println("Error: " + error));
+        return this.userVsService.getUserPuuid(mySummonerName, yourSummonerName, tagLine);
     }
 
     // puuid 로 id 조회

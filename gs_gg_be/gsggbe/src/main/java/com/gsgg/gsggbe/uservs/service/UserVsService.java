@@ -1,13 +1,14 @@
 package com.gsgg.gsggbe.uservs.service;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.retry.Retry;
 
-import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,21 +19,55 @@ public class UserVsService {
 
     // WebClient의 인스턴스 생성
     private final WebClient client = WebClient.create();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public Mono<String> getUserPuuid(String summonerName, String region) {
+    public Mono<Map<String, String>> getUserPuuid(String mySummonerName, String yourSummonerName, String region) {
         try {
-            String requestURL = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + summonerName + "/" + region
-                    +"?api_key=" + apiKey;
-            return client.get()
-                    .uri(requestURL) // URI 주소 설정
+            String myRequestURL = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + mySummonerName + "/" + region +"?api_key=" + apiKey;
+            String yourRequestURL = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + yourSummonerName + "/" + region + "?api_key=" + apiKey;
+
+            Mono<String> myPuuidMono = client.get()
+                    .uri(myRequestURL)
                     .retrieve()
-                    .bodyToMono(String.class) // 비동기 mono로 변환
-                    .doOnNext(result -> System.out.println("Response: " + result))
-                    .doOnError(error -> System.err.println("Error: " + error));
+                    .bodyToMono(String.class)
+                    .map(this::parsePuuid)
+                    .doOnNext(result -> System.out.println("My Response: " + result))
+                    .doOnError(error -> System.err.println("My Error: " + error));
+
+            Mono<String> yourPuuidMono = client.get()
+                    .uri(yourRequestURL)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .map(this::parsePuuid)
+                    .doOnNext(result -> System.out.println("Your Response: " + result))
+                    .doOnError(error -> System.err.println("Your Error: " + error));
+
+            return Mono.zip(myPuuidMono, yourPuuidMono)
+                    .map(tuple -> {
+                        Map<String, String> result = new HashMap<>();
+                        result.put("myPuuid", tuple.getT1());
+                        result.put("yourPuuid", tuple.getT2());
+                        return result;
+                    });
         } catch (Exception e) {
             return Mono.error(e);
         }
     }
+    // 가져온 res에서 puuid만 꺼내기
+    private String parsePuuid(String response) {
+        try {
+            // response  JSON 데이터를 문자열로 가져옴
+            System.out.println(" parsePuuid res 확인" + response);
+            // {"puuid":"TI4gn95v2Jj5BoNALwkQFa9-2uzNwLrepdpQi5KaN4QGgCvvTv59tpiEC4L1mxam5ugoeX6nrEq2LA","gameName":"빵준갓","tagLine":"KR1"}
+            JsonNode root = objectMapper.readTree(response);
+            System.out.println(" root ");
+            return root.path("puuid").asText();
+        } catch (Exception e) {
+            System.err.println("Error parsing PUUID: " + e.getMessage());
+            return null;
+        }
+    }
+
     public Mono<String> getUserId(String puuid) {
         try {
             String requestURL = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/" + puuid
@@ -78,7 +113,7 @@ public class UserVsService {
                             .retrieve()
                             .bodyToMono(Map.class)
                             .flux();
-                }, 5) // 요청 최대 5개
+                }, 4) // 요청 최대 5개
                 .onErrorResume(e -> Flux.error(e));
     }
 }
