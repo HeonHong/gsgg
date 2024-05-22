@@ -60,9 +60,9 @@ public class UserVsService {
             // response  JSON 데이터를 문자열로 가져옴
             System.out.println(" parsePuuid res 확인" + response);
             // {"puuid":"TI4gn95v2Jj5BoNALwkQFa9-2uzNwLrepdpQi5KaN4QGgCvvTv59tpiEC4L1mxam5ugoeX6nrEq2LA","gameName":"빵준갓","tagLine":"KR1"}
-            JsonNode root = objectMapper.readTree(response); // JSON 파싱
+            JsonNode root = objectMapper.readTree(response); // JSON 문자열을 JsonNode로 파싱
             System.out.println(" root ");
-            return root.path("puuid").asText();
+            return root.get("puuid").asText();
         } catch (Exception e) {
             System.err.println("Error parsing PUUID: " + e.getMessage());
             return null;
