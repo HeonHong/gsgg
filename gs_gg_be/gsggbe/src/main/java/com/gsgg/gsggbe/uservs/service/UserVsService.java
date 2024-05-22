@@ -19,7 +19,6 @@ public class UserVsService {
 
     // WebClient의 인스턴스 생성
     private final WebClient client = WebClient.create();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public Mono<Map<String, String>> getUserPuuid(String mySummonerName, String yourSummonerName, String region) {
         try {
@@ -55,11 +54,13 @@ public class UserVsService {
     }
     // 가져온 res에서 puuid만 꺼내기
     private String parsePuuid(String response) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        // https://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
         try {
             // response  JSON 데이터를 문자열로 가져옴
             System.out.println(" parsePuuid res 확인" + response);
             // {"puuid":"TI4gn95v2Jj5BoNALwkQFa9-2uzNwLrepdpQi5KaN4QGgCvvTv59tpiEC4L1mxam5ugoeX6nrEq2LA","gameName":"빵준갓","tagLine":"KR1"}
-            JsonNode root = objectMapper.readTree(response);
+            JsonNode root = objectMapper.readTree(response); // JSON 파싱
             System.out.println(" root ");
             return root.path("puuid").asText();
         } catch (Exception e) {
