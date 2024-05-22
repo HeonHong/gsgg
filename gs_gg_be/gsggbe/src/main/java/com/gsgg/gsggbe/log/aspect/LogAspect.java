@@ -30,17 +30,17 @@ public class LogAspect implements HandlerInterceptor {
     @Autowired
     LogMapper logMapper;
     @Autowired
-    ExecutorService executorService;
-    @Autowired
     JWTUtil jwtUtil;
-
-    String token = "";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        token = request.getHeader("Authorization");
+        String token = request.getHeader("Authorization");
+
+        System.out.println("token=============" + token);
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
+
+            System.out.println("preHandle token ===============" + token);
             return true; // 토큰이 유효하면 요청을 계속 진행
         }
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
@@ -51,36 +51,25 @@ public class LogAspect implements HandlerInterceptor {
 
     @AfterReturning("execution(* com.gsgg.gsggbe.**.*service..*(..)) && !execution(* *..log..*(..))")
     public void logExecution(JoinPoint joinPoint) {
-        executorService.submit(() -> {
-//            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        try {
+            // 토큰 가져오는 로직
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = attributes.getRequest();
+            String token = request.getHeader("Authorization").substring(7);
 
-            try {
-                InetAddress localHost = InetAddress.getLocalHost();
-                System.out.println("local host==========" + localHost.getHostAddress());
+            // 클라이언트 IP 가져오는 로직
+            InetAddress localHost = InetAddress.getLocalHost();
+            System.out.println("local host==========" + localHost.getHostAddress());
 
-//                String token = extractToken(request);
+            //Log Entity 임시
+            LogEntity logEntity = new LogEntity();
+            logMapper.insertLogTest(logEntity);
 
-                System.out.println(jwtUtil.getUserName(token));
-
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-
-//            LogEntity logEntity = new LogEntity();
-
-//            List<Map<String, Object>> result = logMapper.insertLogTest(logEntity);
-//
-//            log.info("result==========={}", result);
-            log.info("jointPoint============{}", joinPoint.getSignature().getName());
-        });
-    }
-
-    private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
-        return null;
-    }
 
+        //실행 service 메서드 반환
+        log.info("jointPoint============{}", joinPoint.getSignature().getName());
+    }
 }
