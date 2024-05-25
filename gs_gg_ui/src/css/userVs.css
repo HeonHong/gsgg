@@ -102,10 +102,10 @@ body {
 }
 .vsTable th:nth-of-type(9) {
     width: 80px;
-    padding-right: 30px;
+    padding-right: 28px;
 }
 .table .thead-dark th {
     color: #fff;
     background-color: #343a40;
-    /*border-color: #454d55;*/
+    box-sizing: border-box;
 }
