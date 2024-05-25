@@ -11,6 +11,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -36,11 +37,9 @@ public class LogAspect implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("Authorization");
 
-        System.out.println("token=============" + token);
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
 
-            System.out.println("preHandle token ===============" + token);
             return true; // 토큰이 유효하면 요청을 계속 진행
         }
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
@@ -49,27 +48,40 @@ public class LogAspect implements HandlerInterceptor {
         //return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
-    @AfterReturning("execution(* com.gsgg.gsggbe.**.*service..*(..)) && !execution(* *..log..*(..))")
+    @AfterReturning("execution(* com.gsgg.gsggbe.**.*service..*(..)) && !execution(* *..log..*(..))  && !execution(* *..login..*(..))")
     public void logExecution(JoinPoint joinPoint) {
         try {
             // 토큰 가져오는 로직
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
             String token = request.getHeader("Authorization").substring(7);
+            String userId = jwtUtil.getUserName(token); //로그인 아이디
 
-            // 클라이언트 IP 가져오는 로직
-            InetAddress localHost = InetAddress.getLocalHost();
-            System.out.println("local host==========" + localHost.getHostAddress());
+            // 클라이언트 IP
+            String ip = InetAddress.getLocalHost().getHostAddress();
 
-            //Log Entity 임시
-            LogEntity logEntity = new LogEntity();
-            logMapper.insertLogTest(logEntity);
+            //실행 메서드
+            String methodName = joinPoint.getSignature().getName();
 
+            if(!userId.isEmpty()) {
+                LogEntity logEntity = LogEntity.builder()
+                        .userId(userId)
+                        .methodName(methodName)
+                        .ip(ip)
+                        .build();
+
+                logMapper.insertDbLog(logEntity);
+            }
+
+
+            log.info("ip=========={}", userId);
+            log.info("ip=========={}", ip);
+            log.info("ip=========={}", methodName);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
 
-        //실행 service 메서드 반환
-        log.info("jointPoint============{}", joinPoint.getSignature().getName());
+
+
     }
 }
