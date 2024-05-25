@@ -32,16 +32,16 @@ public class UserVsController {
     }
 
     // id 로 전적 검색
-    @GetMapping("/getSummonerInfo")
-    public Mono<String> getSummonerInfo( @RequestParam String id){
-        return this.userVsService.getSummonerInfo(id)
-                .doOnNext( result -> System.out.println( " res " + result))
-                .doOnError(error -> System.err.println("Error: " + error));
-    }
+//    @GetMapping("/getSummonerInfo")
+//    public Mono<String> getSummonerInfo( @RequestParam String id){
+//        return this.userVsService.getSummonerInfo(id)
+//                .doOnNext( result -> System.out.println( " res " + result))
+//                .doOnError(error -> System.err.println("Error: " + error));
+//    }
 
     @GetMapping("/getMatchId")
-    public Mono<String> getMatchId( @RequestParam String puuid){
-        return this.userVsService.getMatchId(puuid)
+    public Mono<Map<String, List<String>>> getMatchIds(@RequestParam String myPuuid, @RequestParam String yourPuuid) {
+        return this.userVsService.getMatchIds(myPuuid, yourPuuid)
                 .doOnNext( result -> System.out.println( " res " + result))
                 .doOnError(error -> System.err.println("Error: " + error));
     }

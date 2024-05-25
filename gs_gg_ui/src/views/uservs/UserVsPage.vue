@@ -6,9 +6,9 @@
           <label class="btn-light">
             <input value="랭크전" readonly/>
           </label>
-          <label>
-            <input value="일반전" readonly/>
-          </label>
+<!--          <label>-->
+<!--            <input value="일반전" readonly/>-->
+<!--          </label>-->
         </div>
         <div class="input-group">
           <input placeholder="나" v-model="mySummonerName"/>
@@ -112,6 +112,7 @@ export default {
       mySummonerName: '',
       yourSummonerName: '',
       summonerInfo: '',
+      puuidInfo:[],
       myPuuid:'',
       yourPuuid: '',
       matchInfo: [],
@@ -142,9 +143,11 @@ export default {
       this.getApi('/getUserPuuid', this.param, this.getUserPuuidCallback, this.fail );
     },
     getUserPuuidCallback(res) {
-      this.summonerInfo = res.data;
-      console.log("getUserPuuidCallback 성공 ", this.summonerInfo);
-      // this.getMatchId(this.summonerInfo.puuid);
+      this.puuidInfo = res.data;
+      console.log("getUserPuuidCallback 성공 ", this.puuidInfo);
+      this.myPuuid = this.puuidInfo.myPuuid;
+      this.yourPuuid = this.puuidInfo.yourPuuid;
+      this.getMatchId(this.myPuuid , this.yourPuuid);
     },
 
     // getUserId(puuid) {
@@ -157,16 +160,15 @@ export default {
     //   //this.getSummonerInfo(this.summonerInfo.id);
     // },
 
-    getMatchId(puuid) {
-      this.myPuuid = puuid;
-      this.param = {puuid: puuid};
+    getMatchId(myPuuid,  yourPuuid) {
+      this.param = {myPuuid: myPuuid, yourPuuid : yourPuuid};
       this.getApi("/getMatchId", this.param, this.getMatchIdCallback, this.fail );
     },
     getMatchIdCallback(res){
       console.log(" res ", res);
-      this.param = res.data;
-      console.log("this. param ", this.param);
-      this.postApi("/getMatchDetails", this.param, this.getMatchDetailsCallback, this.fail);
+      // this.param = res.data;
+      // console.log("this. param ", this.param);
+      // this.postApi("/getMatchDetails", this.param, this.getMatchDetailsCallback, this.fail);
     },
     getMatchDetailsCallback(res){
       console.log("getMatchDetailsCallback data ", res.data);

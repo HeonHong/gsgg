@@ -64,7 +64,7 @@ public class UserVsService {
             System.out.println(" root ");
             return root.get("puuid").asText();
         } catch (Exception e) {
-            System.err.println("Error parsing PUUID: " + e.getMessage());
+            System.err.println("parsePuuid e " + e.getMessage());
             return null;
         }
     }
@@ -82,6 +82,7 @@ public class UserVsService {
             return Mono.error(e);
         }
     }
+    
     public Mono<String> getSummonerInfo(String id) {
         try {
             String requestURL = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner//" + id
@@ -94,17 +95,42 @@ public class UserVsService {
             return Mono.error(e);
         }
     }
-    public Mono<String> getMatchId(String puuid) {
+
+    public Mono<Map<String, List<String>>> getMatchIds(String myPuuid, String yourPuuid) {
+        Mono<List<String>> myMatchesMono = getMatchId(myPuuid);
+        Mono<List<String>> yourMatchesMono = getMatchId(yourPuuid);
+
+        return Mono.zip(myMatchesMono, yourMatchesMono)
+                .map(tuple -> {
+                    Map<String, List<String>> resultMap = new HashMap<>();
+                    resultMap.put("myMatches", tuple.getT1());
+                    resultMap.put("yourMatches", tuple.getT2());
+                    return resultMap;
+                });
+    }
+    private Mono<List<String>> getMatchId(String puuid) {
         try {
             String requestURL = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/" + puuid + "/ids?start=0&count=20&api_key=" + apiKey;
             return client.get()
                     .uri(requestURL)
                     .retrieve()
-                    .bodyToMono(String.class);
-        } catch ( Exception e ) {
+                    .bodyToMono(String.class)
+                    .map(this::parseMatchIds);
+        } catch (Exception e) {
             return Mono.error(e);
         }
     }
+    private List<String> parseMatchIds(String jsonResponse) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+            System.out.println(" json node " + jsonNode );
+            return objectMapper.convertValue(jsonNode, List.class);
+        } catch (Exception e) {
+            throw new RuntimeException("parseUserId e ", e);
+        }
+    }
+
     public Flux<Map> getMatchDetails(List<String> matchIds) { // flux 스트림 반환
         return Flux.fromIterable(matchIds) // flux 생성
                 .flatMap(matchId -> {
