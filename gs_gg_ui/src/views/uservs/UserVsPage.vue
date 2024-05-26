@@ -45,7 +45,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="match in participantInfo" :key="match.info.gameId">
+              <tr v-for="match in myParticipantInfo" :key="match.info.gameId">
                 <td> {{ match.date }}</td>
                 <td>
                   <b>
@@ -95,6 +95,25 @@
               </tr>
               </thead>
               <tbody>
+              <tr v-for="match in yourParticipantInfo" :key="match.info.gameId">
+                <td> {{ match.date }}</td>
+                <td>
+                  <b>
+                    <span class="">{{ match.result ? '승' : '패' }}</span> <!-- 승 / 패 -->
+                  </b>
+                </td>
+                <td>
+                  <img :src="match.myChampionImg">
+                </td>
+                <td>{{ match.myKda }}</td>
+                <td>{{ match.myTotalDamageDealt}}</td>
+                <td>
+                  <img>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td> <!-- 돋보기 버튼 -->
+              </tr>
               </tbody>
             </table>
           </div>
@@ -115,13 +134,14 @@ export default {
       puuidInfo:[],
       myPuuid:'',
       yourPuuid: '',
-      matchInfo: [],
+      myMatchInfo: [],
+      yourMatchInfo: [],
       param: {}
     }
   },
   computed: {
-    participantInfo() {
-      return this.matchInfo.map( match => {
+    myParticipantInfo() {
+      return this.myMatchInfo.map( match => {
           const myParticipant = match.info.participants.find( p => p.puuid === this.myPuuid );
           return {
             ...match // 새로운 객체 생성
@@ -132,6 +152,22 @@ export default {
             , myChampionImg: myParticipant ? `https://opgg-static.akamaized.net/meta/images/lol/14.9.1/champion/${myParticipant.championName}.png` : ''
             , myTotalDamageDealt : myParticipant ? myParticipant.totalDamageDealtToChampions : ''
           };
+      });
+    },
+    // "TI4gn95v2Jj5BoNALwkQFa9-2uzNwLrepdpQi5KaN4QGgCvvTv59tpiEC4L1mxam5ugoeX6nrEq2LA"
+    // 2
+    yourParticipantInfo() {
+      return this.yourMatchInfo.map( match => {
+        const yourParticipant = match.info.participants.find( p => p.puuid === this.yourPuuid );
+        return {
+          ...match // 새로운 객체 생성
+          ,date: new Date(match.info.gameCreation).toLocaleDateString() // ? gameCreation : 1714025227629
+          , result: yourParticipant ? yourParticipant.win : false
+          , myChampionName: yourParticipant ? yourParticipant.championName : ''
+          , myKda : yourParticipant ? `${yourParticipant.kills}/${yourParticipant.deaths}/${yourParticipant.assists}` : ''
+          , myChampionImg: yourParticipant ? `https://opgg-static.akamaized.net/meta/images/lol/14.9.1/champion/${yourParticipant.championName}.png` : ''
+          , myTotalDamageDealt : yourParticipant ? yourParticipant.totalDamageDealtToChampions : ''
+        };
       });
     }
   },
@@ -165,22 +201,37 @@ export default {
       this.getApi("/getMatchId", this.param, this.getMatchIdCallback, this.fail );
     },
     getMatchIdCallback(res){
-      console.log(" res ", res);
-      // this.param = res.data;
-      // console.log("this. param ", this.param);
-      // this.postApi("/getMatchDetails", this.param, this.getMatchDetailsCallback, this.fail);
+      console.log(" getMatchIdCallback / myMatches / yourMatches ", res);
+      const param = res.data;
+      const commonMatches = {
+        myMatches: [],
+        yourMatches: []
+      };
+
+      param.myMatches.forEach(myMatchId => {
+        if (param.yourMatches.includes(myMatchId)) {
+          commonMatches.myMatches.push(myMatchId);
+        }
+      });
+
+      param.yourMatches.forEach(yourMatchId => {
+        if (param.myMatches.includes(yourMatchId)) {
+          commonMatches.yourMatches.push(yourMatchId);
+        }
+      });
+
+      console.log("Common matches: ", commonMatches);
+      this.postApi("/getMatchDetails", commonMatches, this.getMatchDetailsCallback, this.fail);
     },
     getMatchDetailsCallback(res){
       console.log("getMatchDetailsCallback data ", res.data);
-      this.matchInfo = res.data;
+      this.myMatchInfo = res.data.myMatches;
+      this.yourMatchInfo = res.data.yourMatches;
+      console.log(" this.myMatchInfo ", this.myMatchInfo);
+      console.log(" this.yourMatchInfo ", this.yourMatchInfo);
       // [ {},  {} ]
       // res.data 배열의 각 요소는 info와 metadata를 포함하는 객체
       // info 객체 반복 iterate 하면서 접근
-      console.log(" match.info  ", this.matchInfo );
-    },
-    getResult(match) {
-      const participant = match.info.participants.find( p => p.puuid === this.myPuuid );
-      return participant ? participant.win : false;
     },
     // getSummonerInfo(id) {
     //   this.param = { id: id}

@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,16 +133,49 @@ public class UserVsService {
         }
     }
 
-    public Flux<Map> getMatchDetails(List<String> matchIds) { // flux 스트림 반환
-        return Flux.fromIterable(matchIds) // flux 생성
+//    public Flux<Map> getMatchDetails(List<String> allMatchIds) { // flux 스트림 반환
+//        return Flux.fromIterable(allMatchIds) // flux 생성
+//                .flatMap(matchId -> {
+//                    String requestURL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + matchId + "?api_key=" + apiKey;
+//                    return client.get()
+//                            .uri(requestURL)
+//                            .retrieve()
+//                            .bodyToMono(Map.class)
+//                            .flux()
+//                            .onErrorResume(e -> {
+//                                // 에러 발생 시 빈 Map을 반환하거나 로깅
+//                                System.err.println("Error fetching details for matchId " + matchId + ": " + e.getMessage());
+//                                return Flux.empty();
+//                            });
+//                }, 4); // 요청 최대 4개
+//    }
+    public Mono<Map<String, List<Map>>> getMatchDetails(List<String> myMatches, List<String> yourMatches) {
+        Mono<List<Map>> myMatchesDetails = parseMatchDetails(myMatches).collectList();
+        Mono<List<Map>> yourMatchesDetails = parseMatchDetails(yourMatches).collectList();
+
+        return Mono.zip(myMatchesDetails, yourMatchesDetails)
+                .map(tuple -> {
+                    Map<String, List<Map>> result = new HashMap<>();
+                    result.put("myMatches", tuple.getT1());
+                    result.put("yourMatches", tuple.getT2());
+                    return result;
+                });
+    }
+
+    private Flux<Map> parseMatchDetails(List<String> matchIds) {
+        return Flux.fromIterable(matchIds)
+                .delayElements(Duration.ofMillis(100)) // 각 요청 사이에 100ms 지연을 추가
                 .flatMap(matchId -> {
                     String requestURL = "https://asia.api.riotgames.com/lol/match/v5/matches/" + matchId + "?api_key=" + apiKey;
                     return client.get()
                             .uri(requestURL)
                             .retrieve()
                             .bodyToMono(Map.class)
-                            .flux();
-                }, 4) // 요청 최대 5개
-                .onErrorResume(e -> Flux.error(e));
+                            .onErrorResume(e -> {
+                                System.err.println("Error fetching details for matchId " + matchId + ": " + e.getMessage());
+                                return Mono.empty();
+                            }).flux();
+                }, 1) // 병렬 요청 수 제한을 1로 설정
+                .subscribeOn(Schedulers.boundedElastic());
     }
 }

@@ -1,11 +1,14 @@
 package com.gsgg.gsggbe.uservs.controller;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders;
+import com.gsgg.gsggbe.uservs.dto.MatchIdsDTO;
 import com.gsgg.gsggbe.uservs.service.UserVsService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +50,9 @@ public class UserVsController {
     }
 
     @PostMapping ("/getMatchDetails")
-    public Flux<Map> getMatchDetails(@RequestBody List <String> matchIds ) {
-        System.out.println(" matchIds : " + matchIds );
-        return this.userVsService.getMatchDetails( matchIds );
+    public Mono<Map<String, List<Map>>> getMatchDetails(@RequestBody MatchIdsDTO matchIdsDTO) {
+        List<String> myMatches = matchIdsDTO.getMyMatches();
+        List<String> yourMatches = matchIdsDTO.getYourMatches();
+        return this.userVsService.getMatchDetails( myMatches,  yourMatches);
     }
 }
