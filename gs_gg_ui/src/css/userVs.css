@@ -109,3 +109,14 @@ body {
     background-color: #343a40;
     box-sizing: border-box;
 }
+.match-win{
+
+}
+.vsTable {
+    text-align: center; /* Align table content to the center */
+}
+
+.vsTable th,
+.vsTable td {
+    text-align: center; /* Align table header and cell content to the center */
+}

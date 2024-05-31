@@ -45,23 +45,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="match in myParticipantInfo" :key="match.info.gameId">
-                <td> {{ match.date }}</td>
+            <tr v-for="match in participantInfo" :key="match.date">
+                <td> {{ match.date }} </td>
                 <td>
                   <b>
-                    <span class="">{{ match.result ? '승' : '패' }}</span> <!-- 승 / 패 -->
+                    <span class="">{{ match.myResult ? '승' : '패' }}</span> <!-- 승 / 패 -->
                   </b>
                 </td>
                 <td>
-                  <img :src="match.myChampionImg">
+                  <img :src="match.myChampionImg" alt="My Champion">
                 </td>
                 <td>{{ match.myKda }}</td>
-                <td>{{ match.myTotalDamageDealt}}</td>
+                <td>{{ match.myTotalDamageDealt }}</td>
                 <td>
-                  <img>
+                  <img :src="match.yourChampionImg" alt="Your Champion">
                 </td>
-                <td></td>
-                <td></td>
+                <td>{{ match.yourKda }}</td>
+                <td>{{ match.yourTotalDamageDealt }}</td>
                 <td></td> <!-- 돋보기 버튼 -->
               </tr>
             </tbody>
@@ -73,12 +73,12 @@
       <div id="con2" class="con">
          <h3 class="con-margin">적팀으로 만나서</h3>
           <div id="con1_2" class="table-responsive">
-            <h4>
+            <h4 style="padding-left: 15px;">
               승리 :
-              <span class="red"> ?? </span>
+              <span class="red">{{ getWinCount }}</span>
               &nbsp;&nbsp;
               패배 :
-              <span class="blue"> ?? </span>
+              <span class="blue">{{ participantInfo.length - getWinCount }}</span>
             </h4>
             <table class="vsTable table table-striped">
               <thead class="thead-dark">
@@ -95,23 +95,23 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="match in yourParticipantInfo" :key="match.info.gameId">
+              <tr v-for="match in participantInfo" :key="match.date">
                 <td> {{ match.date }}</td>
                 <td>
                   <b>
-                    <span class="">{{ match.result ? '승' : '패' }}</span> <!-- 승 / 패 -->
+                    <span class="">{{ match.yourResult ? '승' : '패' }}</span> <!-- 승 / 패 -->
                   </b>
                 </td>
+                <td>
+                  <img :src="match.yourChampionImg">
+                </td>
+                <td>{{ match.yourKda }}</td>
+                <td>{{ match.yourTotalDamageDealt}}</td>
                 <td>
                   <img :src="match.myChampionImg">
                 </td>
                 <td>{{ match.myKda }}</td>
                 <td>{{ match.myTotalDamageDealt}}</td>
-                <td>
-                  <img>
-                </td>
-                <td></td>
-                <td></td>
                 <td></td> <!-- 돋보기 버튼 -->
               </tr>
               </tbody>
@@ -140,36 +140,31 @@ export default {
     }
   },
   computed: {
-    myParticipantInfo() {
-      return this.myMatchInfo.map( match => {
-          const myParticipant = match.info.participants.find( p => p.puuid === this.myPuuid );
-          return {
-            ...match // 새로운 객체 생성
-            ,date: new Date(match.info.gameCreation).toLocaleDateString() // ? gameCreation : 1714025227629
-            , result: myParticipant ? myParticipant.win : false
-            , myChampionName: myParticipant ? myParticipant.championName : ''
-            , myKda : myParticipant ? `${myParticipant.kills}/${myParticipant.deaths}/${myParticipant.assists}` : ''
-            , myChampionImg: myParticipant ? `https://opgg-static.akamaized.net/meta/images/lol/14.9.1/champion/${myParticipant.championName}.png` : ''
-            , myTotalDamageDealt : myParticipant ? myParticipant.totalDamageDealtToChampions : ''
-          };
-      });
-    },
-    // "TI4gn95v2Jj5BoNALwkQFa9-2uzNwLrepdpQi5KaN4QGgCvvTv59tpiEC4L1mxam5ugoeX6nrEq2LA"
-    // 2
-    yourParticipantInfo() {
-      return this.yourMatchInfo.map( match => {
-        const yourParticipant = match.info.participants.find( p => p.puuid === this.yourPuuid );
+    participantInfo() {
+      return this.myMatchInfo.map((match, index) => {
+        const myParticipant = match.info.participants.find(p => p.puuid === this.myPuuid);
+        const yourMatch = this.yourMatchInfo[index];
+        const yourParticipant = yourMatch ? yourMatch.info.participants.find(p => p.puuid === this.yourPuuid) : null;
+
         return {
-          ...match // 새로운 객체 생성
-          ,date: new Date(match.info.gameCreation).toLocaleDateString() // ? gameCreation : 1714025227629
-          , result: yourParticipant ? yourParticipant.win : false
-          , myChampionName: yourParticipant ? yourParticipant.championName : ''
-          , myKda : yourParticipant ? `${yourParticipant.kills}/${yourParticipant.deaths}/${yourParticipant.assists}` : ''
-          , myChampionImg: yourParticipant ? `https://opgg-static.akamaized.net/meta/images/lol/14.9.1/champion/${yourParticipant.championName}.png` : ''
-          , myTotalDamageDealt : yourParticipant ? yourParticipant.totalDamageDealtToChampions : ''
+          date: new Date(match.info.gameCreation).toLocaleDateString(),
+          myResult: myParticipant ? myParticipant.win : false,
+          myChampionName: myParticipant ? myParticipant.championName : '',
+          myKda: myParticipant ? `${myParticipant.kills}/${myParticipant.deaths}/${myParticipant.assists}` : '',
+          myChampionImg: myParticipant ? `https://opgg-static.akamaized.net/meta/images/lol/14.9.1/champion/${myParticipant.championName}.png` : '',
+          myTotalDamageDealt: myParticipant ? myParticipant.totalDamageDealtToChampions : '',
+          yourResult: yourParticipant ? yourParticipant.win : false,
+          yourChampionName: yourParticipant ? yourParticipant.championName : '',
+          yourKda: yourParticipant ? `${yourParticipant.kills}/${yourParticipant.deaths}/${yourParticipant.assists}` : '',
+          yourChampionImg: yourParticipant ? `https://opgg-static.akamaized.net/meta/images/lol/14.9.1/champion/${yourParticipant.championName}.png` : '',
+          yourTotalDamageDealt: yourParticipant ? yourParticipant.totalDamageDealtToChampions : ''
         };
       });
+    },
+    getWinCount() {
+      return this.participantInfo.filter(match => match.yourResult).length;
     }
+
   },
 
   methods: {
