@@ -1,21 +1,23 @@
 <template>
   <div id="main">
     <div class="topUserVs">
+        <div class="btn-con">
         <div class="btn-group">
           <!-- radio type으로 수정 할 예정 -->
-          <label class="btn-light">
-            <input value="랭크전" readonly/>
-          </label>
+<!--          <label class="btn-light">-->
+<!--            <input value="랭크전" readonly/>-->
+<!--          </label>-->
 <!--          <label>-->
 <!--            <input value="일반전" readonly/>-->
 <!--          </label>-->
         </div>
         <div class="input-group">
-          <input placeholder="나" v-model="mySummonerName"/>
-          <input placeholder="상대" v-model="yourSummonerName" />
+          <input placeholder="나 플레이어 이름 + #서버" v-model="mySummonerName"/>
+          <input placeholder="상대 플레이어 이름 + #서버" v-model="yourSummonerName" />
           <div class="input-group-append">
             <button class="search-btn" type="button" @click="getUserPuuid">검색</button>
           </div>
+        </div>
         </div>
     </div>
   </div>
@@ -25,10 +27,10 @@
         <div id="con1_2" class="table-responsive con-margin">
           <h4>
             승리 :
-            <span class="red"> ?? </span>
+            <span class="red">{{ getMyWinCount }}</span>
             &nbsp;&nbsp;
             패배 :
-            <span class="blue"> ?? </span>
+            <span class="blue">{{ participantInfo.length - getMyWinCount }}</span>
           </h4>
           <table class="vsTable table table-striped">
             <thead class="thead-dark">
@@ -41,7 +43,7 @@
                 <th scope="col"> 너 </th>
                 <th scope="col"> KDA </th>
                 <th scope="col"> 딜 </th>
-                <th scope="col"> More </th>
+                <th scope="col">  </th>
               </tr>
             </thead>
             <tbody>
@@ -75,10 +77,10 @@
           <div id="con1_2" class="table-responsive">
             <h4 style="padding-left: 15px;">
               승리 :
-              <span class="red">{{ getWinCount }}</span>
+              <span class="red">{{ getYourWinCount }}</span>
               &nbsp;&nbsp;
               패배 :
-              <span class="blue">{{ participantInfo.length - getWinCount }}</span>
+              <span class="blue">{{ participantInfo.length - getYourWinCount }}</span>
             </h4>
             <table class="vsTable table table-striped">
               <thead class="thead-dark">
@@ -91,7 +93,7 @@
                 <th scope="col"> 너 </th>
                 <th scope="col"> KDA </th>
                 <th scope="col"> 딜 </th>
-                <th scope="col"> More </th>
+                <th scope="col"> </th>
               </tr>
               </thead>
               <tbody>
@@ -161,16 +163,26 @@ export default {
         };
       });
     },
-    getWinCount() {
+    getYourWinCount() {
       return this.participantInfo.filter(match => match.yourResult).length;
+    },
+    getMyWinCount() {
+      return this.participantInfo.filter(match => match.myResult).length;
     }
 
   },
 
   methods: {
     getUserPuuid() {
-      this.param = { mySummonerName: this.mySummonerName, yourSummonerName: this.yourSummonerName }
-      this.param.tagLine = 'KR1';
+      const myParts = this.mySummonerName.split('#');
+      const yourParts = this.yourSummonerName.split('#');
+      this.param = {
+        mySummonerName: myParts[0],
+        yourSummonerName: yourParts[0],
+        myTagLine: myParts[1],
+        yourTagLine: yourParts[1]
+      };
+
       this.getApi('/getUserPuuid', this.param, this.getUserPuuidCallback, this.fail );
     },
     getUserPuuidCallback(res) {

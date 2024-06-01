@@ -22,8 +22,9 @@ public class UserVsController {
     @GetMapping("/getUserPuuid")
     public Mono<Map<String, String>> getUserPuuid(@RequestParam("mySummonerName") String mySummonerName,
                                     @RequestParam("yourSummonerName") String yourSummonerName,
-                                    @RequestParam("tagLine") String tagLine) {
-        return this.userVsService.getUserPuuid(mySummonerName, yourSummonerName, tagLine);
+                                    @RequestParam("myTagLine") String myTagLine,
+                                    @RequestParam("yourTagLine") String yourTagLine) {
+        return this.userVsService.getUserPuuid(mySummonerName, yourSummonerName, myTagLine, yourTagLine);
     }
 
     // puuid 로 id 조회

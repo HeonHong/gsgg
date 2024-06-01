@@ -22,10 +22,10 @@ public class UserVsService {
     // WebClient의 인스턴스 생성
     private final WebClient client = WebClient.create();
 
-    public Mono<Map<String, String>> getUserPuuid(String mySummonerName, String yourSummonerName, String region) {
+    public Mono<Map<String, String>> getUserPuuid(String mySummonerName, String yourSummonerName, String myTagLine, String yourTagLine) {
         try {
-            String myRequestURL = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + mySummonerName + "/" + region +"?api_key=" + apiKey;
-            String yourRequestURL = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + yourSummonerName + "/" + region + "?api_key=" + apiKey;
+            String myRequestURL = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + mySummonerName + "/" + myTagLine +"?api_key=" + apiKey;
+            String yourRequestURL = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + yourSummonerName + "/" + yourTagLine + "?api_key=" + apiKey;
 
             Mono<String> myPuuidMono = client.get()
                     .uri(myRequestURL)
