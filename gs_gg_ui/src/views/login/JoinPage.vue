@@ -6,7 +6,7 @@
                 <EpInput v-model="joinData.name" label="이름"></EpInput>
                 <EpInput v-model="joinData.mobileNum" label="휴대폰번호"></EpInput>
                 <EpInput v-model="joinData.birthday" label="생년월일" placeholder="생년월일 8자리"></EpInput>
-                {{ validMsg }}
+                <div>{{ validMsg }}</div>
                 <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="본인인증"
                     @click="identityCheck" />
             </div>

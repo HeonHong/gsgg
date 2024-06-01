@@ -102,13 +102,12 @@ public class LoginService {
                     userInfo = om.readValue(br, KakaoUserInfo.class);
                 }
                 br.close();
-
+                log.info("KakaoUserInfo {}", userInfo);
             } else {
-                log.error("카카오 고객정보 조회 네트워크 오류");
+                log.error("/kakao/auth getKakaoUserInfo Kakao api 호출 오류");
             }
-
         } catch (IOException e) {
-            log.info("카카오 고객정보 조회 실패");
+            log.error("/kakao/auth getKakaoUserInfo Kakao 네트워크 연동 오류");
         }
         return userInfo;
     }
