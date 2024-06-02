@@ -7,9 +7,15 @@ import com.gsgg.gsggbe.login.dto.KakaoUserInfo;
 import com.gsgg.gsggbe.login.jwt.JWTUtil;
 import com.gsgg.gsggbe.login.service.CustomUserDetailsService;
 import com.gsgg.gsggbe.login.service.LoginService;
+import com.gsgg.gsggbe.response.BasicResponse;
+import com.gsgg.gsggbe.response.ResponseType;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +23,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -62,13 +70,19 @@ public class LoginController {
 */
 
     @PostMapping("/kakao/auth")
-    public String KakaoAuth(@RequestBody String code) {
+    public BasicResponse<?> KakaoAuth(@RequestBody String code) {
         boolean isMember = false;
 
         String accessToken = loginService.getToken(code);
         KakaoUserInfo userInfo = loginService.getKakaoUserInfo(accessToken);
         String username = loginService.getUserName(userInfo.getId());
-        if (username==null) return null;
+        if (username==null) {
+            log.info("/kakao/auth KakaoId Not Exist {} ", userInfo.getId());
+            Map<String, String> err = new HashMap<>();
+            err.put("message", "기존 정보와 연동된 정보가 없습니다. 회원 가입하시겠습니까?");
+//            return ResponseEntity.status(HttpStatusCode.valueOf(401)).body(err);
+            return BasicResponse.builder().responseType(ResponseType.LOGIN_NO_RELATED_ID).body(err).build();
+        }
 
         CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
@@ -77,6 +91,6 @@ public class LoginController {
         String role = auth.getAuthority();
         String token = jwtUtil.createJWT(username, role, 60 * 60 * 10L);
 
-        return token;
+        return BasicResponse.builder().responseType(ResponseType.SUCCESS).body(token).build();
     }
 }

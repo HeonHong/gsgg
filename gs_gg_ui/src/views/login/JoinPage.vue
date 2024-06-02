@@ -5,8 +5,8 @@
             <div v-if="level == 0">
                 <EpInput v-model="joinData.name" label="이름"></EpInput>
                 <EpInput v-model="joinData.mobileNum" label="휴대폰번호"></EpInput>
-                <EpInput v-model="joinData.birthday" label="생년월일"></EpInput>
-                {{ validMsg }}
+                <EpInput v-model="joinData.birthday" label="생년월일" placeholder="생년월일 8자리"></EpInput>
+                <div>{{ validMsg }}</div>
                 <EpButton :width="'22.2rem'" :height="'5rem'" :color="'var(--color1)'" label="본인인증"
                     @click="identityCheck" />
             </div>
@@ -84,6 +84,18 @@ export default {
         identityCheck() {
             let mbRegex = /^[0-9]{11}$/g
             let birthRegex = /^[0-9]{8}$/g
+            
+            if (this.joinData.name == "") {
+                this.validMsg = "이름은 필수값입니다."
+                return;
+            } else if (this.joinData.mobileNum == "") {
+                this.validMsg = "휴대폰번호는 필수값입니다."
+                return;
+            } else if (this.joinData.birthday == ""){
+                this.validMsg = "생년월일은 필수 값입니다."
+                return;
+            }
+            
             if (!this.joinData.mobileNum.match(mbRegex)) {
                 this.validMsg = "휴대폰번호는 11자리입니다."
                 return
@@ -91,17 +103,7 @@ export default {
                 this.validMsg = "생년월일은 YYYYMMDD형식입니다."
                 return
             }
-
-            if (this.joinData.name == "") {
-                this.validMsg = "이름은 필수값입니다."
-                return;
-            } else if (this.joinData.mobileNum == "") {
-                this.validMsg = "휴대폰번호는 필수값입니다."
-                return;
-            } else if (this.joinData.birthday == "") {
-                this.validMsg = "생년월일은 필수 값입니다."
-                return;
-            }
+            
             this.next();
         },
         join() {
@@ -135,7 +137,7 @@ export default {
         userNameCheck() {
             if (this.userNameVal(this.joinData.username)) {
                 let param = { username: this.joinData.username };
-                this.getApi('/check-id', param, this.checkSuccess, this.checkFail);
+                this.getApi('/check-id', param, this.checkSuccess, this.fail);
             }
         },
         next() {
@@ -148,7 +150,7 @@ export default {
             this.isJoined=true;
         },
         fail(err) {
-            console.log(err);
+            this.validMsg = err.response.data
         },
         confirm() {
             this.isOn = false;
@@ -162,9 +164,7 @@ export default {
         checkSuccess(res) {
             this.userCnt = res.data;
         },
-        checkFail() {
-            this.validMsg = '확인 중 오류가 발생하였습니다';
-        },
+        
 
     }
 }

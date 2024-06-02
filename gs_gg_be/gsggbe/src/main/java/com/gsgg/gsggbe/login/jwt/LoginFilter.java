@@ -1,11 +1,14 @@
 package com.gsgg.gsggbe.login.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.gsgg.gsggbe.login.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,11 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /*
-* UsernamePasswordAuthenticationFilter는 "/login"으로 들어오는 post요청 처리
-* */
+ * UsernamePasswordAuthenticationFilter는 "/login"으로 들어오는 post요청 처리
+ * */
+
 @RequiredArgsConstructor
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -56,7 +62,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
         //마지막은 유지 시간
-        String token = jwtUtil.createJWT(username,role,60*60*10L);
+        String token = jwtUtil.createJWT(username, role, 60 * 60 * 10L);
         //Http인증방식은 RFC7235 정의에 따라 아래 인증 헤더 형태를 가져야 함.
         //Authorization은 타입 인증토큰
 //        response.addHeader("Authorization","Bearer " + token);
@@ -69,11 +75,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
         //여기에 찍히는 message는 CustomUserDetailsService에서 던진 예외 메시지가 아니다
         //attemptAuthentication에서 던진 메시지다.
-        log.error(failed.getMessage());
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);//401에러
+        log.error("login failed {}", failed.getMessage());
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);//401에러 >> 200
+
+        Map<String, String> err = new HashMap<>();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        err.put("message", "잘못된 정보입니다");
         try {
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(failed.getMessage());
+            response.getWriter().write(err.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

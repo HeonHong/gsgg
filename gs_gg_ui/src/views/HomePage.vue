@@ -12,8 +12,9 @@
             <span @click="join">회원가입</span>&nbsp;&nbsp;
             </div>
             <div v-if="$store.state.userToken!=null">
-            <img :src="profileImage"/>
-            <span>{{name}}</span>&nbsp;&nbsp;&nbsp;
+            <!-- <img src="@/assets/profileIcon.jpg"/> -->
+            <img :src="$store.state.profileImg"/>
+            <span>{{$store.state.username}}</span>&nbsp;&nbsp;&nbsp;
             <span @click="logOut">로그아웃</span>&nbsp;&nbsp;
             </div>
         </div>

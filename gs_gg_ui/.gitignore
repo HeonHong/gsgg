@@ -10,7 +10,7 @@ yarn-error.log
 /dist
 
 # Local environment file
-.env.local
+# .env.local
 
 # Editor directories and files
 .idea
