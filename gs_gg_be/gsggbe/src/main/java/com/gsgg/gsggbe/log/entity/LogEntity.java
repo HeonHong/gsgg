@@ -7,7 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LogEntity {
-    private Long id;
+    private String userId;
+    private String ip;
     private String methodName;
     private String timeStamp;
 }
