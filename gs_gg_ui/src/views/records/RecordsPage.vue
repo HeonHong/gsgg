@@ -26,13 +26,34 @@
             <div class="game-result" :class="{'win': match.win, 'loss': !match.win}">
               <span>{{ match.win ? 'Victory' : 'Defeat' }}</span>
             </div>
-            <div class="game-details">
-              <span>K/D/A: {{ match.kills }}/{{ match.deaths }}/{{ match.assists }}</span>
+            <div class="match-details">
+              <div class="champion-info">
+                <img :src="`https://ddragon.leagueoflegends.com/cdn/14.9.1/img/champion/${match.championName}.png`" alt="champion" class="icon">
+                <div class="spells">
+                  <img :src="`https://ddragon.leagueoflegends.com/cdn/14.9.1/img/spell/${getSpellName(match.spell1Id)}.png`" alt="spell1" class="spell-icon">
+                  <img :src="`https://ddragon.leagueoflegends.com/cdn/14.9.1/img/spell/${getSpellName(match.spell2Id)}.png`" alt="spell2" class="spell-icon">
+                </div>
+                <div class="runes">
+                  <img :src="`https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${getRunePath(match.perkPrimaryStyle)}/${match.perkPrimaryStyle}.png`" alt="primary rune" class="rune-icon">
+                  <img :src="`https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${getRunePath(match.perkSubStyle)}/${match.perkSubStyle}.png`" alt="sub rune" class="rune-icon">
+                </div>
+                <span class="kda">K/D/A: {{ match.kills }}/{{ match.deaths }}/{{ match.assists }}</span>
+              </div>
             </div>
-          </div>
-          <div class="champion-info">
-            <img :src="`https://ddragon.leagueoflegends.com/cdn/14.9.1/img/champion/${match.championName}.png`" alt="champion">
-            <span>{{ match.championName }}</span>
+            <div class="match-players">
+              <div class="team blue-team">
+                <div v-for="player in getTeamA(match.players)" :key="player.summonerName" class="player">
+                  <img :src="`https://ddragon.leagueoflegends.com/cdn/14.9.1/img/champion/${player.championName}.png`" alt="player champion" class="player-champion-icon">
+                  <span class="player-name">{{ player.summonerName }}</span>
+                </div>
+              </div>
+              <div class="team red-team">
+                <div v-for="player in getTeamB(match.players)" :key="player.summonerName" class="player">
+                  <img :src="`https://ddragon.leagueoflegends.com/cdn/14.9.1/img/champion/${player.championName}.png`" alt="player champion" class="player-champion-icon">
+                  <span class="player-name">{{ player.summonerName }}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="pagination-controls" v-if="totalPages > 1">
@@ -48,7 +69,7 @@
 <script>
 import apiMix from "@/js/mixins/api/api-mix.js"
 export default {
-  name:'RecordsPage',
+  name: 'RecordsPage',
   mixins: [apiMix],
   data() {
     return {
@@ -58,7 +79,7 @@ export default {
       matchInfo: [],
       matchDetail: [],
       currentPage: 1,
-      itemsPerPage: 9
+      itemsPerPage: 15 // 한 페이지에 15개의 매치를 표시하도록 변경
     };
   },
   computed: {
@@ -76,13 +97,13 @@ export default {
       if (!this.summonerName.trim()) return;
 
       const [name, tagLine] = this.summonerName.split('#'); // 라이엇 계정 방식 변경으로 인해 태그라인도 입력 받아야함
-  
+
       let param = { summonerName: name };
 
       if (tagLine) {
         param.tagLine = tagLine;
       }
-      
+
       this.getApi('/summonerId', param, this.successPuuid, this.fail);
     },
     successPuuid(response) {
@@ -117,8 +138,8 @@ export default {
     successMatchDetails(response) {
       console.log('매치 상세 정보 조회 성공:', response.data);
       this.matchInfo = response.data; // 전체 데이터를 배열에 저장
-      
-      this.matchDetail = response.data.flatMap(match => 
+
+      this.matchDetail = response.data.flatMap(match =>
         match.info.participants.filter(participant =>
           participant.summonerName.toLowerCase() === this.summonerID.gameName.toLowerCase()
         ).map(participant => ({
@@ -127,7 +148,18 @@ export default {
           kills: participant.kills,
           deaths: participant.deaths,
           assists: participant.assists,
-          championName: participant.championName
+          championName: participant.championName,
+          spell1Id: participant.spell1Id,
+          spell2Id: participant.spell2Id,
+          perkPrimaryStyle: participant.perkPrimaryStyle,
+          perkSubStyle: participant.perkSubStyle,
+          perkPrimaryStyleIcon: `perk-images/Styles/${this.getRunePath(participant.perkPrimaryStyle)}/${participant.perkPrimaryStyle}.png`,
+          perkSubStyleIcon: `perk-images/Styles/${this.getRunePath(participant.perkSubStyle)}/${participant.perkSubStyle}.png`,
+          players: match.info.participants.map(p => ({
+            summonerName: p.summonerName,
+            championName: p.championName,
+            teamId: p.teamId
+          }))
         }))
       );
     },
@@ -144,10 +176,42 @@ export default {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
+    },
+    getSpellName(spellId) {
+      const spells = {
+        21: 'SummonerBarrier', 1: 'SummonerBoost', 14: 'SummonerDot', 3: 'SummonerExhaust',
+        4: 'SummonerFlash', 6: 'SummonerHaste', 7: 'SummonerHeal', 13: 'SummonerMana',
+        11: 'SummonerSmite', 12: 'SummonerTeleport'
+      };
+      return spells[spellId] || 'Unknown';
+    },
+    getRunePath(runeId) {
+      const paths = {
+        8000: 'Precision', 8100: 'Domination', 8200: 'Sorcery',
+        8300: 'Inspiration', 8400: 'Resolve'
+      };
+      return paths[runeId] || 'Unknown';
+    },
+    getRuneIcon(runeId) {
+      const runeIcons = {
+        8000: 'perk-images/Styles/Precision/Precision.png',
+        8100: 'perk-images/Styles/Domination/Domination.png',
+        8200: 'perk-images/Styles/Sorcery/Sorcery.png',
+        8300: 'perk-images/Styles/Inspiration/Inspiration.png',
+        8400: 'perk-images/Styles/Resolve/Resolve.png'
+      };
+      return runeIcons[runeId] || 'Unknown';
+    },
+    getTeamA(players) {
+      return players.filter(player => player.teamId === 100); // 100은 블루 팀
+    },
+    getTeamB(players) {
+      return players.filter(player => player.teamId === 200); // 200은 레드 팀
     }
   }
 }
 </script>
+
 <style>
 #records-page {
   width: 100%;
@@ -239,29 +303,29 @@ export default {
 }
 
 .profile-icon {
-  width: 80px; 
+  width: 80px;
   height: 80px;
-  border-radius: 15%; 
+  border-radius: 15%;
   margin-right: 20px;
   position: relative;
-  overflow: hidden; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .level-badge {
   position: relative;
   top: 30px;
-  right: 90px; 
+  right: 90px;
   transform: translate(50%, 50%);
   background-color: #4e4d4d;
   border-radius: 15%;
   width: 30px;
   height: 15px;
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: center;
   border: 2px solid #4e4d4d;
-  box-shadow: 0 2px 4px rgba(51, 37, 37, 0.25); 
+  box-shadow: 0 2px 4px rgba(51, 37, 37, 0.25);
   font-size: 5px;
   color: #fff;
 }
@@ -306,6 +370,7 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 10px;
+  height: 150px; /* 일정한 높이를 설정하여 모든 카드의 높이를 동일하게 유지 */
 }
 
 .match-summary {
@@ -329,14 +394,16 @@ export default {
   background-color: #e2b6b3;
 }
 
-.game-details {
-  font-size: 12px;
+.match-details {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .champion-info {
   display: flex;
   align-items: center;
-  padding-top: 10px;
+  margin-right: 20px;
 }
 
 .champion-info img {
@@ -346,12 +413,65 @@ export default {
   margin-right: 10px;
 }
 
-.champion-info span {
-  font-size: 14px;
-  font-weight: bold;
+.icon, .spell-icon, .rune-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }
 
-pagination-controls {
+.spells, .runes {
+  display: flex;
+  flex-direction: column;
+  margin-right: 5px;
+}
+
+.kda {
+  margin-left: 10px;
+}
+
+.match-players {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto; /* 팀 정보가 항상 카드 하단에 위치하도록 설정 */
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+}
+
+.team.blue-team {
+  align-items: flex-start;
+}
+
+.team.red-team {
+  align-items: flex-end;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.player-champion-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.player-name {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px; /* 일정 너비를 설정하여 너비를 일정하게 유지 */
+}
+
+.pagination-controls {
   display: flex;
   justify-content: center;
   align-items: center;
