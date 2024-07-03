@@ -69,6 +69,13 @@ public class LoginController {
     }
 */
 
+    /**
+     * 카카오 로그인 시, access token 요청 api
+     *
+     * @author Heon Hong
+     * @param code
+     * @return
+     */
     @PostMapping("/kakao/auth")
     public BasicResponse<?> KakaoAuth(@RequestBody String code) {
         boolean isMember = false;

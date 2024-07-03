@@ -19,7 +19,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-//스프링 시큐리티의 인가 및 설정 클래스
+/**
+ * Spring Security 설정 클래스
+ * @author Heon Hong
+ *
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -54,7 +58,10 @@ public class SecurityConfig {
 
 
     //vue단에서 처리안했으면 WebMVCConfigurer도 설정 필요
-    //https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html
+
+    /**
+     * @see https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -97,7 +104,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth)->auth
                         //인증이 필요한 경우 아래와 같이 작성
                         //.requestMatchers("/admin").authenticated()
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/admin")
+                        .hasRole("ADMIN")
                         .anyRequest().permitAll()
                 );
         //JWTFilter 등록
